@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Booking\SlotGenerator;
+use App\Services\Sms\SmsManager;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
                 maxAdvanceDays: (int) config('nobat.booking.max_advance_days', 14),
             );
         });
+
+        $this->app->singleton(SmsManager::class);
     }
 
     /**

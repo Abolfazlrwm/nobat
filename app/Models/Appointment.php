@@ -5,13 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 class Appointment extends Model
 {
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_CONFIRMED = 'confirmed';
+
     public const STATUS_CANCELLED = 'cancelled';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_NO_SHOW = 'no_show';
 
     public const STATUSES = [
@@ -94,9 +99,35 @@ class Appointment extends Model
     public function scopeOnDate(Builder $query, string $date): void
     {
         $query->whereBetween('starts_at', [
-            \Illuminate\Support\Carbon::parse($date)->startOfDay(),
-            \Illuminate\Support\Carbon::parse($date)->endOfDay(),
+            Carbon::parse($date)->startOfDay(),
+            Carbon::parse($date)->endOfDay(),
         ]);
+    }
+
+    /**
+     * Limit appointments to what the user is allowed to see:
+     * super-admins see everything, managers see their businesses,
+     * staff see their own schedule and customers their own bookings.
+     */
+    public function scopeVisibleTo(Builder $query, User $user): void
+    {
+        if ($user->isSuperAdmin()) {
+            return;
+        }
+
+        if ($user->hasRole(User::ROLE_MANAGER)) {
+            $query->whereHas('business', fn (Builder $q) => $q->where('owner_id', $user->id));
+
+            return;
+        }
+
+        if ($user->hasRole(User::ROLE_STAFF)) {
+            $query->whereHas('staff', fn (Builder $q) => $q->where('user_id', $user->id));
+
+            return;
+        }
+
+        $query->where('user_id', $user->id);
     }
 
     public function overlaps(\DateTimeInterface $startsAt, \DateTimeInterface $endsAt): bool
@@ -107,5 +138,17 @@ class Appointment extends Model
     public function isCancellable(): bool
     {
         return in_array($this->status, [self::STATUS_PENDING, self::STATUS_CONFIRMED], true);
+    }
+
+    /**
+     * Final statuses (cancelled, completed, no-show) freeze the record.
+     */
+    public function canTransitionTo(string $status): bool
+    {
+        if (! in_array($status, self::STATUSES, true) || $status === $this->status) {
+            return false;
+        }
+
+        return ! in_array($this->status, [self::STATUS_CANCELLED, self::STATUS_COMPLETED, self::STATUS_NO_SHOW], true);
     }
 }
