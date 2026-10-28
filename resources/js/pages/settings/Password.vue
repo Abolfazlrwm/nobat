@@ -20,7 +20,7 @@ defineProps<Props>();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Password settings',
+        title: 'تنظیمات رمز عبور',
         href: '/settings/password',
     },
 ];
@@ -63,11 +63,11 @@ const updatePassword = () => {
 
         <SettingsLayout>
             <div class="space-y-6">
-                <HeadingSmall title="Update password" description="Ensure your account is using a long, random password to stay secure" />
+                <HeadingSmall title="تغییر رمز عبور" description="برای امنیت بیشتر از رمز عبور طولانی و تصادفی استفاده کنید" />
 
                 <form @submit.prevent="updatePassword" class="space-y-6">
                     <div class="grid gap-2">
-                        <Label for="current_password">Current Password</Label>
+                        <Label for="current_password">رمز عبور فعلی</Label>
                         <Input
                             id="current_password"
                             ref="currentPasswordInput"
