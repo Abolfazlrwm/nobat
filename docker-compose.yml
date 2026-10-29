@@ -1,0 +1,77 @@
+# ---------------------------------------------------------------------------
+# Nobat — local production-like stack
+#
+#   docker compose up -d --build
+#   docker compose exec app php artisan migrate --seed
+#
+# Services: nginx (web) -> php-fpm (app) -> mysql (db) / redis (cache+queue)
+# A dedicated container runs the queue worker for SMS jobs.
+# ---------------------------------------------------------------------------
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: nobat/app
+        restart: unless-stopped
+        environment:
+            - CONTAINER_ROLE=app
+        volumes:
+            - storage:/var/www/html/storage/app/public
+        depends_on:
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_started
+
+    worker:
+        image: nobat/app
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        command: ["php", "artisan", "queue:work", "--tries=3", "--backoff=30"]
+        depends_on:
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_started
+
+    web:
+        image: nginx:1.27-alpine
+        restart: unless-stopped
+        ports:
+            - "8080:80"
+        volumes:
+            - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+            - ./public:/var/www/html/public:ro
+        depends_on:
+            - app
+
+    db:
+        image: mysql:8.4
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: nobat
+            MYSQL_USER: nobat
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: very-secret
+        volumes:
+            - db-data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pvery-secret"]
+            interval: 5s
+            timeout: 3s
+            retries: 20
+
+    redis:
+        image: redis:7-alpine
+        restart: unless-stopped
+        volumes:
+            - redis-data:/data
+
+volumes:
+    db-data:
+    redis-data:
+    storage:
