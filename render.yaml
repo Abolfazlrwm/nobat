@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------------------
+# Render Blueprint — Nobat demo
+#
+# Deploy with one click:
+#   https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat
+#
+# Or from the Render dashboard: New + -> Blueprint -> pick this repository.
+# Free plan: service sleeps after 15 min idle, wakes in ~1 minute,
+# SQLite database is re-seeded on every boot.
+# ---------------------------------------------------------------------------
+
+services:
+  - type: web
+    name: nobat-demo
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile.demo
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_NAME
+        value: Nobat
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: SESSION_LIFETIME
+        value: "240"

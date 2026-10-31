@@ -10,8 +10,26 @@
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
 [![Tests](https://img.shields.io/badge/tests-46%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
+
+---
+
+## 🔴 دموی زنده
+
+پروژه با بلوپرینت Render از قبل آماده‌ی استقرار است — با دکمه‌ی بالا (یا `New + → Blueprint` در داشبورد Render) در چند دقیقه یک نسخه‌ی زنده با SQLite و داده‌های نمونه بالا می‌آید.
+
+حساب‌های آماده‌ی دمو (رمز همه: `password`):
+
+| نقش | ایمیل |
+|---|---|
+| مدیر کل سامانه | `admin@nobat.ir` |
+| مدیر کسب‌وکار (کلینیک پارس) | `manager@nobat.ir` |
+| پرسنل | `staff@nobat.ir` |
+| مدیر (سالن آفتاب) | `salon@nobat.ir` |
+
+> ℹ️ پلن رایگان Render بعد از ۱۵ دقیقه بی‌کاری سرویس را به خواب می‌برد؛ بازدید اول پس از آن حدود یک دقیقه طول می‌کشد و دیتابیس دمو در هر اجرا از نو ساخته می‌شود.
 
 ---
 
