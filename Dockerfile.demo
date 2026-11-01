@@ -1,35 +1,22 @@
 # ---------------------------------------------------------------------------
 # Nobat — single-container demo image
 #
-# Unlike the production stack (nginx + php-fpm + worker, see docker-compose.yml)
-# this image serves everything in one process so it can run on free PaaS
-# platforms like Render: `php artisan serve` with SQLite — zero external
-# services, database re-seeded on every boot.
+# Serves the app with `php artisan serve` + SQLite — zero external services,
+# designed for free PaaS hosts (Render, Railway, Koyeb, ...).
+#
+# The frontend assets are built by `npm run build` and committed to the
+# repository (public/build), so this image needs no node and no compiled
+# PHP extensions: the official php:8.3-cli-alpine image already ships every
+# extension Laravel 13 requires. This keeps the free-tier build ~1 minute.
+# (The production stack in Dockerfile builds assets itself with nginx+fpm.)
 # ---------------------------------------------------------------------------
 
-# ---------- Stage 1: frontend assets ----------
-FROM node:22-alpine AS assets
+FROM php:8.3-cli-alpine
 
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-RUN npm ci
-
-COPY resources ./resources
-COPY vite.config.ts tailwind.config.js tsconfig.json ./
-RUN npm run build
-
-# ---------- Stage 2: php runtime ----------
-FROM php:8.3-cli-alpine AS app
-
-# The official image already ships every extension Laravel 13 requires
-# (pdo_sqlite, sqlite3, mbstring, openssl, curl, dom, xml, fileinfo,
-# ctype, tokenizer, session). No compilation needed: keep the demo
-# build fast and bulletproof — only add unzip so composer can extract
-# dist packages.
+# unzip lets composer extract dist packages (the zip extension is not
+# compiled in this image on purpose)
 RUN apk add --no-cache unzip
 
-# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -48,9 +35,8 @@ RUN composer install \
         --prefer-dist \
         --no-interaction
 
-# Application code + compiled assets
+# Application code (public/build is committed to the repository)
 COPY . .
-COPY --from=assets /app/public/build ./public/build
 
 RUN composer dump-autoload --optimize \
     && chown -R www-data:www-data storage bootstrap/cache database

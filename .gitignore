@@ -1,6 +1,8 @@
 /.phpunit.cache
 /node_modules
-/public/build
+# public/build is committed: the demo Docker image (Dockerfile.demo)
+# runs on a free tier without node, so it consumes the compiled assets
+# from the repository. The production Dockerfile still builds assets.
 /public/hot
 /public/storage
 /storage/*.key
