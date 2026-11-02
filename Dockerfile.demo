@@ -6,12 +6,12 @@
 #
 # The frontend assets are built by `npm run build` and committed to the
 # repository (public/build), so this image needs no node and no compiled
-# PHP extensions: the official php:8.3-cli-alpine image already ships every
+# PHP extensions: the official php:8.4-cli-alpine image already ships every
 # extension Laravel 13 requires. This keeps the free-tier build ~1 minute.
 # (The production stack in Dockerfile builds assets itself with nginx+fpm.)
 # ---------------------------------------------------------------------------
 
-FROM php:8.3-cli-alpine
+FROM php:8.4-cli-alpine
 
 # unzip lets composer extract dist packages (the zip extension is not
 # compiled in this image on purpose)

@@ -18,6 +18,8 @@
 
 ## 🔴 دموی زنده
 
+**نسخه‌ی زنده:** [https://nobat-demo.onrender.com](https://nobat-demo.onrender.com) 🚀
+
 پروژه با بلوپرینت Render از قبل آماده‌ی استقرار است — با دکمه‌ی بالا (یا `New + → Blueprint` در داشبورد Render) در چند دقیقه یک نسخه‌ی زنده با SQLite و داده‌های نمونه بالا می‌آید.
 
 حساب‌های آماده‌ی دمو (رمز همه: `password`):
@@ -58,7 +60,7 @@
 
 | لایه | فناوری |
 |---|---|
-| بک‌اند | Laravel 13, PHP 8.3+ |
+| بک‌اند | Laravel 13, PHP 8.4+ |
 | فرانت‌اند | Inertia 2, Vue 3, TypeScript, Tailwind CSS, shadcn-vue |
 | احراز هویت و نقش‌ها | Laravel Auth + Spatie Permission |
 | تست | Pest (Feature + Domain) |
@@ -67,7 +69,7 @@
 
 ## 🚀 راه‌اندازی سریع
 
-پیش‌نیاز: PHP 8.3+, Composer, Node 20+
+پیش‌نیاز: PHP 8.4+, Composer, Node 20+
 
 ```bash
 git clone https://github.com/Abolfazlrwm/nobat.git
