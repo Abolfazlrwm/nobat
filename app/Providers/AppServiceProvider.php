@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\Booking\SlotGenerator;
 use App\Services\Sms\SmsManager;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // The demo/production deployment always sits behind a TLS terminator;
+        // never emit http:// links from it (mixed content = blank page).
+        if ($this->app->isProduction()) {
+            URL::forceScheme('https');
+        }
     }
 }
