@@ -22,20 +22,12 @@ RUN npm run build
 # ---------- Stage 2: php runtime ----------
 FROM php:8.3-cli-alpine AS app
 
-# SQLite ships with the official image (pdo_sqlite); add the rest of the
-# extensions the production image uses.
-RUN apk add --no-cache \
-        icu-dev \
-        libzip-dev \
-        oniguruma-dev \
-        $PHPIZE_DEPS \
-    && docker-php-ext-install \
-        zip \
-        intl \
-        bcmath \
-        pcntl \
-        opcache \
-    && apk del $PHPIZE_DEPS
+# The official image already ships every extension Laravel 13 requires
+# (pdo_sqlite, sqlite3, mbstring, openssl, curl, dom, xml, fileinfo,
+# ctype, tokenizer, session). No compilation needed: keep the demo
+# build fast and bulletproof — only add unzip so composer can extract
+# dist packages.
+RUN apk add --no-cache unzip
 
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
