@@ -15,7 +15,14 @@ fi
 
 # APP_URL: Render injects RENDER_EXTERNAL_URL automatically.
 if [ -z "${APP_URL:-}" ]; then
-    export APP_URL="${RENDER_EXTERNAL_URL:-http://localhost:${PORT:-8080}}"
+    if [ -n "${RENDER_EXTERNAL_URL:-}" ]; then
+        # Render always serves https externally. Normalise the scheme so
+        # Laravel does not emit http:// asset/route links — browsers block
+        # mixed content on https pages and the app renders blank.
+        export APP_URL="$(printf '%s' "$RENDER_EXTERNAL_URL" | sed 's|^http://|https://|')"
+    else
+        export APP_URL="http://localhost:${PORT:-8080}"
+    fi
 fi
 
 echo ">> preparing sqlite database"
