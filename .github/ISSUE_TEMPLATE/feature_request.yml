@@ -1,0 +1,44 @@
+name: ✨ پیشنهاد فیچر
+description: ایده‌ای برای بهتر شدن نوبت دارید؟ با ما در میان بگذارید.
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        پیشنهادها ابتدا بحث و در صورت پذیرش به نقشه‌ی راه اضافه می‌شوند.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: چه مسئله‌ای را حل می‌کند؟
+      description: سناریوی واقعی کاربر را توضیح دهید — مثلاً «مشتری نمی‌تواند بفهمد نوبتش تأیید شده یا نه».
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: راه‌حل پیشنهادی
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: جایگزین‌های در نظر گرفته‌شده
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: حیطه‌ی پیشنهاد
+      options:
+        - سمت مشتری (رزرو عمومی)
+        - پنل کسب‌وکار و ادمین
+        - اعلان‌ها و پیامک
+        - گزارش‌ها و آمار
+        - زیرساخت و استقرار
+        - مورد دیگر
+    validations:
+      required: true

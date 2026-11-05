@@ -35,6 +35,16 @@
 
 ---
 
+## 🖼️ نمای پروژه
+
+| صفحه عمومی | داشبورد مدیریت |
+|:---:|:---:|
+| ![صفحه اصلی نوبت](docs/screenshots/home.png) | ![داشبورد مدیریت](docs/screenshots/dashboard.png) |
+| **ویزارد رزرو ۴ مرحله‌ای** | **صفحه ورود** |
+| ![ویزارد رزرو](docs/screenshots/booking-wizard.png) | ![ورود](docs/screenshots/login.png) |
+
+---
+
 ## ✨ قابلیت‌ها
 
 ### سمت مشتری (بدون نیاز به ثبت‌نام)
@@ -115,10 +125,35 @@ vendor/bin/pint --test
 
 ## 🏛️ معماری در یک نگاه
 
-```
-Public (Vue Wizard)  ──►  SlotController (JSON)   ──►  SlotGenerator
-                     ──►  BookingController      ──►  BookingService ──► SendBookingSms (queue)
-Dashboard (Inertia)  ──►  Dashboard/Appointments/Management Controllers ──► Policies
+```mermaid
+flowchart LR
+    subgraph Browser["مرورگر — Vue 3 · Inertia 2"]
+        W["ویزارد رزرو عمومی"]
+        D["داشبورد کسب‌وکار"]
+    end
+
+    subgraph Laravel["Laravel 13"]
+        SC["SlotController"]
+        BC["BookingController"]
+        MC["کنترلرهای مدیریت"]
+        SG["SlotGenerator"]
+        BS["BookingService"]
+        P["Policies — Spatie Permission"]
+        Q["SendBookingSms (queue)"]
+    end
+
+    DB[("SQLite / MySQL")]
+
+    W -- "JSON: اسلات‌های آزاد" --> SC
+    W -- "POST: ثبت نوبت" --> BC
+    SC --> SG
+    BC --> BS
+    BS --> SG
+    BS --> Q
+    D --> MC
+    MC --> P
+    SG --- DB
+    BS --- DB
 ```
 
 - **SlotGenerator**: اسلات‌های آزاد را از ترکیب ساعات کاری (پیش‌فرض کسب‌وکار + ساعات اختصاصی پرسنل)، مدت خدمت، پیش‌زمان لازم، افق رزرو و نوبت‌های اشغال‌شده محاسبه می‌کند و برای هر اسلات لیست پرسنل آزاد را برمی‌گرداند.
@@ -127,6 +162,22 @@ Dashboard (Inertia)  ──►  Dashboard/Appointments/Management Controllers �
 
 مستند کامل معماری: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
+## 🗺️ نقشه راه
+
+- [x] **v1.0** — هسته رزرو، ویزارد جلالی، نقش‌ها، ۴۶ تست، CI و Docker
+- [x] **v1.1** — استقرار دمو روی Render، سایدبار RTL و برندینگ نوبت
+- [ ] درگاه پیامک واقعی (کاوه‌نگار) با معماری درایور موجود
+- [ ] یادآوری پیامکی قبل از نوبت (Scheduler + Database queue در production)
+- [ ] گزارش‌های پیشرفته و خروجی Excel
+- [ ] پرداخت آنلاین برای خدمات (زرین‌پال)
+- [ ] چندزبانه (fa / en) و PWA
+
+ایده‌ی جدیدی دارید؟ یک [پیشنهاد فیچر](../../issues/new?template=feature_request.yml) باز کنید.
+
+## 🤝 مشارکت
+
+راهنمای کامل گردش کار، قرارداد کامیت‌ها و اجرای تست‌ها: [`CONTRIBUTING.md`](CONTRIBUTING.md) · گزارش آسیب‌پذیری: [`SECURITY.md`](SECURITY.md)
+
 ## 📄 لایسنس
 
-MIT
+انتشار تحت [لایسنس MIT](LICENSE) — © ۲۰۲۶ Abolfazl Ranjbaran

@@ -1,0 +1,61 @@
+name: 🐛 گزارش باگ
+description: مشکلی در نوبت پیدا کرده‌اید؟ از این قالب استفاده کنید.
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        ممنون که وقت می‌گذارید! هرچه جزئیات دقیق‌تر باشد، رفع باگ سریع‌تر انجام می‌شود.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: چه اتفاقی افتاد؟
+      description: خلاصه‌ای از مشکل و اینکه رفتار درست چه چیزی بود.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: مراحل بازتولید
+      placeholder: |
+        1. به صفحه «...» بروید
+        2. روی «...» کلیک کنید
+        3. خطای ... دیده می‌شود
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: کدام بخش از سامانه؟
+      options:
+        - ویزارد رزرو عمومی
+        - داشبورد و نوبت‌ها
+        - خدمات / پرسنل / ساعات کاری
+        - احراز هویت و نقش‌ها
+        - استقرار (Docker / Render)
+        - موبایل و RTL
+        - مورد دیگر
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: محیط
+      placeholder: |
+        - روش اجرا: local / Docker / دموی Render
+        - مرورگر و نسخه: Chrome 130
+        - دستگاه: دسکتاپ / موبایل
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: لاگ‌ها یا اسکرین‌شات
+      description: در صورت وجود، خروجی laravel.log یا عکس صفحه را اضافه کنید.
+    validations:
+      required: false
