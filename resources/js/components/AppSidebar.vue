@@ -1,33 +1,42 @@
 <script setup lang="ts">
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { type NavItem, type SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
+import { Building2, CalendarDays, Clock4, LayoutGrid, Briefcase, Users } from 'lucide-vue-next';
+import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
+const page = usePage<SharedData>();
+const user = computed(() => page.props.auth.user);
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
-    },
-];
+const canManage = computed(() => {
+    if (!user.value) return false;
+
+    return user.value.is_super_admin || user.value.roles.includes('manager');
+});
+
+const mainNavItems = computed<NavItem[]>(() => {
+    const items: NavItem[] = [
+        { title: 'داشبورد', href: '/dashboard', icon: LayoutGrid },
+        { title: 'نوبت‌ها', href: '/appointments', icon: CalendarDays },
+    ];
+
+    if (canManage.value) {
+        items.push(
+            { title: 'خدمات', href: '/services', icon: Briefcase },
+            { title: 'پرسنل', href: '/staff', icon: Users },
+            { title: 'ساعات کاری', href: '/working-hours', icon: Clock4 },
+        );
+    }
+
+    if (user.value?.is_super_admin) {
+        items.push({ title: 'کسب‌وکارها', href: '/businesses', icon: Building2 });
+    }
+
+    return items;
+});
 </script>
 
 <template>
@@ -36,7 +45,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
+                        <Link :href="route('home')">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
@@ -45,11 +54,10 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <NavMain :items="mainNavItems" label="پنل مدیریت" />
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>
