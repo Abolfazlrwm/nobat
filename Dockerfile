@@ -18,7 +18,7 @@ COPY vite.config.ts tailwind.config.js tsconfig.json ./
 RUN npm run build
 
 # ---------- Stage 2: php-fpm runtime ----------
-FROM php:8.3-fpm-alpine AS app
+FROM php:8.4-fpm-alpine AS app
 
 # System libraries + PHP extensions
 RUN apk add --no-cache \
