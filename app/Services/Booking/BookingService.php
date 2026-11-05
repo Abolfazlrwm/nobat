@@ -2,10 +2,12 @@
 
 namespace App\Services\Booking;
 
+use App\Jobs\SendBookingSms;
 use App\Models\Appointment;
 use App\Models\Business;
 use App\Models\Service;
 use App\Models\Staff;
+use App\Models\User;
 use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
 use Carbon\CarbonImmutable;
@@ -35,7 +37,7 @@ class BookingService
         string $customerName,
         string $customerPhone,
         CarbonImmutable $startsAt,
-        ?\App\Models\User $customer = null,
+        ?User $customer = null,
         ?string $notes = null,
     ): Appointment {
         return DB::transaction(function () use ($business, $service, $staff, $customerName, $customerPhone, $startsAt, $customer, $notes) {
@@ -45,17 +47,17 @@ class BookingService
                 $this->lockStaff($staff);
 
                 if (! $this->slotExists($business, $service, $staff, $startsAt)) {
-                    throw new InvalidSlotException();
+                    throw new InvalidSlotException;
                 }
             } else {
                 $staff = $this->findFreeStaff($business, $service, $startsAt);
 
                 if ($staff === null) {
-                    throw new SlotUnavailableException();
+                    throw new SlotUnavailableException;
                 }
             }
 
-            return Appointment::create([
+            $appointment = Appointment::create([
                 'code' => (string) Str::ulid(),
                 'business_id' => $business->id,
                 'service_id' => $service->id,
@@ -68,6 +70,10 @@ class BookingService
                 'status' => Appointment::STATUS_PENDING,
                 'notes' => $notes,
             ]);
+
+            SendBookingSms::dispatch($appointment)->afterCommit();
+
+            return $appointment;
         });
     }
 

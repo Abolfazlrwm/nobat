@@ -11,11 +11,17 @@ class WorkingHour extends Model
      * Weekday numbers follow the Iranian week (Saturday is the first day).
      */
     public const SATURDAY = 0;
+
     public const SUNDAY = 1;
+
     public const MONDAY = 2;
+
     public const TUESDAY = 3;
+
     public const WEDNESDAY = 4;
+
     public const THURSDAY = 5;
+
     public const FRIDAY = 6;
 
     public const WEEKDAY_NAMES = [
