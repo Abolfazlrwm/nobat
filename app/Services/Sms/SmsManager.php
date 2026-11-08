@@ -14,6 +14,7 @@ class SmsManager
     /** @var array<string, class-string<SmsDriver>> */
     private array $drivers = [
         'log' => LogSmsDriver::class,
+        'kavenegar' => KavenegarSmsDriver::class,
     ];
 
     public function driver(?string $name = null): SmsDriver
