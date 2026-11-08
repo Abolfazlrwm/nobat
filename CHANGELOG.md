@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-11-09
+
+### Changed
+
+- **Redesigned public landing page**: gradient hero with live stats pulled
+  from the database (active businesses, services, staff), a feature grid of
+  the six core capabilities, a three-step booking walkthrough, a decorative
+  booking preview card, and a dark demo panel listing the seeded accounts
+  with a one-click sign-in shortcut
+- Public layout: sticky header with backdrop blur and a rebuilt footer with
+  brand summary, project links (GitHub, deployment guide, changelog) and
+  the MIT license notice
+- Anchor links scroll smoothly (`scroll-smooth` on the document root)
+
 ## [1.2.0] - 2026-11-08
 
 ### Added
