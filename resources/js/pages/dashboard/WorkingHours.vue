@@ -48,12 +48,6 @@ function save(): void {
         { preserveScroll: true },
     );
 }
-
-function weekdayLabel(value: string | number): string {
-    const found = props.weekdays.find((w) => w.value === Number(value));
-
-    return found?.label ?? '';
-}
 </script>
 
 <template>

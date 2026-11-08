@@ -19,7 +19,7 @@ import { Head, router } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 import { reactive, ref } from 'vue';
 
-const props = defineProps<{
+defineProps<{
     business: { id: number; name: string };
     services: ServiceItem[];
 }>();
