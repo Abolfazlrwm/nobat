@@ -9,7 +9,6 @@ import { faDateTime, faDigits, faPrice } from '@/lib/persian';
 import { BreadcrumbItem, AppointmentItem, BusinessSummary, ChartPoint, StatCardData } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { CalendarDays, Clock3, Hourglass, Wallet } from 'lucide-vue-next';
-import { watch } from 'vue';
 
 const props = defineProps<{
     stats: StatCardData;

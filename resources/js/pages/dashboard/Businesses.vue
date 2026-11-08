@@ -8,7 +8,7 @@ import { AdminBusiness, BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Power } from 'lucide-vue-next';
 
-const props = defineProps<{
+defineProps<{
     businesses: AdminBusiness[];
 }>();
 

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { faDateTime, faDigits } from '@/lib/persian';
-import { AppointmentItem, BreadcrumbItem, Paginated, WeekdayOption } from '@/types';
+import { AppointmentItem, BreadcrumbItem, Paginated } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { MoreHorizontal } from 'lucide-vue-next';
 import { reactive } from 'vue';
