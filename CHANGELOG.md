@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-11-08
+
+### Added
+
+- **One-click demo sign-in**: demo deployments (`NOBAT_DEMO=true`, set by
+  the Render demo image) list the seeded accounts on the login page and
+  sign the visitor in with a single click
+- **Kavenegar SMS driver** behind the existing `SmsDriver` contract —
+  `NOBAT_SMS_DRIVER=kavenegar` plus `KAVENEGAR_API_KEY` /
+  `KAVENEGAR_SENDER`; 10s timeout, two retries, loud failures so the
+  queued job applies its own backoff, and a gateway test suite
+  (`tests/Feature/SmsGatewayTest.php`, fake HTTP)
+- `docs/DEPLOYMENT.md`: local, Docker Compose, Render demo and Kavenegar
+  setup with a go-live checklist
+
+### Changed
+
+- `.env.example` defaults to the Nobat identity (name `Nobat`, `fa`
+  locale, `fa_IR` faker) instead of the starter-kit values
+- README demo section documents the one-click sign-in and links the new
+  deployment guide
+
 ## [1.1.0] - 2026-11-06
 
 ### Fixed
@@ -69,4 +91,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 46 passing Pest tests covering slot engine, booking flow, authorization
   and status transitions
 
+[1.2.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.2.0
 [1.0.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.0.0

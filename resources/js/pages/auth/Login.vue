@@ -7,11 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import { LoaderCircle, Zap } from 'lucide-vue-next';
 
 defineProps<{
     status?: string;
     canResetPassword: boolean;
+    demo?: boolean;
 }>();
 
 const form = useForm({
@@ -20,10 +21,24 @@ const form = useForm({
     remember: false,
 });
 
+const demoAccounts = [
+    { label: 'مدیر کل سامانه', email: 'admin@nobat.ir' },
+    { label: 'مدیر کسب‌وکار — کلینیک پارس', email: 'manager@nobat.ir' },
+    { label: 'پرسنل — کلینیک پارس', email: 'staff@nobat.ir' },
+    { label: 'مدیر — سالن آفتاب', email: 'salon@nobat.ir' },
+];
+
 const submit = () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
     });
+};
+
+const signInAsDemo = (email: string) => {
+    form.email = email;
+    form.password = 'password';
+    form.remember = true;
+    form.post(route('login'));
 };
 </script>
 
@@ -87,5 +102,30 @@ const submit = () => {
                 <TextLink :href="route('register')" :tabindex="5">ثبت‌نام کنید</TextLink>
             </div>
         </form>
+
+        <div v-if="demo" class="mt-2 rounded-xl border border-dashed border-border bg-muted/40 p-4">
+            <p class="mb-3 flex items-center justify-center gap-1.5 text-sm font-medium">
+                <Zap class="h-4 w-4 text-amber-500" />
+                حساب‌های آماده‌ی دمو — ورود با یک کلیک
+            </p>
+            <div class="grid gap-2">
+                <Button
+                    v-for="account in demoAccounts"
+                    :key="account.email"
+                    type="button"
+                    variant="outline"
+                    class="w-full justify-between"
+                    :disabled="form.processing"
+                    @click="signInAsDemo(account.email)"
+                >
+                    <span>{{ account.label }}</span>
+                    <span dir="ltr" class="text-xs font-normal text-muted-foreground">{{ account.email }}</span>
+                </Button>
+            </div>
+            <p class="mt-3 text-center text-xs text-muted-foreground">
+                رمز عبور همه‌ی حساب‌ها:
+                <code dir="ltr" class="rounded bg-muted px-1 py-0.5 font-mono">password</code>
+            </p>
+        </div>
     </AuthBase>
 </template>

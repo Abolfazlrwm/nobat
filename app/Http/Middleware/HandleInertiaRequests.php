@@ -37,6 +37,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'name' => config('app.name'),
+            'demo' => (bool) config('nobat.demo'),
             'auth' => [
                 'user' => $request->user() ? array_merge($request->user()->only('id', 'name', 'email'), [
                     'roles' => $request->user()->getRoleNames(),

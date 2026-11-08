@@ -33,4 +33,17 @@ return [
         'driver' => env('NOBAT_SMS_DRIVER', 'log'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Demo mode
+    |--------------------------------------------------------------------------
+    |
+    | Throwaway demo deployments (the Render demo image sets NOBAT_DEMO)
+    | show the ready-made demo accounts on the login page with one-click
+    | sign-in. Keep this disabled for real installations.
+    |
+    */
+
+    'demo' => env('NOBAT_DEMO', false),
+
 ];
