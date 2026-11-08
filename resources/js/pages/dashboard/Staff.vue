@@ -13,13 +13,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDigits } from '@/lib/persian';
 import { BreadcrumbItem, StaffItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 import { reactive, ref } from 'vue';
 
-const props = defineProps<{
+defineProps<{
     business: { id: number; name: string };
     staff: StaffItem[];
 }>();

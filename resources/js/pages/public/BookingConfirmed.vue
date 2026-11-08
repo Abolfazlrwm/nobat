@@ -7,7 +7,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { CheckCircle2 } from 'lucide-vue-next';
 import { BookingConfirmation } from '@/types';
 
-const props = defineProps<{
+defineProps<{
     appointment: BookingConfirmation;
 }>();
 </script>

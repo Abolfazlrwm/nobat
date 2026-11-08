@@ -88,11 +88,6 @@ async function loadSlots(): Promise<void> {
     }
 }
 
-function chooseService(service: ServiceItem): void {
-    selectedService.value = service;
-    selectedStaffId.value = null;
-}
-
 function next(): void {
     if (!canContinue.value) return;
     if (step.value === 3) {

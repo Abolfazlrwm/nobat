@@ -8,7 +8,7 @@ import { Head } from '@inertiajs/vue3';
 import { Clock, MapPin, Phone } from 'lucide-vue-next';
 import { BusinessWithServices } from '@/types';
 
-const props = defineProps<{
+defineProps<{
     business: BusinessWithServices;
 }>();
 </script>
