@@ -25,6 +25,9 @@ if [ -z "${APP_URL:-}" ]; then
     fi
 fi
 
+# Show the one-click demo accounts on the login page.
+export NOBAT_DEMO="${NOBAT_DEMO:-true}"
+
 echo ">> preparing sqlite database"
 mkdir -p database
 touch database/database.sqlite
