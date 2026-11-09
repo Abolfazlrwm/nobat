@@ -51,7 +51,7 @@ export function toLocalIso(date: Date): string {
 /** "2026-11-05T14:30:00" -> "۱۴۰۴/۰۸/۱۵" */
 export function faDate(iso: string | Date): string {
     const date = iso instanceof Date ? iso : parseLocal(iso);
-    const { jy, jm, jd } = jalaali.toJalaali(date);
+    const { jy, jm, jd } = toJalaali(date);
 
     return faDigits(`${jy}/${String(jm).padStart(2, '0')}/${String(jd).padStart(2, '0')}`);
 }
