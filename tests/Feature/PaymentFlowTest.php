@@ -113,15 +113,7 @@ it('never records a payment twice when the webhook repeats', function () {
 });
 
 it('releases expired holds and frees the slot', function () {
-    $business = $this->makeBusiness(['payment_required' => true, 'payment_deadline_minutes' => 15]);
-    $service = $this->serviceOf($business);
-    $staff = $this->addStaff($business);
-    $date = $this->nextOpenDate();
-    $startsAt = $this->slotAt($date, '10:00');
-
-    $this->post(route('bookings.store', $business->slug), $this->validBookingPayload($business, $service, $startsAt, $staff->id));
-
-    $appointment = Appointment::query()->where('customer_phone', '09121234567')->firstOrFail();
+    [$business, $service, $staff, $appointment, $payment] = $this->paidBookingWorld();
 
     $this->artisan('nobat:release-expired-holds')->expectsOutput('No expired holds.');
 
@@ -134,9 +126,9 @@ it('releases expired holds and frees the slot', function () {
 
     expect($appointment->status)->toBe(Appointment::STATUS_EXPIRED)
         ->and($appointment->invoice->status)->toBe(Invoice::STATUS_CANCELED)
-        ->and($appointment->latestPayment->status)->toBe(Payment::STATUS_CANCELED);
+        ->and($payment->refresh()->status)->toBe(Payment::STATUS_CANCELED);
 
-    $labels = $this->getJson(route('businesses.slots', ['business' => $business->slug, 'service_id' => $service->id, 'date' => $date->format('Y-m-d')]))
+    $labels = $this->getJson(route('businesses.slots', ['business' => $business->slug, 'service_id' => $service->id, 'date' => $appointment->starts_at->format('Y-m-d')]))
         ->json('slots.*.label');
 
     expect($labels)->toContain('10:00');

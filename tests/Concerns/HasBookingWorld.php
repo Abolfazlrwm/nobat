@@ -4,6 +4,7 @@ namespace Tests\Concerns;
 
 use App\Models\Appointment;
 use App\Models\Business;
+use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Service;
 use App\Models\Staff;
@@ -146,6 +147,27 @@ trait HasBookingWorld
         ]);
 
         $payment = $this->createPaymentFor($appointment, $amount);
+
+        // Mirror what PaymentService::openInvoice would have issued.
+        $invoice = $appointment->invoice()->create([
+            'number' => (string) Str::ulid(),
+            'business_id' => $business->id,
+            'amount' => $amount,
+            'currency' => 'IRT',
+            'status' => Invoice::STATUS_ISSUED,
+            'snapshot' => [
+                'business' => ['name' => $business->name, 'phone' => $business->phone, 'address' => $business->address],
+                'service' => ['name' => $service->name, 'duration_minutes' => $service->duration_minutes, 'price' => $service->price],
+                'customer_name' => $appointment->customer_name,
+                'customer_phone' => $appointment->customer_phone,
+                'appointment_code' => $appointment->code,
+                'starts_at' => $appointment->starts_at->format('Y-m-d\TH:i:s'),
+            ],
+            'issued_at' => now(),
+            'due_at' => $appointment->payment_expires_at,
+        ]);
+
+        $payment->forceFill(['invoice_id' => $invoice->id])->save();
 
         return [$business, $service, $staff, $appointment, $payment];
     }
