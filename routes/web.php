@@ -10,6 +10,8 @@ use App\Http\Controllers\Management\WorkingHourController;
 use App\Http\Controllers\PublicApi\BookingController;
 use App\Http\Controllers\PublicApi\BusinessController;
 use App\Http\Controllers\PublicApi\HomeController;
+use App\Http\Controllers\PublicApi\InvoiceController;
+use App\Http\Controllers\PublicApi\PaymentController;
 use App\Http\Controllers\PublicApi\SlotController;
 use App\Models\Business;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +35,20 @@ Route::post('b/{business:slug}/bookings', [BookingController::class, 'store'])
     ->middleware('throttle:10,1');
 
 Route::get('bookings/{code}', [BookingController::class, 'show'])->name('bookings.show');
+
+/*
+|--------------------------------------------------------------------------
+| Online payment
+|--------------------------------------------------------------------------
+*/
+
+Route::get('payments/callback', [PaymentController::class, 'callback'])->name('payments.callback');
+
+Route::get('payments/{appointment:code}/pay', [PaymentController::class, 'initiate'])
+    ->name('payments.initiate')
+    ->middleware('throttle:20,1');
+
+Route::get('invoices/{invoice:number}', [InvoiceController::class, 'show'])->name('invoices.show');
 
 /*
 |--------------------------------------------------------------------------

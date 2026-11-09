@@ -19,6 +19,7 @@ export interface NavItem {
 export interface FlashData {
     success?: string;
     error?: string;
+    info?: string;
 }
 
 export interface SharedData {
@@ -147,15 +148,25 @@ export interface AdminBusiness {
     staff_count: number;
 }
 
+export interface PaymentSummary {
+    status: string;
+    status_label: string;
+    amount: number;
+    ref_id?: string | null;
+    invoice_number?: string | null;
+}
+
 export interface BookingConfirmation {
     code: string;
     status: string;
     status_label: string;
     customer_name: string;
     starts_at: string;
+    payment_expires_at?: string | null;
     business: { name: string; slug: string; phone: string; address?: string | null };
     service: { name: string; duration_minutes: number; price: number };
     staff: { name: string; specialty?: string | null };
+    payment?: PaymentSummary | null;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

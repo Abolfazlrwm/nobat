@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Booking\StoreBookingRequest;
 use App\Models\Appointment;
 use App\Models\Business;
+use App\Models\Payment;
 use App\Services\Booking\BookingService;
 use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
@@ -54,8 +55,12 @@ class BookingController extends Controller
     {
         $appointment = Appointment::query()
             ->where('code', $code)
-            ->with(['business:id,name,slug,phone,address', 'service:id,name,duration_minutes,price', 'staff:id,name,specialty'])
+            ->with(['business:id,name,slug,phone,address', 'service:id,name,duration_minutes,price', 'staff:id,name,specialty', 'invoice'])
             ->firstOrFail();
+
+        $payment = $appointment->payments()
+            ->whereNotIn('status', [Payment::STATUS_FAILED, Payment::STATUS_CANCELED])
+            ->first();
 
         return Inertia::render('public/BookingConfirmed', [
             'appointment' => [
@@ -64,9 +69,17 @@ class BookingController extends Controller
                 'status_label' => Appointment::STATUS_LABELS[$appointment->status] ?? $appointment->status,
                 'customer_name' => $appointment->customer_name,
                 'starts_at' => $appointment->starts_at->format('Y-m-d\TH:i:s'),
+                'payment_expires_at' => $appointment->payment_expires_at?->format('Y-m-d\TH:i:s'),
                 'business' => $appointment->business->only('name', 'slug', 'phone', 'address'),
                 'service' => $appointment->service->only('name', 'duration_minutes', 'price'),
                 'staff' => $appointment->staff->only('name', 'specialty'),
+                'payment' => $payment ? [
+                    'status' => $payment->status,
+                    'status_label' => Payment::STATUS_LABELS[$payment->status] ?? $payment->status,
+                    'amount' => $payment->amount,
+                    'ref_id' => $payment->ref_id,
+                    'invoice_number' => $payment->invoice?->number ?? $appointment->invoice?->number,
+                ] : null,
             ],
         ]);
     }

@@ -42,6 +42,10 @@ class DemoContentSeeder extends Seeder
             'phone' => '02188776655',
             'address' => 'تهران، خیابان ولیعصر، نرسیده به پارک ساعی، پلاک ۱۲۰',
             'is_active' => true,
+            // The demo shows the full online-payment cycle (ZarinPal sandbox):
+            // bookings at the clinic hold their slot until the deadline.
+            'payment_required' => true,
+            'payment_deadline_minutes' => 15,
         ]);
 
         $clinicStaffUser = User::query()->create([

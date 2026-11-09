@@ -17,12 +17,15 @@ class Business extends Model
         'phone',
         'address',
         'is_active',
+        'payment_required',
+        'payment_deadline_minutes',
     ];
 
     protected function casts(): array
     {
         return [
             'is_active' => 'boolean',
+            'payment_required' => 'boolean',
         ];
     }
 
