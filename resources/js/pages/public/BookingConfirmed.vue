@@ -37,7 +37,7 @@ defineProps<{
                 <CardContent class="space-y-4">
                     <!-- unpaid booking: payment call-to-action -->
                     <div
-                        v-if="appointment.status === 'pending_payment' && appointment.payment"
+                        v-if="appointment.status === 'pending_payment'"
                         class="rounded-xl border border-amber-300 bg-amber-50 p-4 dark:border-amber-500/30 dark:bg-amber-500/10"
                     >
                         <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">
@@ -48,7 +48,7 @@ defineProps<{
                         <Button as-child class="mt-3 w-full gap-2">
                             <a :href="route('payments.initiate', appointment.code)">
                                 <CreditCard class="size-4" />
-                                پرداخت آنلاین ({{ faPrice(appointment.payment.amount) }})
+                                پرداخت آنلاین ({{ faPrice(appointment.payment?.amount ?? appointment.service.price) }})
                             </a>
                         </Button>
                     </div>
