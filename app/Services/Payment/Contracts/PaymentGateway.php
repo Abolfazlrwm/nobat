@@ -14,9 +14,6 @@ interface PaymentGateway
     /**
      * Ask the gateway to start a payment session.
      *
-     * @param  Payment  $payment  The pending payment row (amount in Toman)
-     * @param  string  $description  Human-readable purchase description
-     * @param  string  $callbackUrl  Absolute URL the gateway redirects back to
      * @return array{authority: string, redirect_url: string}
      *
      * @throws \RuntimeException on gateway errors — failures must be loud
@@ -26,7 +23,6 @@ interface PaymentGateway
     /**
      * Verify a payment session after the gateway redirect/webhook.
      *
-     * @param  Payment  $payment
      * @return array{verified: bool, already_verified: bool, ref_id: string|null, card_pan: string|null, error: string|null}
      */
     public function verify(Payment $payment): array;
@@ -36,8 +32,6 @@ interface PaymentGateway
      * support partial automation; implementations must throw loudly when
      * a refund cannot be performed programmatically.
      *
-     * @param  Payment  $payment
-     * @param  int  $amount  Amount to reverse in Toman
      * @return array{succeeded: bool, gateway_refund_id: string|null, error: string|null, simulated?: bool}
      */
     public function refund(Payment $payment, int $amount): array;

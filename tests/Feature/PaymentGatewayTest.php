@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\Payment;
 use App\Services\Payment\Contracts\PaymentGateway;
 use App\Services\Payment\PaymentManager;
+use App\Services\Payment\ZarinPalGateway;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Support\Facades\Http;
 
-covers(App\Services\Payment\ZarinPalGateway::class);
+covers(ZarinPalGateway::class);
 
 function zarinpal(): PaymentGateway
 {
