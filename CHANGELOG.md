@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-11-09
+
+### Fixed
+
+- **Booking confirmation page rendered without a way to pay**: the
+  pending-payment call-to-action required an existing payment record, but
+  gateway sessions are only created when the customer initiates payment —
+  so a fresh pending booking showed a warning with no payment button. The
+  CTA now gates on the appointment status alone and falls back to the
+  service price for the amount label.
+- **`faDate` threw `ReferenceError: jalaali is not defined`**: any page
+  rendering a Jalali date through `faDateTime` (booking confirmation card,
+  appointments table) silently collapsed to an empty card. It now calls the
+  bundled `@/lib/jalali` helper instead of a leftover global.
+
+### Changed
+
+- Landing version badge bumped to 1.4.0; README gallery and demo
+  screenshots refreshed (new landing, payment confirmation with deadline,
+  real ZarinPal sandbox gateway).
+
 ## [1.4.0] - 2026-11-09
 
 ### Added

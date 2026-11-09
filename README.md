@@ -44,8 +44,10 @@
 | صفحه عمومی | داشبورد مدیریت |
 |:---:|:---:|
 | ![صفحه اصلی نوبت](docs/screenshots/home.png) | ![داشبورد مدیریت](docs/screenshots/dashboard.png) |
-| **ویزارد رزرو ۴ مرحله‌ای** | **صفحه ورود** |
-| ![ویزارد رزرو](docs/screenshots/booking-wizard.png) | ![ورود](docs/screenshots/login.png) |
+| **ویزارد رزرو ۴ مرحله‌ای** | **درگاه پرداخت زرین‌پال (سندباکس واقعی)** |
+| ![ویزارد رزرو](docs/screenshots/booking-wizard.png) | ![درگاه پرداخت زرین‌پال](docs/screenshots/zarinpal.png) |
+| **تأیید نوبت با مهلت پرداخت** | **صفحه ورود با حساب‌های دمو** |
+| ![تأیید نوبت و پرداخت](docs/screenshots/payment.png) | ![ورود](docs/screenshots/login.png) |
 
 ---
 
