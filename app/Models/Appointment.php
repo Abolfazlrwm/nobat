@@ -5,11 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 class Appointment extends Model
 {
     public const STATUS_PENDING = 'pending';
+
+    public const STATUS_PENDING_PAYMENT = 'pending_payment';
 
     public const STATUS_CONFIRMED = 'confirmed';
 
@@ -19,12 +23,16 @@ class Appointment extends Model
 
     public const STATUS_NO_SHOW = 'no_show';
 
+    public const STATUS_EXPIRED = 'expired';
+
     public const STATUSES = [
         self::STATUS_PENDING,
+        self::STATUS_PENDING_PAYMENT,
         self::STATUS_CONFIRMED,
         self::STATUS_CANCELLED,
         self::STATUS_COMPLETED,
         self::STATUS_NO_SHOW,
+        self::STATUS_EXPIRED,
     ];
 
     /**
@@ -32,16 +40,19 @@ class Appointment extends Model
      */
     public const BLOCKING_STATUSES = [
         self::STATUS_PENDING,
+        self::STATUS_PENDING_PAYMENT,
         self::STATUS_CONFIRMED,
         self::STATUS_COMPLETED,
     ];
 
     public const STATUS_LABELS = [
         self::STATUS_PENDING => 'در انتظار تأیید',
+        self::STATUS_PENDING_PAYMENT => 'در انتظار پرداخت',
         self::STATUS_CONFIRMED => 'تأیید شده',
         self::STATUS_CANCELLED => 'لغو شده',
         self::STATUS_COMPLETED => 'انجام شده',
         self::STATUS_NO_SHOW => 'عدم حضور',
+        self::STATUS_EXPIRED => 'منقضی شده',
     ];
 
     protected $fillable = [
@@ -55,6 +66,7 @@ class Appointment extends Model
         'starts_at',
         'ends_at',
         'status',
+        'payment_expires_at',
         'notes',
     ];
 
@@ -63,6 +75,7 @@ class Appointment extends Model
         return [
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
+            'payment_expires_at' => 'datetime',
         ];
     }
 
@@ -84,6 +97,21 @@ class Appointment extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function invoice(): HasOne
+    {
+        return $this->hasOne(Invoice::class)->latestOfMany();
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class)->latest('id');
+    }
+
+    public function latestPayment(): HasOne
+    {
+        return $this->hasOne(Payment::class)->latestOfMany();
     }
 
     public function scopeBlocking(Builder $query): void
@@ -137,7 +165,15 @@ class Appointment extends Model
 
     public function isCancellable(): bool
     {
-        return in_array($this->status, [self::STATUS_PENDING, self::STATUS_CONFIRMED], true);
+        return in_array($this->status, [self::STATUS_PENDING, self::STATUS_PENDING_PAYMENT, self::STATUS_CONFIRMED], true);
+    }
+
+    /**
+     * Whether the slot hold of an unpaid booking has run out.
+     */
+    public function paymentExpired(): bool
+    {
+        return $this->payment_expires_at !== null && now()->gt($this->payment_expires_at);
     }
 
     /**
@@ -149,6 +185,6 @@ class Appointment extends Model
             return false;
         }
 
-        return ! in_array($this->status, [self::STATUS_CANCELLED, self::STATUS_COMPLETED, self::STATUS_NO_SHOW], true);
+        return ! in_array($this->status, [self::STATUS_CANCELLED, self::STATUS_COMPLETED, self::STATUS_NO_SHOW, self::STATUS_EXPIRED], true);
     }
 }

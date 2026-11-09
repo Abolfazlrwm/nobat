@@ -57,6 +57,8 @@ class BookingService
                 }
             }
 
+            $paymentRequired = (bool) $business->payment_required;
+
             $appointment = Appointment::create([
                 'code' => (string) Str::ulid(),
                 'business_id' => $business->id,
@@ -67,7 +69,12 @@ class BookingService
                 'customer_phone' => $customerPhone,
                 'starts_at' => $startsAt,
                 'ends_at' => $endsAt,
-                'status' => Appointment::STATUS_PENDING,
+                'status' => $paymentRequired
+                    ? Appointment::STATUS_PENDING_PAYMENT
+                    : Appointment::STATUS_PENDING,
+                'payment_expires_at' => $paymentRequired
+                    ? now()->addMinutes($this->paymentDeadline($business))
+                    : null,
                 'notes' => $notes,
             ]);
 
@@ -83,6 +90,11 @@ class BookingService
         $locked = Staff::query()->whereKey($staff->id)->lockForUpdate()->firstOrFail();
 
         return $locked;
+    }
+
+    private function paymentDeadline(Business $business): int
+    {
+        return (int) ($business->payment_deadline_minutes ?: config('nobat.payment.default_deadline_minutes', 15));
     }
 
     private function slotExists(Business $business, Service $service, Staff $staff, CarbonImmutable $startsAt): bool

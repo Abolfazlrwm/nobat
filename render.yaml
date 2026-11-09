@@ -29,3 +29,10 @@ services:
         value: sync
       - key: SESSION_LIFETIME
         value: "240"
+      - key: NOBAT_PAYMENT_DRIVER
+        value: zarinpal
+      - key: ZARINPAL_SANDBOX
+        value: "true"
+      # Sandbox merchant — swap for a real merchant id in production.
+      - key: ZARINPAL_MERCHANT_ID
+        value: "00000000-0000-0000-0000-000000000000"

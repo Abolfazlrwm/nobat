@@ -30,14 +30,28 @@ class SendBookingSms implements ShouldQueue
         $business = $this->appointment->business;
         $startsAt = $this->appointment->starts_at;
 
-        $message = sprintf(
-            '%s عزیز، نوبت شما در «%s» برای %s ساعت %s ثبت شد. کد پیگیری: %s',
-            $this->appointment->customer_name,
-            $business->name,
-            $this->appointment->service->name,
-            $startsAt->format('H:i'),
-            $this->appointment->code,
-        );
+        if ($this->appointment->status === Appointment::STATUS_PENDING_PAYMENT) {
+            $expiresAt = $this->appointment->payment_expires_at;
+
+            $message = sprintf(
+                '%s عزیز، نوبت شما در «%s» برای %s ساعت %s به‌صورت پیش‌نویس ثبت شد. برای قطعی‌شدن نوبت تا ساعت %s پرداخت آنلاین انجام دهید. کد پیگیری: %s',
+                $this->appointment->customer_name,
+                $business->name,
+                $this->appointment->service->name,
+                $startsAt->format('H:i'),
+                $expiresAt?->format('H:i') ?? '۱۵ دقیقه',
+                $this->appointment->code,
+            );
+        } else {
+            $message = sprintf(
+                '%s عزیز، نوبت شما در «%s» برای %s ساعت %s ثبت شد. کد پیگیری: %s',
+                $this->appointment->customer_name,
+                $business->name,
+                $this->appointment->service->name,
+                $startsAt->format('H:i'),
+                $this->appointment->code,
+            );
+        }
 
         $sms->send($this->appointment->customer_phone, $message);
     }

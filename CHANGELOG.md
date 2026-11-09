@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-11-09
+
+### Added
+
+- **Online payment cycle with the ZarinPal gateway (sandbox-first)**
+  across four building blocks:
+  - **Model**: `payments`, `invoices` and `refunds` tables (amount, status,
+    gateway `authority`, unique `idempotency_key`, masked card, JSON
+    snapshots) plus `payment_required` / `payment_deadline_minutes` on
+    businesses and `payment_expires_at` on appointments
+  - **Gateway**: `PaymentGateway` contract behind a driver manager —
+    `zarinpal` (v4 API, sandbox base URL, amounts converted Toman → Rial,
+    10s timeout with retries, loud failures) and a zero-network `log`
+    gateway for local dev and tests
+  - **Flow**: `GET /payments/{code}/pay` starts a session, the customer is
+    redirected to `StartPay/{authority}`, and `GET /payments/callback`
+    verifies. **Triple idempotency** — UNIQUE index on `authority`, an
+    atomic per-payment cache lock, and a settled-status guard re-checked
+    inside the transaction — so a repeated webhook can never record a
+    second paid payment (code 101 is treated as an idempotent success)
+  - **Lifecycle**: unpaid bookings hold their slot until the deadline
+    (`nobat:release-expired-holds` scheduled every minute), money arriving
+    late is auto-refunded, cancelling a paid appointment reverses the
+    payment, and a printable invoice page renders the frozen issue-time
+    snapshot
+- Payment confirmation goes out via SMS (`SendPaymentSms`) and email
+  (`PaymentConfirmed` notification)
+- Payment flow sequence diagram in the README and the new `payments` /
+  `invoices` routes documented for the demo (Render blueprint now ships
+  ZarinPal sandbox variables)
+
+### Changed
+
+- Bookings at payment-required businesses start as `pending_payment` with
+  a slot hold instead of `pending` — existing unpaid flows are unchanged
+- The demo clinic (کلینیک سلامت پارس) requires online payment so the live
+  demo exercises the real sandbox gateway end-to-end
+
 ## [1.3.0] - 2026-11-08
 
 ### Changed
