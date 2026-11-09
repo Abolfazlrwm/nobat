@@ -24,6 +24,12 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # artisan serve is single-threaded unless workers are requested
 ENV PHP_CLI_SERVER_WORKERS=8
 
+# Demo payment: exercise the real ZarinPal sandbox gateway end-to-end.
+# Service-level env vars (render.yaml / dashboard) override these.
+ENV NOBAT_PAYMENT_DRIVER=zarinpal \
+    ZARINPAL_SANDBOX=true \
+    ZARINPAL_MERCHANT_ID=00000000-0000-0000-0000-000000000000
+
 WORKDIR /var/www/html
 
 # Dependencies first for better layer caching
