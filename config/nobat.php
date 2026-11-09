@@ -35,6 +35,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Online payments
+    |--------------------------------------------------------------------------
+    |
+    | driver: resolves the gateway through App\Services\Payment\PaymentManager.
+    |         "log" instantly succeeds without the network (local + tests);
+    |         "zarinpal" talks to the ZarinPal v4 API (sandbox by default).
+    | default_deadline_minutes: how long an unpaid booking holds its slot
+    |         when the business does not override it.
+    |
+    */
+
+    'payment' => [
+        'driver' => env('NOBAT_PAYMENT_DRIVER', 'log'),
+        'default_deadline_minutes' => (int) env('PAYMENT_HOLD_MINUTES', 15),
+        'gateways' => [
+            'zarinpal' => [
+                'merchant_id' => env('ZARINPAL_MERCHANT_ID'),
+                'sandbox' => (bool) env('ZARINPAL_SANDBOX', true),
+                'timeout' => 10,
+                'retries' => 2,
+            ],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Demo mode
     |--------------------------------------------------------------------------
     |

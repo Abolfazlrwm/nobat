@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Booking\SlotGenerator;
+use App\Services\Payment\PaymentManager;
 use App\Services\Sms\SmsManager;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(SmsManager::class);
+        $this->app->singleton(PaymentManager::class);
     }
 
     /**
