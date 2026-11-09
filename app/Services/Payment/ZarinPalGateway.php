@@ -33,7 +33,7 @@ class ZarinPalGateway implements PaymentGateway
         ];
 
         try {
-            $response = $this->http()->post('/pg/v4/payment/request.json', $payload);
+            $response = $this->http()->post($this->base().'/pg/v4/payment/request.json', $payload);
         } catch (Throwable $exception) {
             throw new RuntimeException('ZarinPal request failed: '.$exception->getMessage(), previous: $exception);
         }
@@ -60,7 +60,7 @@ class ZarinPalGateway implements PaymentGateway
         ];
 
         try {
-            $response = $this->http()->post('/pg/v4/payment/verify.json', $payload);
+            $response = $this->http()->post($this->base().'/pg/v4/payment/verify.json', $payload);
         } catch (Throwable $exception) {
             return [
                 'verified' => false,
@@ -115,7 +115,7 @@ class ZarinPalGateway implements PaymentGateway
 
         try {
             // Sandbox: unVerify reverses a verified-but-unsettled transaction.
-            $this->http()->post('/pg/v4/payment/unVerify.json', [
+            $this->http()->post($this->base().'/pg/v4/payment/unVerify.json', [
                 'merchant_id' => $this->merchantId(),
                 'authority' => (string) $payment->authority,
             ]);
