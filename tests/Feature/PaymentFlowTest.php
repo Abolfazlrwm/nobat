@@ -4,9 +4,10 @@ use App\Models\Appointment;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Refund;
+use App\Services\Payment\PaymentService;
 use Illuminate\Support\Str;
 
-covers(App\Services\Payment\PaymentService::class);
+covers(PaymentService::class);
 
 it('creates a payment hold for a paid business', function () {
     $business = $this->makeBusiness(['payment_required' => true, 'payment_deadline_minutes' => 15]);
