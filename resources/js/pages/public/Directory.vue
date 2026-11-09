@@ -130,7 +130,7 @@ const bookingPreviewRows = [
                 <div>
                     <Badge variant="secondary" class="gap-1.5 rounded-full px-3 py-1 text-xs">
                         <Sparkles class="h-3.5 w-3.5 text-amber-500" />
-                        متن‌باز و رایگان — نسخه {{ faDigits('1.3.0') }}
+                        متن‌باز و رایگان — نسخه {{ faDigits('1.4.0') }}
                     </Badge>
 
                     <h1 class="mt-5 text-4xl font-bold leading-[1.25] tracking-tight md:text-5xl md:leading-[1.25]">
