@@ -52,8 +52,10 @@
 | ![گزارش‌های فروش](docs/screenshots/reports.png) | ![مدیریت نظرات](docs/screenshots/reviews-moderation.png) |
 | **🌍 تجربه‌ی انگلیسی (LTR با فونت Inter)** | **🔐 ورود دمو به انگلیسی** |
 | ![نسخه‌ی انگلیسی لندینگ](docs/screenshots/home-en.png) | ![ورود به انگلیسی](docs/screenshots/login-en.png) |
-| **🎟️ مدیریت کدهای تخفیف (نسخه ۱.۷.۰)** | **⏳ برد لیست انتظار** |
-| ![کدهای تخفیف](docs/screenshots/discounts.png) | ![لیست انتظار](docs/screenshots/waitlist.png) |
+| **🎟️ مدیریت کدهای تخفیف (نسخه ۱.۷.۰)** | **📊 داشبورد تحلیل (نسخه ۱.۸.۰)** |
+| ![کدهای تخفیف](docs/screenshots/discounts.png) | ![داشبورد تحلیل](docs/screenshots/analytics.png) |
+| **⏳ برد لیست انتظار** | |
+| ![لیست انتظار](docs/screenshots/waitlist.png) | |
 
 ---
 
