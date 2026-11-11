@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\AnalyticsController;
 use App\Http\Controllers\Dashboard\AppointmentController;
 use App\Http\Controllers\Dashboard\AppointmentStatusController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -86,6 +87,8 @@ Route::middleware('auth')->group(function () {
     Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::patch('appointments/{appointment}/status', [AppointmentStatusController::class, 'update'])
         ->name('appointments.status');
+
+    Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
     Route::get('reviews', [DashboardReviewController::class, 'index'])->name('reviews.index');
     Route::patch('reviews/{review}/approve', [DashboardReviewController::class, 'approve'])->name('reviews.approve');
