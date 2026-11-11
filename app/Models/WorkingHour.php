@@ -42,6 +42,18 @@ class WorkingHour extends Model
         'ends_at',
     ];
 
+    /**
+     * The `time` columns arrive as plain strings from SQLite and MySQL —
+     * hydrate them as Carbon instances so presentations can call ->format().
+     */
+    protected function casts(): array
+    {
+        return [
+            'starts_at' => 'datetime:H:i',
+            'ends_at' => 'datetime:H:i',
+        ];
+    }
+
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
