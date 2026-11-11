@@ -20,6 +20,7 @@ class StoreBookingRequest extends FormRequest
             'customer_name' => ['required', 'string', 'max:100'],
             'customer_phone' => ['required', 'string', 'regex:/^09\d{9}$/'],
             'notes' => ['nullable', 'string', 'max:500'],
+            'discount_code' => ['nullable', 'string', 'max:40'],
         ];
     }
 
