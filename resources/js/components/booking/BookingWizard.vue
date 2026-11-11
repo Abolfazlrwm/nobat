@@ -6,7 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { faDigits, faPrice, toDateString } from '@/lib/persian';
+import { useLocale } from '@/composables/useLocale';
+import { toDateString } from '@/lib/persian';
 import { cn } from '@/lib/utils';
 import { BusinessWithServices, ServiceItem, SlotItem } from '@/types';
 import { router } from '@inertiajs/vue3';
@@ -17,7 +18,9 @@ const props = defineProps<{
     business: BusinessWithServices;
 }>();
 
-const steps = ['خدمت', 'پرسنل', 'زمان', 'اطلاعات'] as const;
+const { t, num, price } = useLocale();
+
+const stepCount = 4;
 const step = ref(0);
 
 const selectedService = ref<ServiceItem | null>(null);
@@ -90,7 +93,7 @@ async function loadSlots(): Promise<void> {
 
 function next(): void {
     if (!canContinue.value) return;
-    if (step.value === 3) {
+    if (step.value === stepCount - 1) {
         submit();
         return;
     }
@@ -136,23 +139,23 @@ function submit(): void {
         <CardContent class="pt-6">
             <!-- Step indicator -->
             <ol class="mb-6 flex items-start justify-between gap-2 text-sm">
-                <li v-for="(title, index) in steps" :key="title" class="flex flex-1 flex-col items-center gap-1">
+                <li v-for="index in stepCount" :key="index" class="flex flex-1 flex-col items-center gap-1">
                     <div class="flex w-full items-center gap-2">
                         <span
                             :class="[
                                 'flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-medium',
-                                index < step && 'border-primary bg-primary text-primary-foreground',
-                                index === step && 'border-primary text-primary',
-                                index > step && 'text-muted-foreground',
+                                index - 1 < step && 'border-primary bg-primary text-primary-foreground',
+                                index - 1 === step && 'border-primary text-primary',
+                                index - 1 > step && 'text-muted-foreground',
                             ]"
                         >
-                            <Check v-if="index < step" class="size-4" />
-                            <template v-else>{{ faDigits(index + 1) }}</template>
+                            <Check v-if="index - 1 < step" class="size-4" />
+                            <template v-else>{{ num(index) }}</template>
                         </span>
-                        <span v-if="index < steps.length - 1" class="h-0.5 flex-1 rounded bg-border" />
+                        <span v-if="index < stepCount" class="h-0.5 flex-1 rounded bg-border" />
                     </div>
-                    <span :class="[index === step ? 'font-medium text-foreground' : 'text-muted-foreground']">
-                        {{ title }}
+                    <span :class="[index - 1 === step ? 'font-medium text-foreground' : 'text-muted-foreground']">
+                        {{ t(`wizard.steps.${index - 1}`) }}
                     </span>
                 </li>
             </ol>
@@ -164,7 +167,7 @@ function submit(): void {
                     :key="service.id"
                     type="button"
                     :class="[
-                        'rounded-xl border p-4 text-right transition-colors hover:bg-accent',
+                        'rounded-xl border p-4 text-start transition-colors hover:bg-accent',
                         selectedService?.id === service.id && 'border-primary bg-primary/5',
                     ]"
                     @click="selectedService = service"
@@ -173,9 +176,9 @@ function submit(): void {
                     <div class="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
                         <span class="inline-flex items-center gap-1">
                             <Clock class="size-4" />
-                            {{ faDigits(service.duration_minutes) }} دقیقه
+                            {{ t('wizard.minutes', { n: num(service.duration_minutes) }) }}
                         </span>
-                        <span>{{ faPrice(service.price) }}</span>
+                        <span>{{ price(service.price) }}</span>
                     </div>
                 </button>
             </div>
@@ -185,7 +188,7 @@ function submit(): void {
                 <button
                     type="button"
                     :class="[
-                        'flex items-center gap-3 rounded-xl border p-4 text-right transition-colors hover:bg-accent',
+                        'flex items-center gap-3 rounded-xl border p-4 text-start transition-colors hover:bg-accent',
                         selectedStaffId === null && 'border-primary bg-primary/5',
                     ]"
                     @click="selectedStaffId = null"
@@ -194,8 +197,8 @@ function submit(): void {
                         <UserRound class="size-5 text-muted-foreground" />
                     </span>
                     <span>
-                        <span class="block font-medium">فرقی نمی‌کند</span>
-                        <span class="block text-sm text-muted-foreground">اولین همکار آزاد به شما اختصاص می‌یابد</span>
+                        <span class="block font-medium">{{ t('wizard.anyStaff') }}</span>
+                        <span class="block text-sm text-muted-foreground">{{ t('wizard.anyStaffHint') }}</span>
                     </span>
                 </button>
 
@@ -204,7 +207,7 @@ function submit(): void {
                     :key="member.id"
                     type="button"
                     :class="[
-                        'flex items-center gap-3 rounded-xl border p-4 text-right transition-colors hover:bg-accent',
+                        'flex items-center gap-3 rounded-xl border p-4 text-start transition-colors hover:bg-accent',
                         selectedStaffId === member.id && 'border-primary bg-primary/5',
                     ]"
                     @click="selectedStaffId = member.id"
@@ -223,7 +226,7 @@ function submit(): void {
             <div v-if="step === 2" class="flex flex-col gap-6 lg:flex-row">
                 <div class="mx-auto">
                     <JalaliDatePicker v-model="selectedDate" :min-date="minDate" />
-                    <p v-if="!selectedDate" class="mt-2 text-center text-xs text-muted-foreground">ابتدا یک روز را انتخاب کنید</p>
+                    <p v-if="!selectedDate" class="mt-2 text-center text-xs text-muted-foreground">{{ t('wizard.pickDayFirst') }}</p>
                 </div>
 
                 <div class="flex-1">
@@ -231,7 +234,7 @@ function submit(): void {
                         v-if="!selectedDate"
                         class="flex h-full min-h-48 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground"
                     >
-                        <span class="inline-flex items-center gap-2"><Calendar class="size-4" /> برای مشاهده بازه‌ها تاریخ را انتخاب کنید</span>
+                        <span class="inline-flex items-center gap-2"><Calendar class="size-4" /> {{ t('wizard.pickDateHint') }}</span>
                     </div>
 
                     <div v-else-if="loadingSlots" class="flex h-full min-h-48 items-center justify-center text-muted-foreground">
@@ -243,7 +246,7 @@ function submit(): void {
                             v-if="slots.length === 0"
                             class="flex h-full min-h-48 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground"
                         >
-                            در این روز بازه‌ی خالی وجود ندارد؛ روز دیگری را امتحان کنید.
+                            {{ t('wizard.noSlots') }}
                         </div>
 
                         <div v-else class="grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -258,7 +261,7 @@ function submit(): void {
                                 ]"
                                 @click="selectedSlot = slot"
                             >
-                                {{ faDigits(slot.label) }}
+                                {{ num(slot.label) }}
                             </button>
                         </div>
                     </template>
@@ -269,33 +272,33 @@ function submit(): void {
             <div v-if="step === 3" class="mx-auto max-w-md space-y-4">
                 <div class="rounded-xl bg-muted/60 p-4 text-sm">
                     <div class="flex justify-between py-1">
-                        <span class="text-muted-foreground">خدمت</span>
+                        <span class="text-muted-foreground">{{ t('booking.service') }}</span>
                         <span>{{ selectedService?.name }}</span>
                     </div>
                     <div class="flex justify-between py-1">
-                        <span class="text-muted-foreground">پرسنل</span>
-                        <span>{{ business.staff.find((s) => s.id === selectedStaffId)?.name ?? 'فرقی نمی‌کند' }}</span>
+                        <span class="text-muted-foreground">{{ t('booking.staff') }}</span>
+                        <span>{{ business.staff.find((s) => s.id === selectedStaffId)?.name ?? t('wizard.anyStaff') }}</span>
                     </div>
                     <div class="flex justify-between py-1">
-                        <span class="text-muted-foreground">ساعت</span>
+                        <span class="text-muted-foreground">{{ t('booking.time') }}</span>
                         <span class="font-medium" dir="ltr">{{ selectedSlot?.starts_at }}</span>
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="customer_name">نام و نام خانوادگی</Label>
-                    <Input id="customer_name" v-model="form.customer_name" placeholder="مثلاً علی رضایی" />
+                    <Label for="customer_name">{{ t('wizard.fullName') }}</Label>
+                    <Input id="customer_name" v-model="form.customer_name" :placeholder="t('wizard.namePlaceholder')" />
                     <p v-if="formErrors.customer_name" class="text-sm text-destructive">{{ formErrors.customer_name }}</p>
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="customer_phone">شماره موبایل</Label>
+                    <Label for="customer_phone">{{ t('wizard.phone') }}</Label>
                     <Input id="customer_phone" v-model="form.customer_phone" inputmode="numeric" placeholder="09xxxxxxxxx" dir="ltr" />
                     <p v-if="formErrors.customer_phone" class="text-sm text-destructive">{{ formErrors.customer_phone }}</p>
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="notes">توضیحات (اختیاری)</Label>
+                    <Label for="notes">{{ t('wizard.notes') }}</Label>
                     <Textarea id="notes" v-model="form.notes" rows="3" />
                     <p v-if="formErrors.notes" class="text-sm text-destructive">{{ formErrors.notes }}</p>
                 </div>
@@ -305,13 +308,16 @@ function submit(): void {
 
             <!-- Navigation -->
             <div class="mt-6 flex items-center justify-between">
-                <Button variant="outline" :disabled="step === 0 || submitting" @click="back">قبلی</Button>
+                <Button variant="outline" :disabled="step === 0 || submitting" @click="back">{{ t('wizard.prev') }}</Button>
 
-                <Badge v-if="selectedService" variant="secondary"> {{ selectedService.name }} — {{ faPrice(selectedService.price) }} </Badge>
+                <Badge v-if="selectedService" variant="secondary">
+                    <bdi>{{ selectedService.name }}</bdi>
+                    — {{ price(selectedService.price) }}
+                </Badge>
 
                 <Button :disabled="!canContinue || submitting" @click="next">
-                    <Loader2 v-if="submitting" class="ml-2 size-4 animate-spin" />
-                    {{ step === 3 ? 'ثبت نهایی نوبت' : 'بعدی' }}
+                    <Loader2 v-if="submitting" class="me-2 size-4 animate-spin" />
+                    {{ step === 3 ? t('wizard.finalSubmit') : t('wizard.next') }}
                 </Button>
             </div>
         </CardContent>
