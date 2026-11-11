@@ -24,6 +24,8 @@ export interface FlashData {
 
 export interface SharedData {
     name: string;
+    demo: boolean;
+    locale: 'fa' | 'en';
     auth: Auth;
     flash: FlashData;
     ziggy: {
@@ -188,7 +190,6 @@ export interface ReviewSummary {
     average: number | null;
     count: number;
 }
-
 
 export type BreadcrumbItemType = BreadcrumbItem;
 
