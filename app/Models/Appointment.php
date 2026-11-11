@@ -67,6 +67,7 @@ class Appointment extends Model
         'ends_at',
         'status',
         'payment_expires_at',
+        'reminder_sent_at',
         'notes',
     ];
 
@@ -76,6 +77,7 @@ class Appointment extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'payment_expires_at' => 'datetime',
+            'reminder_sent_at' => 'datetime',
         ];
     }
 

@@ -31,6 +31,7 @@ return [
 
     'sms' => [
         'driver' => env('NOBAT_SMS_DRIVER', 'log'),
+        'reminders' => (bool) env('NOBAT_SMS_REMINDERS', true),
     ],
 
     /*

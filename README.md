@@ -9,7 +9,7 @@
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-117%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-121%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -91,7 +91,8 @@
 - 💳 **چرخه‌ی کامل پرداخت** با معماری درایور: قرارداد `PaymentGateway`، درگاه زرین‌پال (sandbox) و درگاه تستِ فوری؛ idempotency سه‌لایه که وب‌هوک تکراری هرگز دو بار پرداخت ثبت نمی‌کند، رفاند خودکار و آزادسازی اسلات‌های منقضی با Scheduler
 - 🌐 **چندزبانه‌ی واقعی (سرور + کلاینت)**: middleware `SetLocale` و `POST /locale` مترجم لاراول را رانند (پیام‌های flash و خطاهای اسلات از `lang/{fa,en}.json`) و vue-i18n 11 با کاتالوگ‌های تایپ‌شده در فرانت؛ تست‌های sync از واگرایی دو کاتالوگ جلوگیری می‌کنند
 - 📨 نوتیفیکیشن صف‌بندی‌شده (Database + SMS با معماری درایور — درایور لاگ و درگاه کاوه‌نگار آماده‌اند)
-- 🧪 **۱۱۷ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، چندزبانه، تخفیف و لیست انتظار
+- ⏰ **یادآوری پیامکی (نسخه ۱.۹.۰)**: کامند ساعتی `nobat:send-reminders` برای همه‌ی نوبت‌های تأییدشده‌ی ۲۴ ساعت آینده؛ «اول ارسال، بعد مهر» — خطای درگاه پیامک دوباره تلاش می‌شود و موفق هرگز تکرار نمی‌شود؛ با `NOBAT_SMS_REMINDERS=false` خاموش می‌شود
+- 🧪 **۱۲۱ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، چندزبانه، تخفیف و لیست انتظار
 - 🐳 Docker (nginx + php-fpm + worker + MySQL + Redis) و GitHub Actions CI
 
 ## 🧱 استک فناوری
@@ -149,7 +150,7 @@ docker compose exec app php artisan migrate --seed
 ## 🧪 اجرای تست‌ها
 
 ```bash
-php artisan test     # ۱۱۷ تست — SQLite درون‌حافظه‌ای
+php artisan test     # ۱۲۱ تست — SQLite درون‌حافظه‌ای
 vendor/bin/pint --test
 ```
 
@@ -242,7 +243,7 @@ sequenceDiagram
 - [x] **v1.6** — دو زبانه‌ی کامل (fa/en): سوییچر زبان، RTL↔LTR داینامیک، فونت Inter برای انگلیسی، i18n سمت سرور و کلاینت
 - [x] **v1.7** — کد تخفیف (درصدی/ثابت با سقف مصرف و اعتبارسنجی زنده) و لیست انتظار روزهای پر با برد مدیریتی
 - [x] **v1.8** — داشبورد تحلیل: KPI و مقایسه‌ی دوره‌ی قبل، روند روزانه‌ی درآمد/نوبت (۷/۳۰/۹۰ روز)، ساعت‌های پرترافیک، نقشه‌ی حرارتی و خدمات پرسود
-- [ ] یادآوری پیامکی قبل از نوبت (Scheduler + Database queue در production)
+- [x] **v1.9** — یادآوری پیامکی خودکار ۲۴ ساعت قبل از نوبت: کامند ساعتی + job صف‌بندی‌شده با تضمین «ارسال یک‌بار» روی درایور SMS موجود
 - [ ] خروجی Excel (xlsx) برای گزارش‌ها
 
 ایده‌ی جدیدی دارید؟ یک [پیشنهاد فیچر](../../issues/new?template=feature_request.yml) باز کنید.
