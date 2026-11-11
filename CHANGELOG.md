@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-11-12
+
+### Added
+
+- **Analytics dashboard (FA: تحلیل)**: a new `/analytics` page beside the
+  reports with six KPI cards — range revenue, bookings, completion and
+  cancellation rates, average ticket, unique customers and the average
+  approved rating — each with a delta badge that compares the window
+  against the equal-length previous one.
+- **Discount-aware revenue**: analytics revenue subtracts the granted
+  `DiscountRedemption` amounts from completed bookings, so a discounted
+  month no longer overstates income (the classic reports keep their
+  historical gross semantics).
+- **Daily booking and revenue trends** with 7/30/90-day range switching,
+  rendered by a reusable `BarSeries` component — no chart library added,
+  the bundle stays lean.
+- **Peak hours and a weekday × hour heatmap**: the busiest start hours of
+  the range plus a demand grid over the Iranian week (شنبه … جمعه), so
+  managers can see exactly when to add staff.
+- **Top services by revenue** (previously ranked by count) and the status
+  breakdown, scoped to the managed business — super-admins may inspect
+  any business via `?business_id=`.
+- Covered by 7 new Pest tests (117 total): KPI maths with a redeemed
+  code, previous-period deltas including the no-baseline null case,
+  cross-business isolation, range fallback/90-day support, the
+  super-admin scope and the guest guard.
+
 ## [1.7.1] - 2026-11-12
 
 ### Fixed

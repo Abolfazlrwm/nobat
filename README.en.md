@@ -9,7 +9,7 @@ Persian-first, fully RTL, Jalali calendar — booking without phone calls and wa
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-110%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-117%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -81,12 +81,13 @@ Demo accounts (password for all: `password`):
 - 🎟️ **Discount code management**: percent or fixed codes with a minimum purchase, total and per-customer usage caps, an activation window and one-click enable/disable
 - ⏳ **Waitlist board**: per-day queue with statuses (waiting / notified / booked), a "customer reached" action and an automatic hint when a booking is cancelled
 - 📈 **Sales reports**: custom date ranges with revenue, status breakdown, top services, a daily trend chart and **CSV export**
+- 📊 **Analytics dashboard (v1.8.0)**: KPI cards for revenue, bookings, completion/cancellation rate, average ticket, unique customers and rating — each compared against the previous period; daily booking & revenue trends over 7/30/90-day ranges, peak hours, a weekday×hour demand heatmap and top services by revenue — with **discount-aware** revenue
 - 👥 **Roles**: `super-admin` (manages every business), `manager` (own business), `staff` (own schedule), `customer`
 
 ### Infrastructure
 - 🔐 **Double-booking prevention** with a transaction + `lockForUpdate` on the staff row
 - 📨 Queued notifications (database + SMS behind a driver architecture — log driver and a real **Kavenegar** gateway driver included)
-- 🧪 **108 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, the full payment cycle, reviews, reports, the bilingual experience, discount codes and the waitlist
+- 🧪 **117 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, the full payment cycle, reviews, reports, analytics, the bilingual experience, discount codes and the waitlist
 - 🐳 Docker (nginx + php-fpm + queue worker + MySQL + Redis) and GitHub Actions CI
 
 ## 🧱 Tech stack
@@ -156,8 +157,9 @@ Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE
 - [x] **v1.5** — ratings & reviews with moderation, sales reports with CSV export, iCal export and an installable PWA
 - [x] **v1.6** — fully bilingual (fa/en): language switcher, dynamic RTL↔LTR, Inter for English, server + client i18n
 - [x] **v1.7** — discount codes (percent/fixed with usage caps and live validation) and a waitlist for fully booked days with a manager board
+- [x] **v1.8** — analytics dashboard: KPIs with previous-period deltas, daily booking/revenue trends (7/30/90 days), peak hours, a weekday×hour heatmap and top services
 - [ ] SMS reminders before appointments (scheduler + database queue in production)
-- [ ] Advanced reports & Excel export
+- [ ] Excel (xlsx) export for reports
 - [ ] Translated dashboard panels (the public experience is already bilingual)
 
 Have an idea? Open a [feature request](../../issues/new?template=feature_request.yml).
