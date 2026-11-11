@@ -9,7 +9,7 @@ Persian-first, fully RTL, Jalali calendar — booking without phone calls and wa
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-81%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-89%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -41,7 +41,7 @@ Demo accounts (password for all: `password`):
 
 ## 🖼️ Screenshots
 
-| Live landing (v1.5.0) | Admin dashboard |
+| Live landing (v1.6.0) | Admin dashboard |
 |:---:|:---:|
 | ![Nobat home](docs/screenshots/home.png) | ![Admin dashboard](docs/screenshots/dashboard.png) |
 | **4-step booking wizard** | **ZarinPal sandbox gateway** |
@@ -64,6 +64,7 @@ Demo accounts (password for all: `password`):
 - ⭐ **Ratings & reviews**: after a completed booking, the customer rates the business with stars from the tracking page; the average shows on directory cards and approved reviews on the business page
 - 📆 **iCal export**: add the booking to any calendar app (Google Calendar, iOS Calendar…) with one click from the confirmation page
 - 📱 **Installable PWA**: the web app installs on phones with a Persian/RTL manifest and custom icons
+- 🌍 **Bilingual (FA/EN)**: a navbar language switcher flips the whole public experience — landing, booking wizard, confirmation and auth pages — into polished English with the Inter typeface, Latin digits and transliterated Jalali months; the choice persists in a one-year cookie
 - 🛡️ Rate limiting on booking submission (10/min) and slot queries (60/min)
 
 ### Business & admin side
@@ -77,7 +78,7 @@ Demo accounts (password for all: `password`):
 ### Infrastructure
 - 🔐 **Double-booking prevention** with a transaction + `lockForUpdate` on the staff row
 - 📨 Queued notifications (database + SMS behind a driver architecture — log driver and a real **Kavenegar** gateway driver included)
-- 🧪 **81 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, the full payment cycle, reviews and reports
+- 🧪 **89 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, the full payment cycle, reviews, reports and the bilingual experience
 - 🐳 Docker (nginx + php-fpm + queue worker + MySQL + Redis) and GitHub Actions CI
 
 ## 🧱 Tech stack
@@ -143,10 +144,12 @@ Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE
 - [x] **v1.0** — booking core, Jalali wizard, roles, 46 tests, CI & Docker
 - [x] **v1.1** — live Render demo, RTL sidebar fix, Nobat branding
 - [x] **v1.2** — one-click demo sign-in, Kavenegar SMS driver, deployment guide
+- [x] **v1.4** — online payments (ZarinPal sandbox): Payment/Invoice/Refund models, idempotent callbacks, refunds, invoices and slot locking
+- [x] **v1.5** — ratings & reviews with moderation, sales reports with CSV export, iCal export and an installable PWA
+- [x] **v1.6** — fully bilingual (fa/en): language switcher, dynamic RTL↔LTR, Inter for English, server + client i18n
 - [ ] SMS reminders before appointments (scheduler + database queue in production)
 - [ ] Advanced reports & Excel export
-- [ ] Online payments for services (Zarinpal)
-- [ ] i18n (fa / en) & PWA
+- [ ] Translated dashboard panels (the public experience is already bilingual)
 
 Have an idea? Open a [feature request](../../issues/new?template=feature_request.yml).
 

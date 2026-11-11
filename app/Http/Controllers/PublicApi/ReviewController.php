@@ -45,6 +45,6 @@ class ReviewController extends Controller
             'is_approved' => false,
         ]);
 
-        return back()->with('success', 'ممنون از نظر شما! پس از تأیید مدیر کسب‌وکار نمایش داده می‌شود.');
+        return back()->with('success', __('reviews.submitted'));
     }
 }

@@ -1,0 +1,224 @@
+{
+    "brand": "Nobat",
+    "nav": {
+        "dashboard": "Dashboard",
+        "login": "Sign in",
+        "register": "Sign up",
+        "logout": "Sign out"
+    },
+    "footer": {
+        "tagline": "The open-source online booking platform for clinics, salons and any appointment-driven business — with the Jalali calendar, SMS reminders and real-time reservations.",
+        "system": "Platform",
+        "project": "Project",
+        "dashboardLogin": "Dashboard sign in",
+        "registerBusiness": "Register your business",
+        "activeBusinesses": "Active businesses",
+        "github": "GitHub",
+        "deployGuide": "Deployment guide",
+        "changelog": "Release notes",
+        "rights": "Nobat — online appointment booking · Released under the MIT license",
+        "builtWith": "Built with Laravel and Vue"
+    },
+    "landing": {
+        "badge": "Open source and free — v{version}",
+        "heroTitleA": "Online booking,",
+        "heroTitleB": "no calls, no waiting",
+        "heroSubtitle": "Nobat makes online appointment booking effortless for clinics, salons and any appointment-driven business: customers pick their own day and time, staff manage their shifts, and SMS reminders go out automatically.",
+        "ctaBook": "Book an appointment",
+        "ctaDashboard": "Open the demo dashboard",
+        "ctaGithub": "GitHub",
+        "statBusinesses": "Active businesses",
+        "statServices": "Bookable services",
+        "statStaff": "Staff online",
+        "previewTitle": "New booking",
+        "previewRows": {
+            "0": "General visit — Monday, 14:30",
+            "1": "Haircut — Tuesday, 10:00",
+            "2": "Cancel in one click — the slot frees up instantly"
+        },
+        "previewNote": "Right now — without a single phone call",
+        "featuresTitle": "Everything an appointment-driven business needs",
+        "featuresSubtitle": "From the public booking page to the management dashboard — fully bilingual, RTL-native and Jalali-ready from day one.",
+        "features": {
+            "0": {
+                "title": "Multi-business",
+                "description": "Every business gets its own world: services, staff, working hours and a dedicated booking page at its own address."
+            },
+            "1": {
+                "title": "Real-time booking",
+                "description": "Available slots are computed live from real staff shifts — two customers can never fight over the same slot."
+            },
+            "2": {
+                "title": "Staff & shift management",
+                "description": "Define each teammate's working hours separately and manage shift changes without phone calls and spreadsheets."
+            },
+            "3": {
+                "title": "SMS reminders",
+                "description": "The Kavenegar driver sits behind a simple SMS contract — need another provider? Just write a new driver."
+            },
+            "4": {
+                "title": "Management dashboard",
+                "description": "Every booking's status, today's appointments and the daily workflow at a glance; status changes apply with one click."
+            },
+            "5": {
+                "title": "Bilingual & Jalali",
+                "description": "A fully RTL Persian interface with the Vazirmatn font, plus a polished English experience — switch anytime from the navbar."
+            }
+        },
+        "stepsTitle": "Booked in three steps",
+        "stepsSubtitle": "From picking a business to your tracking code in under a minute.",
+        "steps": {
+            "0": {
+                "title": "Pick a business",
+                "description": "Open the clinic or salon you like from the list of active businesses and browse its services."
+            },
+            "1": {
+                "title": "Choose a service and a time",
+                "description": "Only genuinely free slots are shown; you choose the day, the time and the staff member."
+            },
+            "2": {
+                "title": "Get confirmed, get reminded",
+                "description": "A tracking code is issued instantly and an SMS reminder arrives before your appointment."
+            }
+        },
+        "dirTitle": "Active businesses",
+        "dirSubtitle": "Pick one and book your slot right away.",
+        "serviceCount": "{n} services",
+        "staffCount": "{n} staff",
+        "ratingOutOf": "out of 5",
+        "reviewCount": "({n} reviews)",
+        "viewAndBook": "View & book",
+        "empty": "No businesses listed yet.",
+        "demoBadge": "Live demo",
+        "demoTitle": "See the platform live before anything else",
+        "demoText1": "Sign in with the ready-made demo accounts: from the super admin to clinic staff. The password for every account is",
+        "demoText2": "and signing in takes a single click.",
+        "demoCta": "One-click sign in",
+        "demoSuperAdmin": "Super admin",
+        "demoClinicManager": "Clinic manager — Pars Clinic",
+        "demoClinicStaff": "Clinic staff — Pars Clinic",
+        "demoSalonManager": "Manager — Aftab Salon",
+        "techNote": "Built with modern, testable technologies",
+        "changelogLink": "Read the release history in CHANGELOG",
+        "pageTitle": "Nobat — Online Appointment Booking"
+    },
+    "business": {
+        "team": "Our team",
+        "noStaff": "No staff members yet.",
+        "reviewsTitle": "Customer reviews"
+    },
+    "booking": {
+        "title": "Your booking",
+        "pendingTitle": "Booking saved — only the payment is left",
+        "confirmedTitle": "Your booking has been confirmed",
+        "subtitle": "See the details below and keep your tracking code safe.",
+        "payDeadline": "To finalize your booking, pay online by {deadline}. After that the slot is released again.",
+        "defaultDeadline": "in 15 minutes",
+        "payCta": "Pay online ({amount})",
+        "paidReceipt": "Paid — transaction no.",
+        "invoice": "Invoice",
+        "trackingCode": "Tracking code",
+        "business": "Business",
+        "service": "Service",
+        "staff": "Staff",
+        "time": "Time",
+        "amount": "Amount",
+        "status": "Status",
+        "reviewPrompt": "Your appointment is done — how was it?",
+        "starsAria": "{n} stars",
+        "commentPlaceholder": "Your comment (optional)",
+        "submitReview": "Submit rating",
+        "reviewThanks": "Your rating has been saved — thanks!",
+        "home": "Home",
+        "addToCalendar": "Add to calendar",
+        "newBooking": "Book again"
+    },
+    "wizard": {
+        "steps": {
+            "0": "Service",
+            "1": "Staff",
+            "2": "Time",
+            "3": "Details"
+        },
+        "minutes": "{n} min",
+        "anyStaff": "Any available",
+        "anyStaffHint": "The first available staff member will be assigned to you",
+        "pickDayFirst": "Pick a day first",
+        "pickDateHint": "Select a date to see the available slots",
+        "noSlots": "No slots available on this day — please try another one.",
+        "prev": "Back",
+        "next": "Next",
+        "finalSubmit": "Confirm booking",
+        "fullName": "Full name",
+        "namePlaceholder": "e.g. Ali Rezaei",
+        "phone": "Mobile number",
+        "notes": "Notes (optional)"
+    },
+    "auth": {
+        "loginTitle": "Sign in to your account",
+        "loginDesc": "Enter your email and password to continue",
+        "loginPageTitle": "Sign in",
+        "email": "Email",
+        "password": "Password",
+        "forgot": "Forgot your password?",
+        "remember": "Remember me",
+        "signIn": "Sign in",
+        "noAccount": "Don't have an account?",
+        "registerLink": "Sign up",
+        "demoPanel": "Ready-made demo accounts — one-click sign in",
+        "demoPasswordA": "Password for all accounts:",
+        "registerTitle": "Create your account",
+        "registerDesc": "Enter your details to sign up",
+        "registerPageTitle": "Sign up",
+        "name": "Name",
+        "namePlaceholder": "First and last name",
+        "passwordConfirmation": "Confirm password",
+        "createAccount": "Create account",
+        "hasAccount": "Already registered?",
+        "demoSuperAdmin": "Super admin",
+        "demoClinicManager": "Business manager — Pars Clinic",
+        "demoClinicStaff": "Staff — Pars Clinic",
+        "demoSalonManager": "Manager — Aftab Salon"
+    },
+    "status": {
+        "pending": "Pending approval",
+        "pending_payment": "Awaiting payment",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "no_show": "No-show",
+        "expired": "Expired"
+    },
+    "calendar": {
+        "prevMonth": "Previous month",
+        "nextMonth": "Next month",
+        "months": {
+            "0": "Farvardin",
+            "1": "Ordibehesht",
+            "2": "Khordad",
+            "3": "Tir",
+            "4": "Mordad",
+            "5": "Shahrivar",
+            "6": "Mehr",
+            "7": "Aban",
+            "8": "Azar",
+            "9": "Dey",
+            "10": "Bahman",
+            "11": "Esfand"
+        },
+        "weekdays": {
+            "0": "Sa",
+            "1": "Su",
+            "2": "Mo",
+            "3": "Tu",
+            "4": "We",
+            "5": "Th",
+            "6": "Fr"
+        }
+    },
+    "langSwitch": {
+        "label": "Change language",
+        "fa": "فارسی",
+        "en": "English"
+    }
+}

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { JALALI_MONTHS, WEEKDAYS, faDigits, jalaliMonthLength, parseLocal, toDateString, toGregorian, toJalaali } from '@/lib/persian';
+import { useLocale } from '@/composables/useLocale';
+import { jalaliMonthLength, parseLocal, toDateString, toGregorian, toJalaali } from '@/lib/persian';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
@@ -21,6 +22,8 @@ const props = withDefaults(
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void;
 }>();
+
+const { t, isFa, num } = useLocale();
 
 const today = new Date();
 const todayJ = toJalaali(today);
@@ -50,6 +53,12 @@ const firstWeekdayIndex = computed(() => {
 
     return (jsDay + 1) % 7;
 });
+
+const monthLabel = computed(() => `${t(`calendar.months.${viewMonth.value - 1}`)} ${num(viewYear.value)}`);
+
+/** Start-of-month chevron: points "back" in each reading direction. */
+const prevIcon = computed(() => (isFa.value ? ChevronRight : ChevronLeft));
+const nextIcon = computed(() => (isFa.value ? ChevronLeft : ChevronRight));
 
 interface DayCell {
     day: number;
@@ -83,6 +92,8 @@ const days = computed<DayCell[]>(() => {
     return cells;
 });
 
+const weekdayHeaders = computed(() => [0, 1, 2, 3, 4, 5, 6].map((i) => t(`calendar.weekdays.${i}`)));
+
 function isOutOfSelectionRange(iso: string): boolean {
     if (props.minDate && iso < props.minDate) return true;
     if (props.maxDate && iso > props.maxDate) return true;
@@ -114,19 +125,19 @@ function select(cell: DayCell): void {
 </script>
 
 <template>
-    <div class="w-72 rounded-xl border bg-card p-3 text-card-foreground shadow-sm" dir="rtl">
+    <div :dir="isFa ? 'rtl' : 'ltr'" class="w-72 rounded-xl border bg-card p-3 text-card-foreground shadow-sm">
         <div class="mb-2 flex items-center justify-between">
-            <Button variant="ghost" size="icon" type="button" aria-label="ماه قبل" @click="go(1)">
-                <ChevronRight class="size-4" />
+            <Button variant="ghost" size="icon" type="button" :aria-label="t('calendar.prevMonth')" @click="go(-1)">
+                <component :is="prevIcon" class="size-4" />
             </Button>
-            <div class="text-sm font-medium">{{ JALALI_MONTHS[viewMonth - 1] }} {{ faDigits(viewYear) }}</div>
-            <Button variant="ghost" size="icon" type="button" aria-label="ماه بعد" @click="go(-1)">
-                <ChevronLeft class="size-4" />
+            <div class="text-sm font-medium">{{ monthLabel }}</div>
+            <Button variant="ghost" size="icon" type="button" :aria-label="t('calendar.nextMonth')" @click="go(1)">
+                <component :is="nextIcon" class="size-4" />
             </Button>
         </div>
 
         <div class="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
-            <span v-for="name in WEEKDAYS" :key="name" class="py-1">{{ name.slice(0, 1) }}</span>
+            <span v-for="(name, index) in weekdayHeaders" :key="index" class="py-1">{{ name }}</span>
         </div>
 
         <div class="grid grid-cols-7 gap-1">
@@ -147,7 +158,7 @@ function select(cell: DayCell): void {
                 "
                 @click="select(cell)"
             >
-                {{ cell.day ? faDigits(cell.day) : '' }}
+                {{ cell.day ? num(cell.day) : '' }}
             </button>
         </div>
     </div>

@@ -6,8 +6,8 @@ use RuntimeException;
 
 class SlotUnavailableException extends RuntimeException
 {
-    public function __construct(string $message = 'متأسفانه این بازه زمانی دیگر در دسترس نیست.')
+    public function __construct(?string $message = null)
     {
-        parent::__construct($message);
+        parent::__construct($message ?? __('bookings.slot_unavailable'));
     }
 }

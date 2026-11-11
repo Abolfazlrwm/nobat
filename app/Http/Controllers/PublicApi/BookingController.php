@@ -49,7 +49,7 @@ class BookingController extends Controller
         }
 
         return to_route('bookings.show', $appointment->code)
-            ->with('success', 'نوبت شما با موفقیت ثبت شد.');
+            ->with('success', __('bookings.created'));
     }
 
     public function show(string $code): Response

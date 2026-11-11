@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import AppLogo from '@/components/AppLogo.vue';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { useLocale } from '@/composables/useLocale';
 import { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Github } from 'lucide-vue-next';
 
 const page = usePage<SharedData>();
+const { t } = useLocale();
 
 const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
 </script>
@@ -20,20 +23,21 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                 </Link>
 
                 <nav class="flex items-center gap-2">
+                    <LanguageSwitcher />
                     <template v-if="page.props.auth.user">
                         <Button variant="ghost" as-child>
-                            <Link :href="route('dashboard')">داشبورد</Link>
+                            <Link :href="route('dashboard')">{{ t('nav.dashboard') }}</Link>
                         </Button>
                         <Button variant="outline" as-child>
-                            <Link :href="route('logout')" method="post" as="button">خروج</Link>
+                            <Link :href="route('logout')" method="post" as="button">{{ t('nav.logout') }}</Link>
                         </Button>
                     </template>
                     <template v-else>
                         <Button variant="ghost" as-child>
-                            <Link :href="route('login')">ورود</Link>
+                            <Link :href="route('login')">{{ t('nav.login') }}</Link>
                         </Button>
                         <Button as-child>
-                            <Link :href="route('register')">ثبت‌نام</Link>
+                            <Link :href="route('register')">{{ t('nav.register') }}</Link>
                         </Button>
                     </template>
                 </nav>
@@ -52,27 +56,32 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                             <AppLogo />
                         </Link>
                         <p class="text-sm leading-7 text-muted-foreground">
-                            سامانه‌ی متن‌باز نوبت‌دهی آنلاین برای کلینیک‌ها، سالن‌ها و هر کسب‌وکار نوبت‌محور؛ با تقویم جلالی، پیامک یادآوری و رزرو
-                            لحظه‌ای.
+                            {{ t('footer.tagline') }}
                         </p>
                     </div>
 
                     <div class="flex gap-14">
                         <div>
-                            <h3 class="text-sm font-semibold">سامانه</h3>
+                            <h3 class="text-sm font-semibold">{{ t('footer.system') }}</h3>
                             <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
-                                <li><Link class="hover:text-foreground" :href="route('login')">ورود به داشبورد</Link></li>
-                                <li><Link class="hover:text-foreground" :href="route('register')">ثبت‌نام کسب‌وکار</Link></li>
-                                <li><a class="hover:text-foreground" href="#businesses">کسب‌وکارهای فعال</a></li>
+                                <li>
+                                    <Link class="hover:text-foreground" :href="route('login')">{{ t('footer.dashboardLogin') }}</Link>
+                                </li>
+                                <li>
+                                    <Link class="hover:text-foreground" :href="route('register')">{{ t('footer.registerBusiness') }}</Link>
+                                </li>
+                                <li>
+                                    <a class="hover:text-foreground" href="#businesses">{{ t('footer.activeBusinesses') }}</a>
+                                </li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="text-sm font-semibold">پروژه</h3>
+                            <h3 class="text-sm font-semibold">{{ t('footer.project') }}</h3>
                             <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
                                 <li>
                                     <a class="flex items-center gap-1.5 hover:text-foreground" :href="GITHUB_URL" target="_blank" rel="noopener">
                                         <Github class="h-3.5 w-3.5" />
-                                        گیت‌هاب
+                                        {{ t('footer.github') }}
                                     </a>
                                 </li>
                                 <li>
@@ -82,12 +91,12 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                                         target="_blank"
                                         rel="noopener"
                                     >
-                                        راهنمای استقرار
+                                        {{ t('footer.deployGuide') }}
                                     </a>
                                 </li>
                                 <li>
                                     <a class="hover:text-foreground" :href="`${GITHUB_URL}/blob/main/CHANGELOG.md`" target="_blank" rel="noopener">
-                                        تغییرات نسخه‌ها
+                                        {{ t('footer.changelog') }}
                                     </a>
                                 </li>
                             </ul>
@@ -98,8 +107,8 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                 <Separator class="my-6" />
 
                 <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-                    <span>نوبت — سامانه نوبت‌دهی آنلاین · منتشرشده تحت مجوز MIT</span>
-                    <span>ساخته‌شده با Laravel و Vue</span>
+                    <span>{{ t('footer.rights') }}</span>
+                    <span>{{ t('footer.builtWith') }}</span>
                 </div>
             </div>
         </footer>
