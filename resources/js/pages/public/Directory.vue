@@ -34,7 +34,7 @@ const props = defineProps<{
 const { t, isFa, num } = useLocale();
 
 const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
-const APP_VERSION = '1.9.0';
+const APP_VERSION = '1.10.0';
 
 const totalServices = computed(() => props.businesses.reduce((sum, b) => sum + (b.services_count ?? 0), 0));
 const totalStaff = computed(() => props.businesses.reduce((sum, b) => sum + (b.staff_count ?? 0), 0));
