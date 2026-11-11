@@ -1,0 +1,13 @@
+{
+    "bookings.created": "Your booking has been confirmed.",
+    "bookings.slot_unavailable": "Sorry, this time slot has just been taken.",
+    "bookings.slot_invalid": "The selected time slot is not valid.",
+    "reviews.submitted": "Thanks for your review! It goes live once the business manager approves it.",
+    "payments.not_payable": "This booking is not in a payable state.",
+    "payments.expired": "The payment window for this booking has expired.",
+    "payments.success": "Payment completed — your booking is now confirmed.",
+    "payments.already_settled": "This payment has already been processed.",
+    "payments.expired_refunded": "The payment window had expired and the amount was automatically refunded.",
+    "payments.failed_retry": "The payment failed; you can try again.",
+    "payments.not_found": "Payment not found."
+}
