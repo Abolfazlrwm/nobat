@@ -6,9 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Textarea } from '@/components/ui/textarea';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { faDateTime, faDigits, faPrice } from '@/lib/persian';
+import { BookingConfirmation } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { BadgeCheck, CalendarPlus, CheckCircle2, Clock3, CreditCard, ExternalLink, Star } from 'lucide-vue-next';
-import { BookingConfirmation } from '@/types';
 
 const props = defineProps<{
     appointment: BookingConfirmation;
@@ -33,13 +33,9 @@ const reviewForm = useForm({
                     <Clock3 v-else-if="appointment.status === 'pending_payment'" class="mx-auto size-12 text-amber-500" />
                     <CheckCircle2 v-else class="mx-auto size-12 text-emerald-500" />
 
-                    <CardTitle v-if="appointment.status === 'pending_payment'" class="mt-2 text-xl">
-                        نوبت ثبت شد؛ فقط پرداخت مانده
-                    </CardTitle>
+                    <CardTitle v-if="appointment.status === 'pending_payment'" class="mt-2 text-xl"> نوبت ثبت شد؛ فقط پرداخت مانده </CardTitle>
                     <CardTitle v-else class="mt-2 text-xl">نوبت شما با موفقیت ثبت شد</CardTitle>
-                    <CardDescription>
-                        جزئیات نوبت را در ادامه ببینید؛ کد پیگیری را نگه دارید.
-                    </CardDescription>
+                    <CardDescription> جزئیات نوبت را در ادامه ببینید؛ کد پیگیری را نگه دارید. </CardDescription>
                 </CardHeader>
 
                 <CardContent class="space-y-4">
@@ -117,10 +113,7 @@ const reviewForm = useForm({
                     </dl>
 
                     <!-- completed booking: rate the experience -->
-                    <div
-                        v-if="appointment.status === 'completed' && !appointment.has_review"
-                        class="rounded-xl border bg-muted/40 p-4"
-                    >
+                    <div v-if="appointment.status === 'completed' && !appointment.has_review" class="rounded-xl border bg-muted/40 p-4">
                         <p class="text-sm font-semibold">نوبت شما انجام شد — تجربه‌ات چطور بود؟</p>
                         <div class="mt-2 flex gap-1">
                             <button
@@ -131,18 +124,10 @@ const reviewForm = useForm({
                                 class="rounded-md p-1 transition-transform hover:scale-110"
                                 @click="reviewForm.rating = i"
                             >
-                                <Star
-                                    class="size-6"
-                                    :class="i <= reviewForm.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/40'"
-                                />
+                                <Star class="size-6" :class="i <= reviewForm.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/40'" />
                             </button>
                         </div>
-                        <Textarea
-                            v-model="reviewForm.comment"
-                            :rows="2"
-                            class="mt-3"
-                            placeholder="متن نظر (اختیاری)"
-                        />
+                        <Textarea v-model="reviewForm.comment" :rows="2" class="mt-3" placeholder="متن نظر (اختیاری)" />
                         <InputError :message="reviewForm.errors.rating || reviewForm.errors.code" class="mt-2" />
                         <Button
                             class="mt-3 w-full gap-2"

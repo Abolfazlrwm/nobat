@@ -4,7 +4,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BarChart3, Building2, CalendarDays, Clock4, LayoutGrid, Briefcase, MessageSquareText, Users } from 'lucide-vue-next';
+import { BarChart3, Briefcase, Building2, CalendarDays, Clock4, LayoutGrid, MessageSquareText, Users } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 

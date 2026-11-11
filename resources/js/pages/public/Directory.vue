@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { faDigits } from '@/lib/persian';
+import { BusinessSummary } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import {
     ArrowLeft,
@@ -23,7 +24,6 @@ import {
     Zap,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
-import { BusinessSummary } from '@/types';
 
 const props = defineProps<{
     businesses: BusinessSummary[];
@@ -44,38 +44,32 @@ const features = [
     {
         icon: Building2,
         title: 'چندکسب‌وکاری',
-        description:
-            'هر کسب‌وکار دنیای مستقل خودش را دارد: خدمات، پرسنل، ساعات کاری و صفحه‌ی اختصاصی رزرو با آدرس اختصاصی.',
+        description: 'هر کسب‌وکار دنیای مستقل خودش را دارد: خدمات، پرسنل، ساعات کاری و صفحه‌ی اختصاصی رزرو با آدرس اختصاصی.',
     },
     {
         icon: CalendarClock,
         title: 'رزرو لحظه‌ای',
-        description:
-            'اسلات‌های آزاد بر اساس شیفت واقعی پرسنل به‌صورت زنده محاسبه می‌شوند؛ دو نفر هرگز روی یک نوبت نمی‌جنگند.',
+        description: 'اسلات‌های آزاد بر اساس شیفت واقعی پرسنل به‌صورت زنده محاسبه می‌شوند؛ دو نفر هرگز روی یک نوبت نمی‌جنگند.',
     },
     {
         icon: Users,
         title: 'مدیریت پرسنل و شیفت',
-        description:
-            'ساعات کاری هر همکار را جداگانه تعریف کن و تغییر شیفت‌ها را بدون تماس تلفنی و جدول اکسل مدیریت کن.',
+        description: 'ساعات کاری هر همکار را جداگانه تعریف کن و تغییر شیفت‌ها را بدون تماس تلفنی و جدول اکسل مدیریت کن.',
     },
     {
         icon: MessageSquareText,
         title: 'پیامک یادآوری',
-        description:
-            'درایور کاوه‌نگار پشت یک قرارداد ساده‌ی پیامک نشسته است؛ اگر سرویس‌دهنده‌ی دیگری خواستی، فقط یک درایور جدید بنویس.',
+        description: 'درایور کاوه‌نگار پشت یک قرارداد ساده‌ی پیامک نشسته است؛ اگر سرویس‌دهنده‌ی دیگری خواستی، فقط یک درایور جدید بنویس.',
     },
     {
         icon: BarChart3,
         title: 'داشبورد مدیریتی',
-        description:
-            'وضعیت هر رزرو، نوبت‌های امروز و گردش کار روزانه در یک نگاه؛ تغییر وضعیت با یک کلیک اعمال می‌شود.',
+        description: 'وضعیت هر رزرو، نوبت‌های امروز و گردش کار روزانه در یک نگاه؛ تغییر وضعیت با یک کلیک اعمال می‌شود.',
     },
     {
         icon: Languages,
         title: 'RTL و تقویم جلالی',
-        description:
-            'رابط کاملاً راست‌به‌چپ با فونت وزیرمتن و اعداد فارسی؛ برای کاربر ایرانی، طبیعی — نه ترجمه‌شده — حس می‌شود.',
+        description: 'رابط کاملاً راست‌به‌چپ با فونت وزیرمتن و اعداد فارسی؛ برای کاربر ایرانی، طبیعی — نه ترجمه‌شده — حس می‌شود.',
     },
 ];
 
@@ -103,11 +97,7 @@ const demoAccounts = [
     { label: 'مدیر سالن آفتاب', email: 'salon@nobat.ir' },
 ];
 
-const bookingPreviewRows = [
-    'ویزیت عمومی — دوشنبه، ۱۴:۳۰',
-    'کوتاهی مو — سه‌شنبه، ۱۰:۰۰',
-    'کنسل با یک کلیک، اسلات فوراً آزاد می‌شود',
-];
+const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰', 'کوتاهی مو — سه‌شنبه، ۱۰:۰۰', 'کنسل با یک کلیک، اسلات فوراً آزاد می‌شود'];
 </script>
 
 <template>
@@ -117,12 +107,8 @@ const bookingPreviewRows = [
         <section class="relative overflow-hidden">
             <!-- decorative background -->
             <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
-                <div
-                    class="absolute -top-32 start-[-10%] h-96 w-96 rounded-full bg-gradient-to-br from-primary/15 to-transparent blur-3xl"
-                ></div>
-                <div
-                    class="absolute top-40 end-[-8%] h-80 w-80 rounded-full bg-gradient-to-bl from-primary/10 to-transparent blur-3xl"
-                ></div>
+                <div class="absolute -top-32 start-[-10%] h-96 w-96 rounded-full bg-gradient-to-br from-primary/15 to-transparent blur-3xl"></div>
+                <div class="absolute end-[-8%] top-40 h-80 w-80 rounded-full bg-gradient-to-bl from-primary/10 to-transparent blur-3xl"></div>
             </div>
 
             <FlashMessages />
@@ -131,21 +117,19 @@ const bookingPreviewRows = [
                 <div>
                     <Badge variant="secondary" class="gap-1.5 rounded-full px-3 py-1 text-xs">
                         <Sparkles class="h-3.5 w-3.5 text-amber-500" />
-                        متن‌باز و رایگان — نسخه {{ faDigits('1.4.0') }}
+                        متن‌باز و رایگان — نسخه {{ faDigits('1.5.0') }}
                     </Badge>
 
                     <h1 class="mt-5 text-4xl font-bold leading-[1.25] tracking-tight md:text-5xl md:leading-[1.25]">
                         نوبت آنلاین،
-                        <span
-                            class="bg-gradient-to-l from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent"
-                        >
+                        <span class="bg-gradient-to-l from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent">
                             بدون تماس و بدون معطلی
                         </span>
                     </h1>
 
                     <p class="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">
-                        نوبت، نوبت‌دهی آنلاین را برای کلینیک‌ها، سالن‌ها و هر کسب‌وکار نوبت‌محور ساده می‌کند: مشتری
-                        خودش روز و ساعت را برمی‌دارد، پرسنل شیفتش را مدیریت می‌کند و یادآوری پیامکی خودکار می‌رود.
+                        نوبت، نوبت‌دهی آنلاین را برای کلینیک‌ها، سالن‌ها و هر کسب‌وکار نوبت‌محور ساده می‌کند: مشتری خودش روز و ساعت را برمی‌دارد،
+                        پرسنل شیفتش را مدیریت می‌کند و یادآوری پیامکی خودکار می‌رود.
                     </p>
 
                     <div class="mt-8 flex flex-wrap items-center gap-3">
@@ -176,9 +160,7 @@ const bookingPreviewRows = [
 
                 <!-- decorative booking preview -->
                 <div class="relative mx-auto hidden w-full max-w-md lg:block">
-                    <div
-                        class="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-tr from-primary/10 via-transparent to-primary/5 blur-xl"
-                    ></div>
+                    <div class="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-tr from-primary/10 via-transparent to-primary/5 blur-xl"></div>
                     <Card class="rotate-1 rounded-2xl border-border/60 shadow-xl transition-transform duration-500 hover:rotate-0">
                         <CardHeader class="flex-row items-center justify-between space-y-0">
                             <CardTitle class="text-base">رزرو نوبت جدید</CardTitle>
@@ -193,9 +175,7 @@ const bookingPreviewRows = [
                                 <span class="text-foreground/90">{{ row }}</span>
                                 <CheckCircle2 class="h-4 w-4 shrink-0 text-green-600" />
                             </div>
-                            <p class="pt-1 text-center text-xs text-muted-foreground">
-                                همین الان، بدون حتی یک تماس تلفنی
-                            </p>
+                            <p class="pt-1 text-center text-xs text-muted-foreground">همین الان، بدون حتی یک تماس تلفنی</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -213,11 +193,7 @@ const bookingPreviewRows = [
                 </div>
 
                 <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    <Card
-                        v-for="feature in features"
-                        :key="feature.title"
-                        class="group transition-all hover:-translate-y-0.5 hover:shadow-md"
-                    >
+                    <Card v-for="feature in features" :key="feature.title" class="group transition-all hover:-translate-y-0.5 hover:shadow-md">
                         <CardHeader>
                             <div
                                 class="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
@@ -295,19 +271,14 @@ const bookingPreviewRows = [
                     </Card>
                 </div>
 
-                <div v-if="businesses.length === 0" class="mt-16 text-center text-muted-foreground">
-                    هنوز کسب‌وکاری ثبت نشده است.
-                </div>
+                <div v-if="businesses.length === 0" class="mt-16 text-center text-muted-foreground">هنوز کسب‌وکاری ثبت نشده است.</div>
             </div>
         </section>
 
         <!-- demo panel -->
         <section class="mx-auto max-w-6xl px-4 py-16">
             <div class="relative overflow-hidden rounded-3xl bg-primary px-6 py-12 text-primary-foreground md:px-12">
-                <div
-                    aria-hidden="true"
-                    class="pointer-events-none absolute -top-24 end-[-5%] h-72 w-72 rounded-full bg-white/10 blur-3xl"
-                ></div>
+                <div aria-hidden="true" class="pointer-events-none absolute -top-24 end-[-5%] h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
 
                 <div class="grid items-center gap-8 lg:grid-cols-2">
                     <div>

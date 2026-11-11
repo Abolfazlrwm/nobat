@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { faDateTime, faDigits, faPrice } from '@/lib/persian';
-import { BreadcrumbItem, AppointmentItem, BusinessSummary, ChartPoint, StatCardData } from '@/types';
+import { AppointmentItem, BreadcrumbItem, BusinessSummary, ChartPoint, StatCardData } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { CalendarDays, Clock3, Hourglass, Wallet } from 'lucide-vue-next';
 
@@ -19,9 +19,7 @@ const props = defineProps<{
     business_id: number | null;
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-];
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'داشبورد', href: '/dashboard' }];
 
 const statCards = [
     { key: 'today_count', label: 'نوبت‌های امروز', icon: CalendarDays, value: () => faDigits(props.stats.today_count) },
@@ -90,9 +88,7 @@ function changeBusiness(businessId: number): void {
                         >
                             <div>
                                 <div class="font-medium">{{ appointment.customer_name }}</div>
-                                <div class="text-xs text-muted-foreground">
-                                    {{ appointment.service_name }} — {{ appointment.staff_name ?? '' }}
-                                </div>
+                                <div class="text-xs text-muted-foreground">{{ appointment.service_name }} — {{ appointment.staff_name ?? '' }}</div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <StatusBadge :status="appointment.status" :label="appointment.status_label" />
@@ -102,9 +98,7 @@ function changeBusiness(businessId: number): void {
                             </div>
                         </Link>
 
-                        <p v-if="today_appointments.length === 0" class="py-6 text-center text-sm text-muted-foreground">
-                            امروز نوبتی ثبت نشده است.
-                        </p>
+                        <p v-if="today_appointments.length === 0" class="py-6 text-center text-sm text-muted-foreground">امروز نوبتی ثبت نشده است.</p>
                     </CardContent>
                 </Card>
 
@@ -121,18 +115,14 @@ function changeBusiness(businessId: number): void {
                         >
                             <div>
                                 <div class="font-medium">{{ appointment.customer_name }}</div>
-                                <div class="text-xs text-muted-foreground">
-                                    {{ appointment.business_name }} — {{ appointment.service_name }}
-                                </div>
+                                <div class="text-xs text-muted-foreground">{{ appointment.business_name }} — {{ appointment.service_name }}</div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <Badge variant="outline">{{ faDateTime(appointment.starts_at) }}</Badge>
                             </div>
                         </div>
 
-                        <p v-if="upcoming.length === 0" class="py-6 text-center text-sm text-muted-foreground">
-                            نوبت آینده‌ای وجود ندارد.
-                        </p>
+                        <p v-if="upcoming.length === 0" class="py-6 text-center text-sm text-muted-foreground">نوبت آینده‌ای وجود ندارد.</p>
                     </CardContent>
                 </Card>
             </div>

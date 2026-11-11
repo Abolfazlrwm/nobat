@@ -2,14 +2,7 @@
 import FlashMessages from '@/components/FlashMessages.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -130,9 +123,7 @@ function destroy(member: StaffItem): void {
                         </tr>
 
                         <tr v-if="staff.length === 0">
-                            <td colspan="5" class="px-4 py-10 text-center text-muted-foreground">
-                                هنوز همکاری اضافه نشده است.
-                            </td>
+                            <td colspan="5" class="px-4 py-10 text-center text-muted-foreground">هنوز همکاری اضافه نشده است.</td>
                         </tr>
                     </tbody>
                 </table>

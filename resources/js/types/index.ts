@@ -189,7 +189,6 @@ export interface ReviewSummary {
     count: number;
 }
 
-export interface BusinessReview extends ReviewItem {}
 
 export type BreadcrumbItemType = BreadcrumbItem;
 

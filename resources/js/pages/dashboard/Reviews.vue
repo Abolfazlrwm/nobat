@@ -9,7 +9,7 @@ import { BreadcrumbItem, ReviewItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Check, MessageSquareText, Star, Trash2 } from 'lucide-vue-next';
 
-const props = defineProps<{
+defineProps<{
     reviews: (ReviewItem & { service?: string | null })[];
     stats: { pending: number; approved: number; average: number | null };
 }>();
@@ -37,9 +37,7 @@ function remove(id: number): void {
 
             <div>
                 <h1 class="text-xl font-bold">نظرات مشتریان</h1>
-                <p class="text-sm text-muted-foreground">
-                    نظرات مشتریان را بررسی کنید؛ فقط نظرات تأییدشده در صفحه‌ی کسب‌وکار نمایش داده می‌شوند.
-                </p>
+                <p class="text-sm text-muted-foreground">نظرات مشتریان را بررسی کنید؛ فقط نظرات تأییدشده در صفحه‌ی کسب‌وکار نمایش داده می‌شوند.</p>
             </div>
 
             <div class="grid gap-4 sm:grid-cols-3">
@@ -112,9 +110,7 @@ function remove(id: number): void {
                     </CardContent>
                 </Card>
 
-                <p v-if="reviews.length === 0" class="py-10 text-center text-muted-foreground">
-                    هنوز نظری ثبت نشده است.
-                </p>
+                <p v-if="reviews.length === 0" class="py-10 text-center text-muted-foreground">هنوز نظری ثبت نشده است.</p>
             </div>
         </div>
     </AppLayout>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChartPoint } from '@/types';
 import { faDigits, weekdayName } from '@/lib/persian';
+import { ChartPoint } from '@/types';
+import { computed } from 'vue';
 
 const props = defineProps<{
     points: ChartPoint[];

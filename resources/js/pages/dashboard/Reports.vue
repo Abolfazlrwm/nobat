@@ -65,9 +65,7 @@ const statCards = [
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
                     <h1 class="text-xl font-bold">گزارش‌ها</h1>
-                    <p class="text-sm text-muted-foreground">
-                        عملکرد نوبت‌ها و درآمد در بازه‌ی دلخواه — با خروجی CSV
-                    </p>
+                    <p class="text-sm text-muted-foreground">عملکرد نوبت‌ها و درآمد در بازه‌ی دلخواه — با خروجی CSV</p>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
@@ -113,17 +111,11 @@ const statCards = [
                         <CardDescription>ترکیب وضعیت نوبت‌ها در بازه</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-3">
-                        <div
-                            v-for="row in by_status"
-                            :key="row.status"
-                            class="flex items-center justify-between text-sm"
-                        >
+                        <div v-for="row in by_status" :key="row.status" class="flex items-center justify-between text-sm">
                             <StatusBadge :status="row.status" />
                             <span class="font-semibold">{{ faDigits(row.count) }}</span>
                         </div>
-                        <p v-if="by_status.length === 0" class="text-sm text-muted-foreground">
-                            در این بازه نوبتی ثبت نشده است.
-                        </p>
+                        <p v-if="by_status.length === 0" class="text-sm text-muted-foreground">در این بازه نوبتی ثبت نشده است.</p>
                     </CardContent>
                 </Card>
 
@@ -133,11 +125,7 @@ const statCards = [
                         <CardDescription>پنج خدمت با بیشترین نوبت و درآمد</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-3">
-                        <div
-                            v-for="service in top_services"
-                            :key="service.name"
-                            class="flex items-center justify-between text-sm"
-                        >
+                        <div v-for="service in top_services" :key="service.name" class="flex items-center justify-between text-sm">
                             <div>
                                 <span class="font-medium">{{ service.name }}</span>
                                 <span class="block text-xs text-muted-foreground">
@@ -148,9 +136,7 @@ const statCards = [
                                 {{ faDigits(service.count) }}
                             </span>
                         </div>
-                        <p v-if="top_services.length === 0" class="text-sm text-muted-foreground">
-                            آماری برای نمایش وجود ندارد.
-                        </p>
+                        <p v-if="top_services.length === 0" class="text-sm text-muted-foreground">آماری برای نمایش وجود ندارد.</p>
                     </CardContent>
                 </Card>
             </div>

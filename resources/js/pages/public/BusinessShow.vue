@@ -4,9 +4,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { faDigits } from '@/lib/persian';
+import { BusinessWithServices } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { Clock, MapPin, Phone, Star } from 'lucide-vue-next';
-import { BusinessWithServices } from '@/types';
 
 defineProps<{
     business: BusinessWithServices;
@@ -28,15 +28,17 @@ defineProps<{
                                     v-for="i in 5"
                                     :key="i"
                                     class="size-4"
-                                    :class="i <= Math.round(business.reviews_summary?.average ?? 0) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'"
+                                    :class="
+                                        i <= Math.round(business.reviews_summary?.average ?? 0)
+                                            ? 'fill-amber-400 text-amber-400'
+                                            : 'text-muted-foreground/30'
+                                    "
                                 />
                             </span>
                             <span class="text-sm font-semibold text-amber-600 dark:text-amber-400">
                                 {{ faDigits(business.reviews_summary?.average ?? 0) }} از ۵
                             </span>
-                            <span class="text-xs text-muted-foreground">
-                                ({{ faDigits(business.reviews_summary?.count ?? 0) }} نظر مشتریان)
-                            </span>
+                            <span class="text-xs text-muted-foreground"> ({{ faDigits(business.reviews_summary?.count ?? 0) }} نظر مشتریان) </span>
                         </div>
                         <p v-if="business.description" class="mt-2 max-w-2xl text-muted-foreground">
                             {{ business.description }}
@@ -73,11 +75,7 @@ defineProps<{
                         <CardTitle class="text-base">تیم ما</CardTitle>
                     </CardHeader>
                     <CardContent class="space-y-3">
-                        <div
-                            v-for="member in business.staff"
-                            :key="member.id"
-                            class="flex items-center gap-3"
-                        >
+                        <div v-for="member in business.staff" :key="member.id" class="flex items-center gap-3">
                             <span class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
                                 {{ member.name.charAt(0) }}
                             </span>
@@ -89,9 +87,7 @@ defineProps<{
                             </span>
                         </div>
 
-                        <p v-if="business.staff.length === 0" class="text-sm text-muted-foreground">
-                            هنوز همکاری ثبت نشده است.
-                        </p>
+                        <p v-if="business.staff.length === 0" class="text-sm text-muted-foreground">هنوز همکاری ثبت نشده است.</p>
                     </CardContent>
                 </Card>
             </div>
@@ -101,11 +97,7 @@ defineProps<{
                     <CardTitle class="text-base">نظرات مشتریان</CardTitle>
                 </CardHeader>
                 <CardContent class="grid gap-4 sm:grid-cols-2">
-                    <div
-                        v-for="review in business.reviews"
-                        :key="review.id"
-                        class="rounded-xl border bg-muted/40 p-4"
-                    >
+                    <div v-for="review in business.reviews" :key="review.id" class="rounded-xl border bg-muted/40 p-4">
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-medium">{{ review.customer_name }}</span>
                             <span class="flex gap-0.5">
