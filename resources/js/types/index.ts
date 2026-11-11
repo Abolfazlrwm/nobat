@@ -128,6 +128,37 @@ export interface ChartPoint {
     count: number;
 }
 
+export interface AnalyticsPoint {
+    date: string;
+    count: number;
+    revenue: number;
+}
+
+export interface AnalyticsHeatCell {
+    weekday: number;
+    hour: number;
+    count: number;
+}
+
+export interface AnalyticsHourPeak {
+    hour: number;
+    count: number;
+}
+
+export interface AnalyticsStats {
+    revenue: number;
+    bookings: number;
+    completed: number;
+    cancelled: number;
+    completion_rate: number;
+    cancellation_rate: number;
+    avg_ticket: number | null;
+    unique_customers: number;
+    avg_rating: number | null;
+    revenue_delta: number | null;
+    bookings_delta: number | null;
+}
+
 export interface WindowItem {
     id: number;
     weekday: number;
