@@ -20,7 +20,7 @@
 
 ## 🔴 دموی زنده
 
-**نسخه‌ی زنده:** [h[https://nobat-demo.onrender.com](https://nobat-demo.onrender.com) 🚀
+**نسخه‌ی زنده:** [nobat-demo.onrender.com](https://nobat-demo.onrender.com) 🚀
 
 پروژه با بلوپرینت Render از قبل آماده‌ی استقرار است — با دکمه‌ی بالا (یا `New + → Blueprint` در داشبورد Render) در چند دقیقه یک نسخه‌ی زنده با SQLite و داده‌های نمونه بالا می‌آید.
 
