@@ -65,11 +65,15 @@ export interface BusinessSummary {
     address?: string | null;
     services_count?: number;
     staff_count?: number;
+    rating_avg?: number | null;
+    rating_count?: number;
 }
 
 export interface BusinessWithServices extends BusinessSummary {
     services: ServiceItem[];
     staff: StaffItem[];
+    reviews_summary?: ReviewSummary | null;
+    reviews?: ReviewItem[];
 }
 
 export interface ServiceItem {

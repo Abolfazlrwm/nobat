@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dashboard\AppointmentController;
 use App\Http\Controllers\Dashboard\AppointmentStatusController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ReviewController as DashboardReviewController;
 use App\Http\Controllers\Management\BusinessAdminController;
 use App\Http\Controllers\Management\ServiceController;
 use App\Http\Controllers\Management\StaffController;
@@ -67,6 +68,11 @@ Route::middleware('auth')->group(function () {
     Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::patch('appointments/{appointment}/status', [AppointmentStatusController::class, 'update'])
         ->name('appointments.status');
+
+    Route::get('reviews', [DashboardReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('reviews/{review}/approve', [DashboardReviewController::class, 'approve'])->name('reviews.approve');
+    Route::delete('reviews/{review}', [DashboardReviewController::class, 'destroy'])->name('reviews.destroy');
+
 
     Route::get('services', [ServiceController::class, 'index'])->name('services.index');
     Route::post('services', [ServiceController::class, 'store'])->name('services.store');

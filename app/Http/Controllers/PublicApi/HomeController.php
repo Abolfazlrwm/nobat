@@ -17,6 +17,8 @@ class HomeController extends Controller
                 ->active()
                 ->withCount(['services' => fn ($query) => $query->active()])
                 ->with('activeStaff')
+                ->withAvg('approvedReviews', 'rating')
+                ->withCount('approvedReviews')
                 ->orderBy('id')
                 ->get()
                 ->map(fn (Business $business) => [
@@ -28,6 +30,10 @@ class HomeController extends Controller
                     'address' => $business->address,
                     'services_count' => $business->services_count,
                     'staff_count' => $business->activeStaff->count(),
+                    'rating_avg' => $business->approved_reviews_avg_rating
+                        ? round((float) $business->approved_reviews_avg_rating, 1)
+                        : null,
+                    'rating_count' => (int) $business->approved_reviews_count,
                 ]);
         });
 

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { faDigits } from '@/lib/persian';
 import { Head } from '@inertiajs/vue3';
-import { Clock, MapPin, Phone } from 'lucide-vue-next';
+import { Clock, MapPin, Phone, Star } from 'lucide-vue-next';
 import { BusinessWithServices } from '@/types';
 
 defineProps<{
@@ -22,6 +22,22 @@ defineProps<{
                 <div class="flex flex-wrap items-start justify-between gap-4">
                     <div>
                         <h1 class="text-2xl font-bold">{{ business.name }}</h1>
+                        <div v-if="business.reviews_summary?.average" class="mt-2 flex items-center gap-2">
+                            <span class="flex gap-0.5">
+                                <Star
+                                    v-for="i in 5"
+                                    :key="i"
+                                    class="size-4"
+                                    :class="i <= Math.round(business.reviews_summary?.average ?? 0) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'"
+                                />
+                            </span>
+                            <span class="text-sm font-semibold text-amber-600 dark:text-amber-400">
+                                {{ faDigits(business.reviews_summary?.average ?? 0) }} از ۵
+                            </span>
+                            <span class="text-xs text-muted-foreground">
+                                ({{ faDigits(business.reviews_summary?.count ?? 0) }} نظر مشتریان)
+                            </span>
+                        </div>
                         <p v-if="business.description" class="mt-2 max-w-2xl text-muted-foreground">
                             {{ business.description }}
                         </p>
@@ -79,6 +95,35 @@ defineProps<{
                     </CardContent>
                 </Card>
             </div>
+
+            <Card v-if="business.reviews && business.reviews.length > 0" class="mt-6">
+                <CardHeader>
+                    <CardTitle class="text-base">نظرات مشتریان</CardTitle>
+                </CardHeader>
+                <CardContent class="grid gap-4 sm:grid-cols-2">
+                    <div
+                        v-for="review in business.reviews"
+                        :key="review.id"
+                        class="rounded-xl border bg-muted/40 p-4"
+                    >
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium">{{ review.customer_name }}</span>
+                            <span class="flex gap-0.5">
+                                <Star
+                                    v-for="i in 5"
+                                    :key="i"
+                                    class="size-3.5"
+                                    :class="i <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'"
+                                />
+                            </span>
+                        </div>
+                        <p v-if="review.comment" class="mt-2 text-sm text-muted-foreground">{{ review.comment }}</p>
+                        <p v-if="review.created_at" class="mt-2 text-xs text-muted-foreground">
+                            {{ faDigits(review.created_at ?? '') }}
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
         </section>
     </PublicLayout>
 </template>

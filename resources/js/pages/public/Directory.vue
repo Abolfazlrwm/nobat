@@ -18,6 +18,7 @@ import {
     MapPin,
     MessageSquareText,
     Phone,
+    Star,
     Users,
     Zap,
 } from 'lucide-vue-next';
@@ -279,6 +280,11 @@ const bookingPreviewRows = [
                                 <Badge variant="secondary" class="gap-1">
                                     <Phone class="size-3" />
                                     {{ faDigits(business.staff_count ?? 0) }} همکار
+                                </Badge>
+                                <Badge v-if="business.rating_avg" variant="secondary" class="gap-1 text-amber-600 dark:text-amber-400">
+                                    <Star class="size-3 fill-amber-400 text-amber-400" />
+                                    {{ faDigits(business.rating_avg ?? 0) }} از ۵
+                                    <span class="text-muted-foreground">({{ faDigits(business.rating_count ?? 0) }} نظر)</span>
                                 </Badge>
                             </div>
 
