@@ -5,18 +5,22 @@ use App\Http\Controllers\Dashboard\AppointmentStatusController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\ReviewController as DashboardReviewController;
+use App\Http\Controllers\Dashboard\WaitlistController as DashboardWaitlistController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Management\BusinessAdminController;
+use App\Http\Controllers\Management\DiscountController;
 use App\Http\Controllers\Management\ServiceController;
 use App\Http\Controllers\Management\StaffController;
 use App\Http\Controllers\Management\WorkingHourController;
 use App\Http\Controllers\PublicApi\BookingController;
 use App\Http\Controllers\PublicApi\BusinessController;
+use App\Http\Controllers\PublicApi\DiscountController;
 use App\Http\Controllers\PublicApi\HomeController;
 use App\Http\Controllers\PublicApi\InvoiceController;
 use App\Http\Controllers\PublicApi\PaymentController;
 use App\Http\Controllers\PublicApi\ReviewController;
 use App\Http\Controllers\PublicApi\SlotController;
+use App\Http\Controllers\PublicApi\WaitlistController;
 use App\Models\Business;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +50,14 @@ Route::get('bookings/{code}/ics', [BookingController::class, 'ics'])->name('book
 
 Route::post('b/{business:slug}/reviews', [ReviewController::class, 'store'])
     ->name('reviews.store')
+    ->middleware('throttle:10,1');
+
+Route::get('b/{business:slug}/discount', [DiscountController::class, 'check'])
+    ->name('businesses.discount')
+    ->middleware('throttle:20,1');
+
+Route::post('b/{business:slug}/waitlist', [WaitlistController::class, 'store'])
+    ->name('waitlist.store')
     ->middleware('throttle:10,1');
 
 /*
@@ -81,6 +93,17 @@ Route::middleware('auth')->group(function () {
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
+
+    Route::get('waitlist', [DashboardWaitlistController::class, 'index'])->name('waitlist.index');
+    Route::patch('waitlist/{waitlistEntry}/notify', [DashboardWaitlistController::class, 'notify'])->name('waitlist.notify');
+    Route::patch('waitlist/{waitlistEntry}/cancel', [DashboardWaitlistController::class, 'cancel'])->name('waitlist.cancel');
+    Route::delete('waitlist/{waitlistEntry}', [DashboardWaitlistController::class, 'destroy'])->name('waitlist.destroy');
+
+    Route::get('discounts', [DiscountController::class, 'index'])->name('discounts.index');
+    Route::post('discounts', [DiscountController::class, 'store'])->name('discounts.store');
+    Route::put('discounts/{discountCode}', [DiscountController::class, 'update'])->name('discounts.update');
+    Route::patch('discounts/{discountCode}/toggle', [DiscountController::class, 'toggle'])->name('discounts.toggle');
+    Route::delete('discounts/{discountCode}', [DiscountController::class, 'destroy'])->name('discounts.destroy');
 
     Route::get('services', [ServiceController::class, 'index'])->name('services.index');
     Route::post('services', [ServiceController::class, 'store'])->name('services.store');
