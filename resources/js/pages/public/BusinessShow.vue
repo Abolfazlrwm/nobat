@@ -3,7 +3,7 @@ import BookingWizard from '@/components/booking/BookingWizard.vue';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import PublicLayout from '@/layouts/PublicLayout.vue';
-import { faDigits } from '@/lib/persian';
+import { faDate, faDigits } from '@/lib/persian';
 import { BusinessWithServices } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { Clock, MapPin, Phone, Star } from 'lucide-vue-next';
@@ -111,7 +111,7 @@ defineProps<{
                         </div>
                         <p v-if="review.comment" class="mt-2 text-sm text-muted-foreground">{{ review.comment }}</p>
                         <p v-if="review.created_at" class="mt-2 text-xs text-muted-foreground">
-                            {{ faDigits(review.created_at ?? '') }}
+                            {{ faDate(review.created_at ?? '') }}
                         </p>
                     </div>
                 </CardContent>
