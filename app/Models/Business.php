@@ -64,6 +64,18 @@ class Business extends Model
         return $this->hasMany(Appointment::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function approvedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class)
+            ->where('is_approved', true)
+            ->orderByDesc('created_at');
+    }
+
     public function scopeActive(Builder $query): void
     {
         $query->where('is_active', true);
