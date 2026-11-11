@@ -30,7 +30,7 @@ class WaitlistController extends Controller
                 'customer_phone' => $entry->customer_phone,
                 'status' => $entry->status,
                 'status_label' => WaitlistEntry::STATUS_LABELS[$entry->status] ?? $entry->status,
-                'notified_at' => $entry->notified_at?->format('Y-m-d H:i'),
+                'notified_at' => $entry->notified_at?->format('Y-m-d\TH:i:s'),
                 'note' => $entry->note,
                 'service' => $entry->service?->only('name'),
                 'staff' => $entry->staff?->only('name'),
@@ -51,17 +51,17 @@ class WaitlistController extends Controller
      * The manager has reached out (call/SMS) — record it without blocking
      * further notifications, since a freed slot may still be taken by others.
      */
-    public function notify(Request $request, WaitlistEntry $entry)
+    public function notify(Request $request, WaitlistEntry $waitlistEntry)
     {
-        $this->authorize('manage', $entry);
+        $this->authorize('manage', $waitlistEntry);
 
-        if ($entry->status !== WaitlistEntry::STATUS_WAITING) {
+        if ($waitlistEntry->status !== WaitlistEntry::STATUS_WAITING) {
             return back()->withErrors([
                 'waitlist' => 'فقط مشتری‌های «در انتظار» قابل مطلع‌سازی هستند.',
             ]);
         }
 
-        $entry->update([
+        $waitlistEntry->update([
             'status' => WaitlistEntry::STATUS_NOTIFIED,
             'notified_at' => now(),
         ]);
@@ -69,20 +69,20 @@ class WaitlistController extends Controller
         return back()->with('success', 'وضعیت مشتری به «مطلع شده» تغییر کرد.');
     }
 
-    public function cancel(Request $request, WaitlistEntry $entry)
+    public function cancel(Request $request, WaitlistEntry $waitlistEntry)
     {
-        $this->authorize('manage', $entry);
+        $this->authorize('manage', $waitlistEntry);
 
-        $entry->update(['status' => WaitlistEntry::STATUS_CANCELLED]);
+        $waitlistEntry->update(['status' => WaitlistEntry::STATUS_CANCELLED]);
 
         return back()->with('success', 'ثبت‌نام لیست انتظار لغو شد.');
     }
 
-    public function destroy(WaitlistEntry $entry)
+    public function destroy(WaitlistEntry $waitlistEntry)
     {
-        $this->authorize('manage', $entry);
+        $this->authorize('manage', $waitlistEntry);
 
-        $entry->delete();
+        $waitlistEntry->delete();
 
         return back()->with('success', 'ثبت‌نام لیست انتظار حذف شد.');
     }
