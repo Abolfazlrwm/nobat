@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import { CheckCircle2, Info, XCircle, X } from 'lucide-vue-next';
+import { CheckCircle2, Info, X, XCircle } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
 const page = usePage<{ props: { flash: { success?: string; error?: string; info?: string } } }>();
 
@@ -40,8 +40,8 @@ function dismiss(id: string): void {
                 message.type === 'success'
                     ? 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200'
                     : message.type === 'info'
-                        ? 'border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-200'
-                        : 'border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200',
+                      ? 'border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-200'
+                      : 'border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200',
             ]"
         >
             <span class="flex items-center gap-2">

@@ -138,9 +138,7 @@ function setStatus(appointment: AppointmentItem, status: string): void {
                         </tr>
 
                         <tr v-if="appointments.data.length === 0">
-                            <td colspan="6" class="px-4 py-10 text-center text-muted-foreground">
-                                نوبتی با این فیلترها پیدا نشد.
-                            </td>
+                            <td colspan="6" class="px-4 py-10 text-center text-muted-foreground">نوبتی با این فیلترها پیدا نشد.</td>
                         </tr>
                     </tbody>
                 </table>

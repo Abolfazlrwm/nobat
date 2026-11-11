@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { router } from '@inertiajs/vue3';
-import { Calendar, Check, Clock, Loader2, UserRound } from 'lucide-vue-next';
 import JalaliDatePicker from '@/components/JalaliDatePicker.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,8 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { faDigits, faPrice, toDateString } from '@/lib/persian';
-import { BusinessWithServices, ServiceItem, SlotItem } from '@/types';
 import { cn } from '@/lib/utils';
+import { BusinessWithServices, ServiceItem, SlotItem } from '@/types';
+import { router } from '@inertiajs/vue3';
+import { Calendar, Check, Clock, Loader2, UserRound } from 'lucide-vue-next';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     business: BusinessWithServices;
@@ -136,11 +136,7 @@ function submit(): void {
         <CardContent class="pt-6">
             <!-- Step indicator -->
             <ol class="mb-6 flex items-start justify-between gap-2 text-sm">
-                <li
-                    v-for="(title, index) in steps"
-                    :key="title"
-                    class="flex flex-1 flex-col items-center gap-1"
-                >
+                <li v-for="(title, index) in steps" :key="title" class="flex flex-1 flex-col items-center gap-1">
                     <div class="flex w-full items-center gap-2">
                         <span
                             :class="[
@@ -227,13 +223,14 @@ function submit(): void {
             <div v-if="step === 2" class="flex flex-col gap-6 lg:flex-row">
                 <div class="mx-auto">
                     <JalaliDatePicker v-model="selectedDate" :min-date="minDate" />
-                    <p v-if="!selectedDate" class="mt-2 text-center text-xs text-muted-foreground">
-                        ابتدا یک روز را انتخاب کنید
-                    </p>
+                    <p v-if="!selectedDate" class="mt-2 text-center text-xs text-muted-foreground">ابتدا یک روز را انتخاب کنید</p>
                 </div>
 
                 <div class="flex-1">
-                    <div v-if="!selectedDate" class="flex h-full min-h-48 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground">
+                    <div
+                        v-if="!selectedDate"
+                        class="flex h-full min-h-48 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground"
+                    >
                         <span class="inline-flex items-center gap-2"><Calendar class="size-4" /> برای مشاهده بازه‌ها تاریخ را انتخاب کنید</span>
                     </div>
 
@@ -242,7 +239,10 @@ function submit(): void {
                     </div>
 
                     <template v-else>
-                        <div v-if="slots.length === 0" class="flex h-full min-h-48 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground">
+                        <div
+                            v-if="slots.length === 0"
+                            class="flex h-full min-h-48 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground"
+                        >
                             در این روز بازه‌ی خالی وجود ندارد؛ روز دیگری را امتحان کنید.
                         </div>
 
@@ -253,7 +253,8 @@ function submit(): void {
                                 type="button"
                                 :class="[
                                     cn('rounded-lg border py-2 text-sm transition-colors hover:bg-accent'),
-                                    selectedSlot?.starts_at === slot.starts_at && 'border-primary bg-primary text-primary-foreground hover:bg-primary',
+                                    selectedSlot?.starts_at === slot.starts_at &&
+                                        'border-primary bg-primary text-primary-foreground hover:bg-primary',
                                 ]"
                                 @click="selectedSlot = slot"
                             >
@@ -306,9 +307,7 @@ function submit(): void {
             <div class="mt-6 flex items-center justify-between">
                 <Button variant="outline" :disabled="step === 0 || submitting" @click="back">قبلی</Button>
 
-                <Badge v-if="selectedService" variant="secondary">
-                    {{ selectedService.name }} — {{ faPrice(selectedService.price) }}
-                </Badge>
+                <Badge v-if="selectedService" variant="secondary"> {{ selectedService.name }} — {{ faPrice(selectedService.price) }} </Badge>
 
                 <Button :disabled="!canContinue || submitting" @click="next">
                     <Loader2 v-if="submitting" class="ml-2 size-4 animate-spin" />

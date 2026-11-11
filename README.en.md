@@ -9,7 +9,7 @@ Persian-first, fully RTL, Jalali calendar — booking without phone calls and wa
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-49%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-81%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -20,7 +20,7 @@ Persian-first, fully RTL, Jalali calendar — booking without phone calls and wa
 
 ## 🔴 Live demo
 
-**Try it live:** [https://nobat-demo.onrender.com](https://nobat-demo.onrender.com) 🚀
+**Try it live:** [nobat-demo.onrender.com](https://nobat-demo.onrender.com) 🚀
 
 The repo ships with a Render Blueprint — hit the button above (or `New + → Blueprint` in the Render dashboard) and you get a live instance with SQLite and seeded demo data in minutes.
 
@@ -58,18 +58,24 @@ Demo accounts (password for all: `password`):
 - 🧙 **4-step booking wizard**: pick a service → pick a staff member (or "anyone") → pick a day on a **Jalali calendar** → pick a free slot → leave contact info
 - 🕐 Real-time slot availability combining working hours, service duration, lead time and existing bookings
 - 🎫 Confirmation page with a unique tracking code (ULID)
+- 💳 **Online payment (ZarinPal gateway)**: for payment-required businesses the slot stays locked until the payment deadline; printable invoice and SMS/email confirmation
+- ⭐ **Ratings & reviews**: after a completed booking, the customer rates the business with stars from the tracking page; the average shows on directory cards and approved reviews on the business page
+- 📆 **iCal export**: add the booking to any calendar app (Google Calendar, iOS Calendar…) with one click from the confirmation page
+- 📱 **Installable PWA**: the web app installs on phones with a Persian/RTL manifest and custom icons
 - 🛡️ Rate limiting on booking submission (10/min) and slot queries (60/min)
 
 ### Business & admin side
 - 📊 Statistics dashboard: today's appointments, pending confirmations, next week, monthly revenue + a 7-day chart
 - 📅 Appointment management with status/date/staff filters and a guarded status flow (pending → confirmed → done / cancelled / no-show) — final states are immutable
 - 💼 CRUD for services (duration & price), staff members and working hours (morning/evening shifts)
+- 🗣️ **Review moderation**: approve/delete customer reviews with average-rating stats — only approved reviews go public
+- 📈 **Sales reports**: custom date ranges with revenue, status breakdown, top services, a daily trend chart and **CSV export**
 - 👥 **Roles**: `super-admin` (manages every business), `manager` (own business), `staff` (own schedule), `customer`
 
 ### Infrastructure
 - 🔐 **Double-booking prevention** with a transaction + `lockForUpdate` on the staff row
 - 📨 Queued notifications (database + SMS behind a driver architecture — log driver and a real **Kavenegar** gateway driver included)
-- 🧪 **49 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway
+- 🧪 **81 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, the full payment cycle, reviews and reports
 - 🐳 Docker (nginx + php-fpm + queue worker + MySQL + Redis) and GitHub Actions CI
 
 ## 🧱 Tech stack

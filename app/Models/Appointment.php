@@ -114,6 +114,11 @@ class Appointment extends Model
         return $this->hasOne(Payment::class)->latestOfMany();
     }
 
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
+    }
+
     public function scopeBlocking(Builder $query): void
     {
         $query->whereIn('status', self::BLOCKING_STATUSES);

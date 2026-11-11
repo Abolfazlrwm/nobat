@@ -4,7 +4,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { Building2, CalendarDays, Clock4, LayoutGrid, Briefcase, Users } from 'lucide-vue-next';
+import { BarChart3, Briefcase, Building2, CalendarDays, Clock4, LayoutGrid, MessageSquareText, Users } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
@@ -28,6 +28,8 @@ const mainNavItems = computed<NavItem[]>(() => {
             { title: 'خدمات', href: '/services', icon: Briefcase },
             { title: 'پرسنل', href: '/staff', icon: Users },
             { title: 'ساعات کاری', href: '/working-hours', icon: Clock4 },
+            { title: 'نظرات مشتریان', href: '/reviews', icon: MessageSquareText },
+            { title: 'گزارش‌ها', href: '/reports', icon: BarChart3 },
         );
     }
 

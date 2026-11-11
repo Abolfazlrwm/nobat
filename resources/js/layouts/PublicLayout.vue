@@ -3,8 +3,8 @@ import AppLogo from '@/components/AppLogo.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { SharedData } from '@/types';
-import { Github } from 'lucide-vue-next';
 import { Link, usePage } from '@inertiajs/vue3';
+import { Github } from 'lucide-vue-next';
 
 const page = usePage<SharedData>();
 
@@ -52,8 +52,8 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                             <AppLogo />
                         </Link>
                         <p class="text-sm leading-7 text-muted-foreground">
-                            سامانه‌ی متن‌باز نوبت‌دهی آنلاین برای کلینیک‌ها، سالن‌ها و هر کسب‌وکار نوبت‌محور؛ با
-                            تقویم جلالی، پیامک یادآوری و رزرو لحظه‌ای.
+                            سامانه‌ی متن‌باز نوبت‌دهی آنلاین برای کلینیک‌ها، سالن‌ها و هر کسب‌وکار نوبت‌محور؛ با تقویم جلالی، پیامک یادآوری و رزرو
+                            لحظه‌ای.
                         </p>
                     </div>
 
@@ -70,12 +70,7 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                             <h3 class="text-sm font-semibold">پروژه</h3>
                             <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
                                 <li>
-                                    <a
-                                        class="flex items-center gap-1.5 hover:text-foreground"
-                                        :href="GITHUB_URL"
-                                        target="_blank"
-                                        rel="noopener"
-                                    >
+                                    <a class="flex items-center gap-1.5 hover:text-foreground" :href="GITHUB_URL" target="_blank" rel="noopener">
                                         <Github class="h-3.5 w-3.5" />
                                         گیت‌هاب
                                     </a>
@@ -91,12 +86,7 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                                     </a>
                                 </li>
                                 <li>
-                                    <a
-                                        class="hover:text-foreground"
-                                        :href="`${GITHUB_URL}/blob/main/CHANGELOG.md`"
-                                        target="_blank"
-                                        rel="noopener"
-                                    >
+                                    <a class="hover:text-foreground" :href="`${GITHUB_URL}/blob/main/CHANGELOG.md`" target="_blank" rel="noopener">
                                         تغییرات نسخه‌ها
                                     </a>
                                 </li>

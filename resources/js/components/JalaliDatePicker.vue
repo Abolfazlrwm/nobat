@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
-import { JALALI_MONTHS, WEEKDAYS, faDigits, jalaliMonthLength, parseLocal, toDateString, toGregorian, toJalaali } from '@/lib/persian';
 import { Button } from '@/components/ui/button';
+import { JALALI_MONTHS, WEEKDAYS, faDigits, jalaliMonthLength, parseLocal, toDateString, toGregorian, toJalaali } from '@/lib/persian';
 import { cn } from '@/lib/utils';
+import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(
     defineProps<{
@@ -69,8 +69,7 @@ const days = computed<DayCell[]>(() => {
     for (let day = 1; day <= monthLength.value; day++) {
         const g = toGregorian(viewYear.value, viewMonth.value, day);
         const iso = toDateString(new Date(g.gy, g.gm - 1, g.gd));
-        const isToday =
-            todayJ.jy === viewYear.value && todayJ.jm === viewMonth.value && todayJ.jd === day;
+        const isToday = todayJ.jy === viewYear.value && todayJ.jm === viewMonth.value && todayJ.jd === day;
 
         cells.push({
             day,
@@ -120,9 +119,7 @@ function select(cell: DayCell): void {
             <Button variant="ghost" size="icon" type="button" aria-label="ماه قبل" @click="go(1)">
                 <ChevronRight class="size-4" />
             </Button>
-            <div class="text-sm font-medium">
-                {{ JALALI_MONTHS[viewMonth - 1] }} {{ faDigits(viewYear) }}
-            </div>
+            <div class="text-sm font-medium">{{ JALALI_MONTHS[viewMonth - 1] }} {{ faDigits(viewYear) }}</div>
             <Button variant="ghost" size="icon" type="button" aria-label="ماه بعد" @click="go(-1)">
                 <ChevronLeft class="size-4" />
             </Button>

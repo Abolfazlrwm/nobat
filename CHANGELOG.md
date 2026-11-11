@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-11-11
+
+### Added
+
+- **Ratings & reviews**: customers rate a completed booking (1–5 stars) from its
+  tracking page; reviews land in a moderation queue and go public — star average
+  on the directory cards and business header, the full review list on the
+  business page — only after manager approval. One review per appointment is
+  enforced by a unique index, and only completed bookings can be rated.
+- **Review moderation for managers**: new dashboard page (`/reviews`) with
+  approve/delete actions, pending-vs-approved stats and the average rating; the
+  cached directory is invalidated on every moderation change.
+- **Manager reports with CSV export**: new report page (`/reports`) with a
+  custom date range — totals, completed/cancelled counts, range revenue, a
+  status breakdown, top services and a daily trend chart — plus a one-click CSV
+  download (UTF-8 BOM so Excel renders Persian correctly).
+- **iCal export**: `GET /bookings/{code}/ics` streams a VEVENT calendar file
+  (UTC timestamps, RFC-escaped text, cancelled bookings marked `CANCELLED`) so
+  customers can save the appointment to any calendar app; linked from the
+  confirmation page as «افزودن به تقویم».
+- **PWA**: installable web app — `manifest.webmanifest` (fa, RTL, standalone,
+  theme #171717), generated brand icons (192/512 + maskable) and a conservative
+  service worker that cache-serves only content-hashed build assets; registered
+  in production builds.
+- **Demo content**: seeded reviews for completed demo appointments — mostly
+  approved with realistic Persian comments, one left pending for the moderation
+  flow.
+
+### Fixed
+
+- The demo link in both READMEs was malformed (`ttps://…` without the opening
+  bracket); the English README's tests badge was stale (49 → 81).
+
 ## [1.4.1] - 2026-11-09
 
 ### Fixed

@@ -39,10 +39,7 @@ interface JalCalResult {
 }
 
 function jalCal(jy: number): JalCalResult {
-    const breaks = [
-        -61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262,
-        2324, 2394, 2456, 3178,
-    ];
+    const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178];
 
     const bl = breaks.length;
     const gy = jy + 621;
@@ -95,11 +92,7 @@ function jalCal(jy: number): JalCalResult {
 }
 
 function g2d(gy: number, gm: number, gd: number): number {
-    let d =
-        div((gy + div(gm - 8, 6) + 100100) * 1461, 4) +
-        div(153 * mod(gm + 9, 12) + 2, 5) +
-        gd -
-        34840408;
+    let d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4) + div(153 * mod(gm + 9, 12) + 2, 5) + gd - 34840408;
 
     d = d - div(div(gy + 100100 + div(gm - 8, 6), 100) * 3, 4) + 752;
 

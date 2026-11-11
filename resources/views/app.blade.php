@@ -6,6 +6,10 @@
 
         <title inertia>{{ config('app.name', 'Nobat') }}</title>
 
+        <meta name="theme-color" content="#171717">
+        <link rel="manifest" href="/manifest.webmanifest">
+        <link rel="apple-touch-icon" href="/icons/pwa-192.png">
+
         @routes
         @vite(['resources/js/app.ts'])
         @inertiaHead

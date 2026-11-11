@@ -2,14 +2,7 @@
 import FlashMessages from '@/components/FlashMessages.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -134,9 +127,7 @@ function destroy(service: ServiceItem): void {
                         </tr>
 
                         <tr v-if="services.length === 0">
-                            <td colspan="5" class="px-4 py-10 text-center text-muted-foreground">
-                                هنوز خدمتی ثبت نشده است.
-                            </td>
+                            <td colspan="5" class="px-4 py-10 text-center text-muted-foreground">هنوز خدمتی ثبت نشده است.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -146,9 +137,7 @@ function destroy(service: ServiceItem): void {
                 <DialogContent class="sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle>{{ editingService ? 'ویرایش خدمت' : 'خدمت جدید' }}</DialogTitle>
-                        <DialogDescription>
-                            مدت زمان هر خدمت تعیین می‌کند بازه‌های رزرو با چه گام‌هایی ساخته شوند.
-                        </DialogDescription>
+                        <DialogDescription> مدت زمان هر خدمت تعیین می‌کند بازه‌های رزرو با چه گام‌هایی ساخته شوند. </DialogDescription>
                     </DialogHeader>
 
                     <div class="space-y-4">

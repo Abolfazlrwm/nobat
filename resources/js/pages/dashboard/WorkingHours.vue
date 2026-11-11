@@ -42,11 +42,7 @@ function removeWindow(index: number): void {
 }
 
 function save(): void {
-    router.post(
-        route('working-hours.store'),
-        { windows: drafts },
-        { preserveScroll: true },
-    );
+    router.post(route('working-hours.store'), { windows: drafts }, { preserveScroll: true });
 }
 </script>
 
@@ -77,21 +73,11 @@ function save(): void {
                         </option>
                     </select>
 
-                    <input
-                        v-model="draft.starts_at"
-                        type="time"
-                        dir="ltr"
-                        class="h-9 rounded-md border border-input bg-background px-3 text-sm"
-                    />
+                    <input v-model="draft.starts_at" type="time" dir="ltr" class="h-9 rounded-md border border-input bg-background px-3 text-sm" />
 
                     <span class="text-sm text-muted-foreground">تا</span>
 
-                    <input
-                        v-model="draft.ends_at"
-                        type="time"
-                        dir="ltr"
-                        class="h-9 rounded-md border border-input bg-background px-3 text-sm"
-                    />
+                    <input v-model="draft.ends_at" type="time" dir="ltr" class="h-9 rounded-md border border-input bg-background px-3 text-sm" />
 
                     <Button variant="ghost" size="icon" @click="removeWindow(index)">
                         <Trash2 class="size-4 text-destructive" />
@@ -111,19 +97,13 @@ function save(): void {
                 <h2 class="mb-3 text-sm font-medium">بازه‌های فعلی</h2>
 
                 <div class="flex flex-wrap gap-2">
-                    <span
-                        v-for="window in windows"
-                        :key="window.id"
-                        class="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs"
-                    >
+                    <span v-for="window in windows" :key="window.id" class="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs">
                         {{ window.weekday_name }}
                         <span dir="ltr">{{ faDigits(window.starts_at) }} تا {{ faDigits(window.ends_at) }}</span>
                     </span>
                 </div>
 
-                <p v-if="windows.length === 0" class="py-4 text-center text-sm text-muted-foreground">
-                    هنوز بازه‌ای ثبت نشده است.
-                </p>
+                <p v-if="windows.length === 0" class="py-4 text-center text-sm text-muted-foreground">هنوز بازه‌ای ثبت نشده است.</p>
             </div>
         </div>
     </AppLayout>
