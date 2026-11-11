@@ -131,7 +131,9 @@
         "reviewThanks": "Your rating has been saved — thanks!",
         "home": "Home",
         "addToCalendar": "Add to calendar",
-        "newBooking": "Book again"
+        "newBooking": "Book again",
+        "discount": "Discount",
+        "payableAmount": "Payable amount"
     },
     "wizard": {
         "steps": {
@@ -152,7 +154,22 @@
         "fullName": "Full name",
         "namePlaceholder": "e.g. Ali Rezaei",
         "phone": "Mobile number",
-        "notes": "Notes (optional)"
+        "notes": "Notes (optional)",
+        "discountLabel": "Discount code (optional)",
+        "discountPlaceholder": "e.g. WELCOME10",
+        "discountApply": "Check code",
+        "discountChecking": "Checking…",
+        "discountApplied": "Code applied: {amount} off",
+        "discountInvalid": "Code cannot be used",
+        "discountLine": "Discount ({code})",
+        "discountFinal": "Payable after discount",
+        "waitlistTitle": "No free slots on this day",
+        "waitlistHint": "Join the waitlist and be the first to know when a slot frees up.",
+        "waitlistJoin": "Join the waitlist",
+        "waitlistSubmitting": "Joining…",
+        "waitlistSuccess": "You are on the list! The business will reach out if a slot opens.",
+        "waitlistError": "Please provide a valid name and mobile number.",
+        "waitlistDuplicate": "You have already joined for this day."
     },
     "auth": {
         "loginTitle": "Sign in to your account",

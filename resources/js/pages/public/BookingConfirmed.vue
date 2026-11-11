@@ -111,7 +111,22 @@ const displayStatusLabel = computed(() => statusLabel(props.appointment.status, 
                         </div>
                         <div class="flex items-center justify-between">
                             <dt class="text-muted-foreground">{{ t('booking.amount') }}</dt>
-                            <dd class="font-medium">{{ price(appointment.service.price) }}</dd>
+                            <dd class="font-medium" :class="appointment.discount_amount && 'line-through opacity-70'">
+                                {{ price(appointment.service.price) }}
+                            </dd>
+                        </div>
+                        <div v-if="appointment.discount_amount" class="flex items-center justify-between">
+                            <dt class="text-muted-foreground">
+                                {{ t('booking.discount')
+                                }}<span v-if="appointment.discount_code" class="font-mono" dir="ltr"> ({{ appointment.discount_code }})</span>
+                            </dt>
+                            <dd class="font-medium text-emerald-600 dark:text-emerald-400">− {{ price(appointment.discount_amount) }}</dd>
+                        </div>
+                        <div v-if="appointment.discount_amount" class="flex items-center justify-between">
+                            <dt class="text-muted-foreground">{{ t('booking.payableAmount') }}</dt>
+                            <dd class="font-semibold">
+                                {{ price(Math.max(0, appointment.service.price - (appointment.discount_amount ?? 0))) }}
+                            </dd>
                         </div>
                         <div class="flex items-center justify-between">
                             <dt class="text-muted-foreground">{{ t('booking.status') }}</dt>
