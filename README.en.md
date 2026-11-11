@@ -50,6 +50,8 @@ Demo accounts (password for all: `password`):
 | ![Booking confirmation and payment](docs/screenshots/payment.png) | ![Business ratings and reviews](docs/screenshots/business-reviews-full.png) |
 | **📈 Sales reports with CSV export** | **🗣️ Review moderation** |
 | ![Sales reports](docs/screenshots/reports.png) | ![Review moderation](docs/screenshots/reviews-moderation.png) |
+| **🌍 The English experience (LTR, Inter typeface)** | **🔐 Demo sign-in in English** |
+| ![English landing](docs/screenshots/home-en.png) | ![English sign-in](docs/screenshots/login-en.png) |
 
 ---
 
