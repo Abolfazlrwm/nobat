@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-11-11
+
+### Added
+
+- **Discount codes (FA: کد تخفیف)**: managers create percent or fixed-amount
+  codes per business with a minimum purchase threshold, a total usage cap,
+  a per-customer (phone) cap, an activation window and one-click
+  enable/disable from the new dashboard page. Codes that have already been
+  redeemed cannot be deleted — they are deactivated instead, keeping the
+  billing history intact.
+- **Live code validation**: while booking, the wizard checks the code
+  against `GET /b/{slug}/discount` (throttled) and shows the discount
+  amount plus the payable price before submission; the booking request
+  validates the code again server-side inside the reservation transaction.
+- **Discount-aware billing**: the issued invoice and the gateway payment
+  both use the discounted amount (`service price − discount`), and the
+  invoice snapshot records the code and the amount granted for audit.
+  Redemptions are recorded atomically with a `lockForUpdate` on the code
+  row, so two concurrent bookings can never overspend a capped code.
+- **Waitlist (FA: لیست انتظار)**: when the slot grid of a day is empty, the
+  wizard swaps the "no slots" message for a waitlist panel — the customer
+  leaves name + phone for that service/day and the request lands in the
+  business's waitlist (JSON `201`/`409` responses keep the inline UX
+  redirect-free; duplicate signups for the same day/service/phone are
+  rejected with a friendly message).
+- **Waitlist board**: a new dashboard page lists entries grouped by status
+  (waiting / notified / booked / closed) with per-status counters; managers
+  mark entries as "customer reached", cancel or delete them, and entries
+  close automatically as *booked* when the same phone actually books that
+  day.
+- **Freed-slot hint**: cancelling an appointment now surfaces a flash
+  message telling the manager how many waitlisted customers are hoping for
+  that exact day/service — nothing gets notified automatically, the
+  decision stays with the business.
+- **Bilingual strings**: every new public-facing message (discount errors,
+  waitlist confirmations, duplicate/limit notices) ships in `lang/fa.json`
+  and `lang/en.json`; the wizard and confirmation UI use the vue-i18n
+  catalogs in both locales with RTL/LTR-safe layouts.
+
+### Tests
+
+- 19 new Pest tests (108 total): code validation and every limit, invoice
+  math with discounts, live-check endpoint, manager CRUD/toggle/delete
+  guards, waitlist signup/duplicate/past-date validation, the board's
+  authorization scope, freed-slot hints and auto-closing booked entries.
+
 ## [1.6.0] - 2026-11-11
 
 ### Added

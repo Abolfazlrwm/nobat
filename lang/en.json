@@ -9,5 +9,18 @@
     "payments.already_settled": "This payment has already been processed.",
     "payments.expired_refunded": "The payment window had expired and the amount was automatically refunded.",
     "payments.failed_retry": "The payment failed; you can try again.",
-    "payments.not_found": "Payment not found."
+    "payments.not_found": "Payment not found.",
+    "discounts.not_found": "This discount code was not found.",
+    "discounts.not_usable": "This discount code is inactive, expired or its quota is exhausted.",
+    "discounts.min_amount": "This code only applies to purchases above :amount tomans.",
+    "discounts.user_limit": "You have already used this discount code as many times as allowed.",
+    "waitlist.joined": "You are on the waitlist now — the business will contact you if a slot frees up.",
+    "waitlist.duplicate": "You have already joined the waitlist for this day and service.",
+    "waitlist.service_required": "Choosing a service is required.",
+    "waitlist.date_required": "Choosing a day is required.",
+    "waitlist.date_past": "The requested day cannot be in the past.",
+    "waitlist.name_required": "Your full name is required.",
+    "waitlist.phone_required": "A mobile number is required.",
+    "waitlist.phone_invalid": "The mobile number must look like 09xxxxxxxxx.",
+    "waitlist.slot_freed": ":n customer(s) are on the waitlist for this day — reach out to them from the waitlist page."
 }

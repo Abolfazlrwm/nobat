@@ -11,7 +11,7 @@ import { toDateString } from '@/lib/persian';
 import { cn } from '@/lib/utils';
 import { BusinessWithServices, ServiceItem, SlotItem } from '@/types';
 import { router } from '@inertiajs/vue3';
-import { Calendar, Check, Clock, Loader2, UserRound } from 'lucide-vue-next';
+import { Calendar, Check, CheckCircle2, Clock, Hourglass, Loader2, Tag, UserRound, X } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
@@ -39,6 +39,25 @@ const loadingSlots = ref(false);
 const submitting = ref(false);
 const formErrors = ref<Record<string, string>>({});
 
+// Discount code state (checked live against the business before submitting).
+const discountInput = ref('');
+const discountChecking = ref(false);
+const discountApplied = ref<{ code: string; discount_amount: number; final_amount: number } | null>(null);
+const discountError = ref('');
+
+// Waitlist state for fully booked days.
+const showWaitlistForm = ref(false);
+const waitlistSubmitting = ref(false);
+const waitlistDone = ref(false);
+const waitlistError = ref('');
+const waitlistForm = ref({ customer_name: '', customer_phone: '' });
+
+const payableAmount = computed(() =>
+    discountApplied.value
+        ? discountApplied.value.final_amount
+        : (selectedService.value?.price ?? 0),
+);
+
 const canContinue = computed(() => {
     if (step.value === 0) return selectedService.value !== null;
     if (step.value === 1) return true; // "any staff" is always allowed
@@ -60,6 +79,13 @@ watch(selectedDate, () => {
     if (step.value === 2) {
         loadSlots();
     }
+});
+
+// Leaving the slot step (or changing the service) resets the waitlist panel.
+watch([step, () => selectedService.value?.id], () => {
+    showWaitlistForm.value = false;
+    waitlistDone.value = false;
+    waitlistError.value = '';
 });
 
 async function loadSlots(): Promise<void> {
@@ -91,6 +117,93 @@ async function loadSlots(): Promise<void> {
     }
 }
 
+async function checkDiscount(): Promise<void> {
+    if (!selectedService.value || discountInput.value.trim().length < 2) return;
+
+    discountChecking.value = true;
+    discountError.value = '';
+    discountApplied.value = null;
+
+    const params = new URLSearchParams({
+        code: discountInput.value.trim(),
+        service_id: String(selectedService.value.id),
+    });
+
+    if (form.value.customer_phone) {
+        params.set('phone', form.value.customer_phone);
+    }
+
+    try {
+        const response = await fetch(`/b/${props.business.slug}/discount?${params}`, {
+            headers: { Accept: 'application/json' },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.valid) {
+                discountApplied.value = data;
+            } else {
+                discountError.value = t('wizard.discountInvalid');
+            }
+        } else {
+            discountError.value = t('wizard.discountInvalid');
+        }
+    } finally {
+        discountChecking.value = false;
+    }
+}
+
+function clearDiscount(): void {
+    discountInput.value = '';
+    discountApplied.value = null;
+    discountError.value = '';
+}
+
+async function joinWaitlist(): Promise<void> {
+    if (!selectedService.value || !selectedDate.value) return;
+    if (waitlistForm.value.customer_name.length < 3 || !/^09\d{9}$/.test(waitlistForm.value.customer_phone)) {
+        waitlistError.value = t('wizard.waitlistError');
+        return;
+    }
+
+    waitlistSubmitting.value = true;
+    waitlistError.value = '';
+
+    try {
+        const response = await fetch(route('waitlist.store', props.business.slug), {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': decodeURIComponent(
+                    (document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/) ?? [])[1] ?? '',
+                ),
+            },
+            body: JSON.stringify({
+                service_id: selectedService.value.id,
+                desired_date: selectedDate.value,
+                ...waitlistForm.value,
+            }),
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (response.ok) {
+            waitlistDone.value = true;
+            showWaitlistForm.value = false;
+        } else if (response.status === 409) {
+            waitlistError.value = t('wizard.waitlistDuplicate');
+        } else if (response.status === 422 && data?.errors) {
+            waitlistError.value = Object.values(data.errors)[0] as string;
+        } else {
+            waitlistError.value = t('wizard.waitlistError');
+        }
+    } finally {
+        waitlistSubmitting.value = false;
+    }
+}
+
 function next(): void {
     if (!canContinue.value) return;
     if (step.value === stepCount - 1) {
@@ -117,12 +230,18 @@ function submit(): void {
             service_id: selectedService.value.id,
             staff_id: selectedStaffId.value,
             starts_at: selectedSlot.value.starts_at,
+            discount_code: discountApplied.value?.code ?? null,
             ...form.value,
         },
         {
             onError: (errors) => {
                 formErrors.value = errors;
                 submitting.value = false;
+
+                if (errors.discount_code) {
+                    discountApplied.value = null;
+                    discountError.value = errors.discount_code;
+                }
 
                 if (errors.starts_at) {
                     step.value = 2;
@@ -244,9 +363,38 @@ function submit(): void {
                     <template v-else>
                         <div
                             v-if="slots.length === 0"
-                            class="flex h-full min-h-48 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground"
+                            class="flex h-full min-h-48 flex-col items-center justify-center gap-3 rounded-xl border border-dashed p-4 text-center"
                         >
-                            {{ t('wizard.noSlots') }}
+                            <template v-if="!waitlistDone">
+                                <Hourglass class="size-6 text-muted-foreground" />
+                                <p class="text-sm font-medium">{{ t('wizard.waitlistTitle') }}</p>
+                                <p class="max-w-sm text-sm text-muted-foreground">{{ t('wizard.waitlistHint') }}</p>
+
+                                <Button v-if="!showWaitlistForm" variant="outline" size="sm" class="gap-2" @click="showWaitlistForm = true">
+                                    <Hourglass class="size-4" />
+                                    {{ t('wizard.waitlistJoin') }}
+                                </Button>
+
+                                <form v-else class="w-full max-w-xs space-y-2 text-start" @submit.prevent="joinWaitlist">
+                                    <Input v-model="waitlistForm.customer_name" :placeholder="t('wizard.fullName')" />
+                                    <Input
+                                        v-model="waitlistForm.customer_phone"
+                                        inputmode="numeric"
+                                        placeholder="09xxxxxxxxx"
+                                        dir="ltr"
+                                    />
+                                    <p v-if="waitlistError" class="text-sm text-destructive">{{ waitlistError }}</p>
+                                    <Button type="submit" size="sm" class="w-full gap-2" :disabled="waitlistSubmitting">
+                                        <Loader2 v-if="waitlistSubmitting" class="size-4 animate-spin" />
+                                        {{ waitlistSubmitting ? t('wizard.waitlistSubmitting') : t('wizard.waitlistJoin') }}
+                                    </Button>
+                                </form>
+                            </template>
+
+                            <template v-else>
+                                <CheckCircle2 class="size-6 text-emerald-500" />
+                                <p class="text-sm font-medium">{{ t('wizard.waitlistSuccess') }}</p>
+                            </template>
                         </div>
 
                         <div v-else class="grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -283,6 +431,52 @@ function submit(): void {
                         <span class="text-muted-foreground">{{ t('booking.time') }}</span>
                         <span class="font-medium" dir="ltr">{{ selectedSlot?.starts_at }}</span>
                     </div>
+                    <div class="flex justify-between py-1">
+                        <span class="text-muted-foreground">{{ t('booking.amount') }}</span>
+                        <span :class="discountApplied && 'line-through opacity-70'">{{ price(selectedService?.price ?? 0) }}</span>
+                    </div>
+                    <div v-if="discountApplied" class="flex justify-between py-1 text-emerald-600 dark:text-emerald-400">
+                        <span>{{ t('wizard.discountLine', { code: discountApplied.code }) }}</span>
+                        <span>− {{ price(discountApplied.discount_amount) }}</span>
+                    </div>
+                    <div v-if="discountApplied" class="flex justify-between border-t pt-2 font-medium">
+                        <span>{{ t('wizard.discountFinal') }}</span>
+                        <span>{{ price(payableAmount) }}</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <Label for="discount_code">{{ t('wizard.discountLabel') }}</Label>
+                    <div class="flex gap-2">
+                        <div class="relative flex-1">
+                            <Tag class="pointer-events-none absolute top-2.5 start-3 size-4 text-muted-foreground" />
+                            <Input
+                                id="discount_code"
+                                v-model="discountInput"
+                                class="ps-9"
+                                :placeholder="t('wizard.discountPlaceholder')"
+                                dir="ltr"
+                                :disabled="!!discountApplied"
+                            />
+                        </div>
+                        <Button
+                            v-if="!discountApplied"
+                            type="button"
+                            variant="outline"
+                            :disabled="discountChecking || discountInput.trim().length < 2"
+                            @click="checkDiscount"
+                        >
+                            <Loader2 v-if="discountChecking" class="size-4 animate-spin" />
+                            {{ discountChecking ? t('wizard.discountChecking') : t('wizard.discountApply') }}
+                        </Button>
+                        <Button v-else type="button" variant="outline" size="icon" @click="clearDiscount">
+                            <X class="size-4" />
+                        </Button>
+                    </div>
+                    <p v-if="discountApplied" class="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                        {{ t('wizard.discountApplied', { amount: price(discountApplied.discount_amount) }) }}
+                    </p>
+                    <p v-else-if="discountError" class="text-sm text-destructive">{{ discountError }}</p>
                 </div>
 
                 <div class="space-y-2">
@@ -312,7 +506,7 @@ function submit(): void {
 
                 <Badge v-if="selectedService" variant="secondary">
                     <bdi>{{ selectedService.name }}</bdi>
-                    — {{ price(selectedService.price) }}
+                    — {{ price(payableAmount) }}
                 </Badge>
 
                 <Button :disabled="!canContinue || submitting" @click="next">

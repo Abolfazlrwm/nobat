@@ -9,5 +9,18 @@
     "payments.already_settled": "این پرداخت قبلاً ثبت شده است.",
     "payments.expired_refunded": "مهلت پرداخت به پایان رسیده بود و مبلغ به‌صورت خودکار برگشت داده شد.",
     "payments.failed_retry": "پرداخت ناموفق بود؛ می‌توانید دوباره تلاش کنید.",
-    "payments.not_found": "پرداخت یافت نشد."
+    "payments.not_found": "پرداخت یافت نشد.",
+    "discounts.not_found": "کد تخفیف واردشده یافت نشد.",
+    "discounts.not_usable": "این کد تخفیف فعال نیست یا مهلت و سهمیه‌ی آن به پایان رسیده است.",
+    "discounts.min_amount": "این کد فقط برای خرید بالای :amount تومان قابل استفاده است.",
+    "discounts.user_limit": "سهمیه‌ی استفاده‌ی شما از این کد تخفیف به پایان رسیده است.",
+    "waitlist.joined": "درخواست شما در لیست انتظار ثبت شد؛ اگر بازه‌ای آزاد شود کسب‌وکار با شما تماس می‌گیرد.",
+    "waitlist.duplicate": "شما قبلاً برای این روز و خدمت در لیست انتظار ثبت‌نام کرده‌اید.",
+    "waitlist.service_required": "انتخاب خدمت الزامی است.",
+    "waitlist.date_required": "انتخاب روز الزامی است.",
+    "waitlist.date_past": "روز موردنظر نمی‌تواند در گذشته باشد.",
+    "waitlist.name_required": "نام و نام خانوادگی الزامی است.",
+    "waitlist.phone_required": "شماره موبایل الزامی است.",
+    "waitlist.phone_invalid": "شماره موبایل باید با فرمت ۰۹xxxxxxxxx وارد شود.",
+    "waitlist.slot_freed": "این بازه در لیست انتظار :n مشتری ثبت‌شده است؛ از صفحه «لیست انتظار» مطلع‌شان کنید."
 }
