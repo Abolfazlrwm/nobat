@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dashboard\AppointmentController;
 use App\Http\Controllers\Dashboard\AppointmentStatusController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\ReviewController as DashboardReviewController;
 use App\Http\Controllers\Management\BusinessAdminController;
 use App\Http\Controllers\Management\ServiceController;
@@ -72,6 +73,9 @@ Route::middleware('auth')->group(function () {
     Route::get('reviews', [DashboardReviewController::class, 'index'])->name('reviews.index');
     Route::patch('reviews/{review}/approve', [DashboardReviewController::class, 'approve'])->name('reviews.approve');
     Route::delete('reviews/{review}', [DashboardReviewController::class, 'destroy'])->name('reviews.destroy');
+
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
 
 
     Route::get('services', [ServiceController::class, 'index'])->name('services.index');
