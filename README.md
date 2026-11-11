@@ -41,13 +41,15 @@
 
 ## 🖼️ نمای پروژه
 
-| صفحه عمومی | داشبورد مدیریت |
+| صفحه اصلی — لندینگ زنده (نسخه ۱.۵.۰) | داشبورد مدیریت |
 |:---:|:---:|
 | ![صفحه اصلی نوبت](docs/screenshots/home.png) | ![داشبورد مدیریت](docs/screenshots/dashboard.png) |
 | **ویزارد رزرو ۴ مرحله‌ای** | **درگاه پرداخت زرین‌پال (سندباکس واقعی)** |
 | ![ویزارد رزرو](docs/screenshots/booking-wizard.png) | ![درگاه پرداخت زرین‌پال](docs/screenshots/zarinpal.png) |
-| **تأیید نوبت با مهلت پرداخت** | **صفحه ورود با حساب‌های دمو** |
-| ![تأیید نوبت و پرداخت](docs/screenshots/payment.png) | ![ورود](docs/screenshots/login.png) |
+| **تأیید نوبت + افزودن به تقویم (iCal)** | **⭐ امتیاز و نظرات مشتریان** |
+| ![تأیید نوبت و پرداخت](docs/screenshots/payment.png) | ![امتیاز و نظرات کسب‌وکار](docs/screenshots/business-reviews-full.png) |
+| **📈 گزارش‌های فروش با خروجی CSV** | **🗣️ صفحه مدیریت نظرات** |
+| ![گزارش‌های فروش](docs/screenshots/reports.png) | ![مدیریت نظرات](docs/screenshots/reviews-moderation.png) |
 
 ---
 
