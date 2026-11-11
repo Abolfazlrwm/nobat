@@ -50,6 +50,8 @@
 | ![تأیید نوبت و پرداخت](docs/screenshots/payment.png) | ![امتیاز و نظرات کسب‌وکار](docs/screenshots/business-reviews-full.png) |
 | **📈 گزارش‌های فروش با خروجی CSV** | **🗣️ صفحه مدیریت نظرات** |
 | ![گزارش‌های فروش](docs/screenshots/reports.png) | ![مدیریت نظرات](docs/screenshots/reviews-moderation.png) |
+| **🌍 تجربه‌ی انگلیسی (LTR با فونت Inter)** | **🔐 ورود دمو به انگلیسی** |
+| ![نسخه‌ی انگلیسی لندینگ](docs/screenshots/home-en.png) | ![ورود به انگلیسی](docs/screenshots/login-en.png) |
 
 ---
 
