@@ -110,12 +110,12 @@ class ReportController extends Controller
     private function appointmentsBetween(int $businessId, CarbonImmutable $from, CarbonImmutable $to)
     {
         return Appointment::query()
-            ->where('business_id', $businessId)
-            ->whereBetween('starts_at', [$from->startOfDay(), $to->endOfDay()])
+            ->where('appointments.business_id', $businessId)
+            ->whereBetween('appointments.starts_at', [$from->startOfDay(), $to->endOfDay()])
             ->join('services', 'services.id', '=', 'appointments.service_id')
             ->with('staff:id,name')
             ->select('appointments.*', 'services.name as service_name', 'services.price as service_price')
-            ->orderBy('starts_at')
+            ->orderBy('appointments.starts_at')
             ->get();
     }
 
