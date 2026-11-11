@@ -80,6 +80,8 @@ class BookingController extends Controller
                     'ref_id' => $payment->ref_id,
                     'invoice_number' => $payment->invoice?->number ?? $appointment->invoice?->number,
                 ] : null,
+                'has_review' => $appointment->review()->exists(),
+                'review' => $appointment->review?->only('rating', 'comment'),
             ],
         ]);
     }

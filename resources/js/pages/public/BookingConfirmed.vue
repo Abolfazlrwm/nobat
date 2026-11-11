@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import FlashMessages from '@/components/FlashMessages.vue';
+import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { faDateTime, faDigits, faPrice } from '@/lib/persian';
-import { Head, Link } from '@inertiajs/vue3';
-import { BadgeCheck, CheckCircle2, Clock3, CreditCard, ExternalLink } from 'lucide-vue-next';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { BadgeCheck, CheckCircle2, Clock3, CreditCard, ExternalLink, Star } from 'lucide-vue-next';
 import { BookingConfirmation } from '@/types';
 
-defineProps<{
+const props = defineProps<{
     appointment: BookingConfirmation;
 }>();
+
+const reviewForm = useForm({
+    code: props.appointment.code,
+    rating: 0,
+    comment: '',
+});
 </script>
 
 <template>
@@ -107,6 +115,59 @@ defineProps<{
                             <dd class="font-medium">{{ appointment.status_label }}</dd>
                         </div>
                     </dl>
+
+                    <!-- completed booking: rate the experience -->
+                    <div
+                        v-if="appointment.status === 'completed' && !appointment.has_review"
+                        class="rounded-xl border bg-muted/40 p-4"
+                    >
+                        <p class="text-sm font-semibold">نوبت شما انجام شد — تجربه‌ات چطور بود؟</p>
+                        <div class="mt-2 flex gap-1">
+                            <button
+                                v-for="i in 5"
+                                :key="i"
+                                type="button"
+                                :aria-label="`${i} ستاره`"
+                                class="rounded-md p-1 transition-transform hover:scale-110"
+                                @click="reviewForm.rating = i"
+                            >
+                                <Star
+                                    class="size-6"
+                                    :class="i <= reviewForm.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/40'"
+                                />
+                            </button>
+                        </div>
+                        <Textarea
+                            v-model="reviewForm.comment"
+                            :rows="2"
+                            class="mt-3"
+                            placeholder="متن نظر (اختیاری)"
+                        />
+                        <InputError :message="reviewForm.errors.rating || reviewForm.errors.code" class="mt-2" />
+                        <Button
+                            class="mt-3 w-full gap-2"
+                            :disabled="reviewForm.processing"
+                            @click="reviewForm.post(route('reviews.store', appointment.business.slug))"
+                        >
+                            <Star class="size-4" />
+                            ثبت امتیاز
+                        </Button>
+                    </div>
+
+                    <div
+                        v-else-if="appointment.review"
+                        class="flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm dark:border-amber-500/30 dark:bg-amber-500/10"
+                    >
+                        <span class="font-semibold text-amber-800 dark:text-amber-300">امتیاز شما ثبت شد — ممنون!</span>
+                        <span class="flex gap-0.5">
+                            <Star
+                                v-for="i in 5"
+                                :key="i"
+                                class="size-4"
+                                :class="i <= (appointment.review?.rating ?? 0) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'"
+                            />
+                        </span>
+                    </div>
 
                     <div class="flex gap-2">
                         <Button as-child class="flex-1">

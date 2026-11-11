@@ -167,7 +167,25 @@ export interface BookingConfirmation {
     service: { name: string; duration_minutes: number; price: number };
     staff: { name: string; specialty?: string | null };
     payment?: PaymentSummary | null;
+    has_review?: boolean;
+    review?: { rating: number; comment?: string | null } | null;
 }
+
+export interface ReviewItem {
+    id: number;
+    customer_name: string;
+    rating: number;
+    comment?: string | null;
+    is_approved: boolean;
+    created_at?: string | null;
+}
+
+export interface ReviewSummary {
+    average: number | null;
+    count: number;
+}
+
+export interface BusinessReview extends ReviewItem {}
 
 export type BreadcrumbItemType = BreadcrumbItem;
 
