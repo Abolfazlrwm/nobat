@@ -41,7 +41,7 @@ Demo accounts (password for all: `password`):
 
 ## 🖼️ Screenshots
 
-| Live landing (v1.6.0) | Admin dashboard |
+| Live landing | Admin dashboard |
 |:---:|:---:|
 | ![Nobat home](docs/screenshots/home.png) | ![Admin dashboard](docs/screenshots/dashboard.png) |
 | **4-step booking wizard** | **ZarinPal sandbox gateway** |
@@ -52,6 +52,8 @@ Demo accounts (password for all: `password`):
 | ![Sales reports](docs/screenshots/reports.png) | ![Review moderation](docs/screenshots/reviews-moderation.png) |
 | **🌍 The English experience (LTR, Inter typeface)** | **🔐 Demo sign-in in English** |
 | ![English landing](docs/screenshots/home-en.png) | ![English sign-in](docs/screenshots/login-en.png) |
+| **🎟️ Discount code management (v1.7.0)** | **⏳ The waitlist board** |
+| ![Discount codes](docs/screenshots/discounts.png) | ![Waitlist board](docs/screenshots/waitlist.png) |
 
 ---
 

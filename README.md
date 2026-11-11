@@ -41,7 +41,7 @@
 
 ## 🖼️ نمای پروژه
 
-| صفحه اصلی — لندینگ زنده (نسخه ۱.۶.۰) | داشبورد مدیریت |
+| صفحه اصلی — لندینگ زنده | داشبورد مدیریت |
 |:---:|:---:|
 | ![صفحه اصلی نوبت](docs/screenshots/home.png) | ![داشبورد مدیریت](docs/screenshots/dashboard.png) |
 | **ویزارد رزرو ۴ مرحله‌ای** | **درگاه پرداخت زرین‌پال (سندباکس واقعی)** |
@@ -52,6 +52,8 @@
 | ![گزارش‌های فروش](docs/screenshots/reports.png) | ![مدیریت نظرات](docs/screenshots/reviews-moderation.png) |
 | **🌍 تجربه‌ی انگلیسی (LTR با فونت Inter)** | **🔐 ورود دمو به انگلیسی** |
 | ![نسخه‌ی انگلیسی لندینگ](docs/screenshots/home-en.png) | ![ورود به انگلیسی](docs/screenshots/login-en.png) |
+| **🎟️ مدیریت کدهای تخفیف (نسخه ۱.۷.۰)** | **⏳ برد لیست انتظار** |
+| ![کدهای تخفیف](docs/screenshots/discounts.png) | ![لیست انتظار](docs/screenshots/waitlist.png) |
 
 ---
 
