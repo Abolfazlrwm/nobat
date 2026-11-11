@@ -36,5 +36,12 @@ createInertiaApp({
     },
 });
 
+// Register the service worker in production so the app is installable (PWA).
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+}
+
 // This will set light / dark mode on page load...
 initializeTheme();
