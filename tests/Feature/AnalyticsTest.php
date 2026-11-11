@@ -4,6 +4,7 @@ use App\Models\Appointment;
 use App\Models\DiscountCode;
 use App\Models\DiscountRedemption;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 
 it('shows analytics kpis with discount-aware revenue for the manager', function () {
     $business = $this->makeBusiness();
@@ -18,9 +19,9 @@ it('shows analytics kpis with discount-aware revenue for the manager', function 
     ]);
 
     // two completed bookings today (one discounted) and one cancelled
-    $first = $this->createAppointment($staff, $service, now()->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
-    $second = $this->createAppointment($staff, $service, now()->setTimeFromTimeString('11:00'), Appointment::STATUS_COMPLETED);
-    $this->createAppointment($staff, $service, now()->setTimeFromTimeString('12:00'), Appointment::STATUS_CANCELLED);
+    $first = $this->createAppointment($staff, $service, CarbonImmutable::now()->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
+    $second = $this->createAppointment($staff, $service, CarbonImmutable::now()->setTimeFromTimeString('11:00'), Appointment::STATUS_COMPLETED);
+    $this->createAppointment($staff, $service, CarbonImmutable::now()->setTimeFromTimeString('12:00'), Appointment::STATUS_CANCELLED);
 
     $second->update(['customer_phone' => '09121111111']);
 
@@ -60,9 +61,9 @@ it('compares the range against the previous period', function () {
     $service = $this->serviceOf($business);
 
     // previous window (31..60 days ago): one completed booking, current window: two
-    $this->createAppointment($staff, $service, now()->subDays(40)->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
-    $this->createAppointment($staff, $service, now()->subDays(3)->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
-    $this->createAppointment($staff, $service, now()->subDays(4)->setTimeFromTimeString('11:00'), Appointment::STATUS_COMPLETED);
+    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDays(40)->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
+    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDays(3)->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
+    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDays(4)->setTimeFromTimeString('11:00'), Appointment::STATUS_COMPLETED);
 
     $manager = User::query()->whereKey($business->owner_id)->firstOrFail();
 
@@ -81,7 +82,7 @@ it('reports a null delta when the previous period has no baseline', function () 
     $staff = $this->addStaff($business);
     $service = $this->serviceOf($business);
 
-    $this->createAppointment($staff, $service, now()->subDay()->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
+    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDay()->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
 
     $manager = User::query()->whereKey($business->owner_id)->firstOrFail();
 
@@ -100,7 +101,7 @@ it('isolates the analytics of one business from another', function () {
     $staff = $this->addStaff($business);
     $service = $this->serviceOf($business);
 
-    $this->createAppointment($staff, $service, now()->subDay()->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
+    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDay()->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
 
     $other = $this->makeBusiness(['name' => 'کسب‌وکار دیگر']);
     $otherManager = User::query()->whereKey($other->owner_id)->firstOrFail();
@@ -135,7 +136,7 @@ it('lets the super admin inspect another business analytics', function () {
     $staff = $this->addStaff($business);
     $service = $this->serviceOf($business);
 
-    $this->createAppointment($staff, $service, now()->subDay()->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
+    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDay()->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
 
     $admin = User::factory()->create();
     $admin->assignRole(User::ROLE_SUPER_ADMIN);
