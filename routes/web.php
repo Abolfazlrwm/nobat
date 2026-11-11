@@ -8,7 +8,7 @@ use App\Http\Controllers\Dashboard\ReviewController as DashboardReviewController
 use App\Http\Controllers\Dashboard\WaitlistController as DashboardWaitlistController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Management\BusinessAdminController;
-use App\Http\Controllers\Management\DiscountController;
+use App\Http\Controllers\Management\DiscountController as ManagementDiscountController;
 use App\Http\Controllers\Management\ServiceController;
 use App\Http\Controllers\Management\StaffController;
 use App\Http\Controllers\Management\WorkingHourController;
@@ -99,11 +99,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('waitlist/{waitlistEntry}/cancel', [DashboardWaitlistController::class, 'cancel'])->name('waitlist.cancel');
     Route::delete('waitlist/{waitlistEntry}', [DashboardWaitlistController::class, 'destroy'])->name('waitlist.destroy');
 
-    Route::get('discounts', [DiscountController::class, 'index'])->name('discounts.index');
-    Route::post('discounts', [DiscountController::class, 'store'])->name('discounts.store');
-    Route::put('discounts/{discountCode}', [DiscountController::class, 'update'])->name('discounts.update');
-    Route::patch('discounts/{discountCode}/toggle', [DiscountController::class, 'toggle'])->name('discounts.toggle');
-    Route::delete('discounts/{discountCode}', [DiscountController::class, 'destroy'])->name('discounts.destroy');
+    Route::get('discounts', [ManagementDiscountController::class, 'index'])->name('discounts.index');
+    Route::post('discounts', [ManagementDiscountController::class, 'store'])->name('discounts.store');
+    Route::put('discounts/{discountCode}', [ManagementDiscountController::class, 'update'])->name('discounts.update');
+    Route::patch('discounts/{discountCode}/toggle', [ManagementDiscountController::class, 'toggle'])->name('discounts.toggle');
+    Route::delete('discounts/{discountCode}', [ManagementDiscountController::class, 'destroy'])->name('discounts.destroy');
 
     Route::get('services', [ServiceController::class, 'index'])->name('services.index');
     Route::post('services', [ServiceController::class, 'store'])->name('services.store');
