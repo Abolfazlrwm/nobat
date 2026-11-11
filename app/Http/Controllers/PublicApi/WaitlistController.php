@@ -41,6 +41,13 @@ class WaitlistController extends Controller
             ->exists();
 
         if ($alreadyWaiting) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => 'duplicate',
+                    'message' => __('waitlist.duplicate'),
+                ], 409);
+            }
+
             return back()->with('info', __('waitlist.duplicate'));
         }
 
@@ -56,6 +63,13 @@ class WaitlistController extends Controller
             'status' => WaitlistEntry::STATUS_WAITING,
             'note' => $data['note'] ?? null,
         ]);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => 'joined',
+                'message' => __('waitlist.joined'),
+            ], 201);
+        }
 
         return back()->with('success', __('waitlist.joined'));
     }
