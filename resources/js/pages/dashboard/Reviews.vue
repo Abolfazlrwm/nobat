@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDigits } from '@/lib/persian';
+import { faDate, faDigits } from '@/lib/persian';
 import { BreadcrumbItem, ReviewItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Check, MessageSquareText, Star, Trash2 } from 'lucide-vue-next';
@@ -93,7 +93,7 @@ function remove(id: number): void {
                             <p v-if="review.comment" class="text-sm text-muted-foreground">{{ review.comment }}</p>
                             <p class="text-xs text-muted-foreground">
                                 خدمت: {{ review.service ?? '—' }}
-                                <span v-if="review.created_at"> • {{ faDigits(review.created_at ?? '') }}</span>
+                                <span v-if="review.created_at"> • {{ faDate(review.created_at ?? '') }}</span>
                             </p>
                         </div>
 
