@@ -3,6 +3,7 @@
 use App\Models\Appointment;
 use App\Models\User;
 use App\Models\WaitlistEntry;
+use Carbon\CarbonImmutable;
 
 function waitlistPayload($business, $service, string $date, array $overrides = []): array
 {
@@ -59,7 +60,7 @@ it('rejects a duplicate signup for the same day and service', function () {
 it('validates the desired date is today or later', function () {
     $business = $this->makeBusiness();
     $service = $this->serviceOf($business);
-    $date = Carbon\CarbonImmutable::yesterday()->format('Y-m-d');
+    $date = CarbonImmutable::yesterday()->format('Y-m-d');
 
     $this->post(route('waitlist.store', $business->slug), waitlistPayload($business, $service, $date))
         ->assertSessionHasErrors('desired_date');

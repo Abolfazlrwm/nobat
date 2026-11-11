@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PublicApi;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\WaitlistEntry;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class WaitlistController extends Controller
      * A customer whose preferred day is fully booked leaves their contact
      * details here; the business reaches out when a slot frees up.
      */
-    public function store(Request $request, Business $business): RedirectResponse
+    public function store(Request $request, Business $business): RedirectResponse|JsonResponse
     {
         $data = $request->validate([
             'service_id' => ['required', 'integer'],
