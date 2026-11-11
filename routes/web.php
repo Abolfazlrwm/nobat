@@ -39,6 +39,8 @@ Route::post('b/{business:slug}/bookings', [BookingController::class, 'store'])
 
 Route::get('bookings/{code}', [BookingController::class, 'show'])->name('bookings.show');
 
+Route::get('bookings/{code}/ics', [BookingController::class, 'ics'])->name('bookings.ics');
+
 Route::post('b/{business:slug}/reviews', [ReviewController::class, 'store'])
     ->name('reviews.store')
     ->middleware('throttle:10,1');

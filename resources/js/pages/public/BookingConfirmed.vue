@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { faDateTime, faDigits, faPrice } from '@/lib/persian';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { BadgeCheck, CheckCircle2, Clock3, CreditCard, ExternalLink, Star } from 'lucide-vue-next';
+import { BadgeCheck, CalendarPlus, CheckCircle2, Clock3, CreditCard, ExternalLink, Star } from 'lucide-vue-next';
 import { BookingConfirmation } from '@/types';
 
 const props = defineProps<{
@@ -172,6 +172,12 @@ const reviewForm = useForm({
                     <div class="flex gap-2">
                         <Button as-child class="flex-1">
                             <Link :href="route('home')">صفحه اصلی</Link>
+                        </Button>
+                        <Button as-child variant="outline" class="flex-1 gap-1">
+                            <a :href="route('bookings.ics', appointment.code)" download>
+                                <CalendarPlus class="size-4" />
+                                افزودن به تقویم
+                            </a>
                         </Button>
                         <Button as-child variant="outline" class="flex-1">
                             <Link :href="`/b/${appointment.business.slug}`">رزرو نوبت جدید</Link>
