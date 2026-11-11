@@ -4,9 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Appointment;
 use App\Models\Business;
+use App\Models\DiscountCode;
 use App\Models\Service;
 use App\Models\Staff;
 use App\Models\User;
+use App\Models\WaitlistEntry;
 use App\Models\WorkingHour;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
@@ -153,6 +155,79 @@ class DemoContentSeeder extends Seeder
         foreach ([$plans, $salonPlans] as $plan) {
             $this->seedAppointments($plan['business'], $plan['services'], $plan['staff'], $plan['times'], $customers);
         }
+
+        // ------------------------------------------------------------------
+        // Discount codes — one live, one capped, one expiring
+        // ------------------------------------------------------------------
+        $clinic->discountCodes()->createMany([
+            [
+                'code' => 'WELCOME10',
+                'type' => DiscountCode::TYPE_PERCENT,
+                'value' => 10,
+                'per_user_limit' => 1,
+                'is_active' => true,
+            ],
+            [
+                'code' => 'CHECKUP50',
+                'type' => DiscountCode::TYPE_FIXED,
+                'value' => 50_000,
+                'min_amount' => 300_000,
+                'max_uses' => 200,
+                'starts_at' => CarbonImmutable::today(),
+                'expires_at' => CarbonImmutable::today()->addDays(30),
+                'is_active' => true,
+            ],
+        ]);
+
+        $salon->discountCodes()->create([
+            'code' => 'BEAUTY15',
+            'type' => DiscountCode::TYPE_PERCENT,
+            'value' => 15,
+            'max_uses' => 100,
+            'per_user_limit' => 2,
+            'expires_at' => CarbonImmutable::today()->addDays(14),
+            'is_active' => true,
+        ]);
+
+        // ------------------------------------------------------------------
+        // Waitlist — customers queued for a busy clinic day
+        // ------------------------------------------------------------------
+        $clinicService = $clinicServices->first();
+        $salonService = $salonServices->first();
+
+        $clinic->waitlistEntries()->createMany([
+            [
+                'service_id' => $clinicService->id,
+                'desired_date' => CarbonImmutable::tomorrow(),
+                'customer_name' => 'مریم انتظاری',
+                'customer_phone' => '09121110000',
+                'status' => WaitlistEntry::STATUS_WAITING,
+                'note' => 'ترجیحاً عصر',
+            ],
+            [
+                'service_id' => $clinicService->id,
+                'desired_date' => CarbonImmutable::tomorrow(),
+                'customer_name' => 'رضا شکیبا',
+                'customer_phone' => '09332220000',
+                'status' => WaitlistEntry::STATUS_WAITING,
+            ],
+            [
+                'service_id' => $clinicService->id,
+                'desired_date' => CarbonImmutable::today()->addDays(2),
+                'customer_name' => 'شیما نادری',
+                'customer_phone' => '09123330000',
+                'status' => WaitlistEntry::STATUS_NOTIFIED,
+                'notified_at' => now()->subHours(3),
+            ],
+        ]);
+
+        $salon->waitlistEntries()->create([
+            'service_id' => $salonService->id,
+            'desired_date' => CarbonImmutable::tomorrow(),
+            'customer_name' => 'الهام بهرامی',
+            'customer_phone' => '09124440000',
+            'status' => WaitlistEntry::STATUS_WAITING,
+        ]);
     }
 
     private function seedClinicHours(Business $clinic): void

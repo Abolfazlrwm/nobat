@@ -249,9 +249,11 @@ it('blocks deleting a code that has already been used', function () {
         'code' => 'USEDUP',
         'type' => DiscountCode::TYPE_PERCENT,
         'value' => 10,
-        'used_count' => 3,
         'is_active' => true,
     ]);
+
+    // used_count is not mass-assignable; mirror a redeemed code directly.
+    $code->forceFill(['used_count' => 3])->save();
 
     $this->actingAs($manager)->delete(route('discounts.destroy', $code))->assertRedirect();
 

@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2026-11-12
+
+### Fixed
+
+- **Working hours board (500)**: `working_hours.starts_at/ends_at` are `time`
+  columns that Eloquent hydrates as plain strings, so the board's
+  `->format('H:i')` presentation threw "call to a member function format()
+  on string" and the page 500'd on every render — a latent bug since v1.1
+  that no test and no screenshot ever exercised. The model now casts both
+  columns as `datetime:H:i` Carbon instances (the slot generator keeps
+  parsing them transparently), and the board is covered by regression
+  tests: the manager render (windows, weekday names, H:i strings) and the
+  guest redirect.
+
 ## [1.7.0] - 2026-11-11
 
 ### Added

@@ -9,7 +9,7 @@
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-108%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-110%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -41,7 +41,7 @@
 
 ## 🖼️ نمای پروژه
 
-| صفحه اصلی — لندینگ زنده (نسخه ۱.۶.۰) | داشبورد مدیریت |
+| صفحه اصلی — لندینگ زنده | داشبورد مدیریت |
 |:---:|:---:|
 | ![صفحه اصلی نوبت](docs/screenshots/home.png) | ![داشبورد مدیریت](docs/screenshots/dashboard.png) |
 | **ویزارد رزرو ۴ مرحله‌ای** | **درگاه پرداخت زرین‌پال (سندباکس واقعی)** |
@@ -52,6 +52,8 @@
 | ![گزارش‌های فروش](docs/screenshots/reports.png) | ![مدیریت نظرات](docs/screenshots/reviews-moderation.png) |
 | **🌍 تجربه‌ی انگلیسی (LTR با فونت Inter)** | **🔐 ورود دمو به انگلیسی** |
 | ![نسخه‌ی انگلیسی لندینگ](docs/screenshots/home-en.png) | ![ورود به انگلیسی](docs/screenshots/login-en.png) |
+| **🎟️ مدیریت کدهای تخفیف (نسخه ۱.۷.۰)** | **⏳ برد لیست انتظار** |
+| ![کدهای تخفیف](docs/screenshots/discounts.png) | ![لیست انتظار](docs/screenshots/waitlist.png) |
 
 ---
 

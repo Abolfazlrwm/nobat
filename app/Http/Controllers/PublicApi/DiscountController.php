@@ -4,8 +4,8 @@ namespace App\Http\Controllers\PublicApi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
-use App\Services\Discount\DiscountService;
 use App\Services\Booking\Exceptions\DiscountCodeException;
+use App\Services\Discount\DiscountService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
