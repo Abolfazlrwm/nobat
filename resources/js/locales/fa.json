@@ -131,7 +131,9 @@
         "reviewThanks": "امتیاز شما ثبت شد — ممنون!",
         "home": "صفحه اصلی",
         "addToCalendar": "افزودن به تقویم",
-        "newBooking": "رزرو نوبت جدید"
+        "newBooking": "رزرو نوبت جدید",
+        "discount": "تخفیف",
+        "payableAmount": "مبلغ قابل پرداخت"
     },
     "wizard": {
         "steps": {
@@ -152,7 +154,22 @@
         "fullName": "نام و نام خانوادگی",
         "namePlaceholder": "مثلاً علی رضایی",
         "phone": "شماره موبایل",
-        "notes": "توضیحات (اختیاری)"
+        "notes": "توضیحات (اختیاری)",
+        "discountLabel": "کد تخفیف (اختیاری)",
+        "discountPlaceholder": "مثلاً WELCOME10",
+        "discountApply": "بررسی کد",
+        "discountChecking": "در حال بررسی…",
+        "discountApplied": "کد اعمال شد: {amount} تخفیف",
+        "discountInvalid": "کد قابل استفاده نیست",
+        "discountLine": "تخفیف ({code})",
+        "discountFinal": "مبلغ پس از تخفیف",
+        "waitlistTitle": "در این روز بازه‌ی خالی نیست",
+        "waitlistHint": "در لیست انتظار ثبت‌نام کنید تا اگر بازه‌ای آزاد شد، اولین کسی باشید که می‌دانید.",
+        "waitlistJoin": "ثبت‌نام در لیست انتظار",
+        "waitlistSubmitting": "در حال ثبت…",
+        "waitlistSuccess": "ثبت شد! اگر بازه‌ای آزاد شود به شما اطلاع می‌دهند.",
+        "waitlistError": "نام و شماره موبایل معتبر را وارد کنید.",
+        "waitlistDuplicate": "شما قبلاً برای این روز ثبت‌نام کرده‌اید."
     },
     "auth": {
         "loginTitle": "ورود به حساب کاربری",

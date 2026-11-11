@@ -114,6 +114,11 @@ class Appointment extends Model
         return $this->hasOne(Payment::class)->latestOfMany();
     }
 
+    public function discountCode(): BelongsTo
+    {
+        return $this->belongsTo(DiscountCode::class);
+    }
+
     public function review(): HasOne
     {
         return $this->hasOne(Review::class);

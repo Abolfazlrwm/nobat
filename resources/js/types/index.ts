@@ -172,9 +172,40 @@ export interface BookingConfirmation {
     business: { name: string; slug: string; phone: string; address?: string | null };
     service: { name: string; duration_minutes: number; price: number };
     staff: { name: string; specialty?: string | null };
+    discount_amount?: number | null;
+    discount_code?: string | null;
     payment?: PaymentSummary | null;
     has_review?: boolean;
     review?: { rating: number; comment?: string | null } | null;
+}
+
+export interface DiscountCodeItem {
+    id: number;
+    code: string;
+    type: string;
+    type_label: string;
+    value: number;
+    value_label: string;
+    min_amount?: number | null;
+    max_uses?: number | null;
+    used_count: number;
+    per_user_limit?: number | null;
+    starts_at?: string | null;
+    expires_at?: string | null;
+    is_active: boolean;
+}
+
+export interface WaitlistItem {
+    id: number;
+    desired_date: string;
+    customer_name: string;
+    customer_phone: string;
+    status: string;
+    status_label: string;
+    notified_at?: string | null;
+    note?: string | null;
+    service?: { name: string } | null;
+    staff?: { name: string } | null;
 }
 
 export interface ReviewItem {

@@ -40,11 +40,14 @@ class PaymentService
         $business = $appointment->business;
         $service = $appointment->service;
 
+        $discountAmount = (int) ($appointment->discount_amount ?? 0);
+        $payable = max(0, (int) $service->price - $discountAmount);
+
         return Invoice::create([
             'number' => (string) Str::ulid(),
             'business_id' => $business->id,
             'appointment_id' => $appointment->id,
-            'amount' => (int) $service->price,
+            'amount' => $payable,
             'currency' => 'IRT',
             'status' => Invoice::STATUS_ISSUED,
             'snapshot' => [
@@ -55,6 +58,10 @@ class PaymentService
                 'customer_phone' => $appointment->customer_phone,
                 'appointment_code' => $appointment->code,
                 'starts_at' => $appointment->starts_at->format('Y-m-d\TH:i:s'),
+                'discount' => $discountAmount > 0 ? [
+                    'code' => $appointment->discountCode?->code,
+                    'amount' => $discountAmount,
+                ] : null,
             ],
             'issued_at' => now(),
             'due_at' => $appointment->payment_expires_at,

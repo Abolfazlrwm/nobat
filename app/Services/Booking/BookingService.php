@@ -5,11 +5,13 @@ namespace App\Services\Booking;
 use App\Jobs\SendBookingSms;
 use App\Models\Appointment;
 use App\Models\Business;
+use App\Models\DiscountCode;
 use App\Models\Service;
 use App\Models\Staff;
 use App\Models\User;
 use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
+use App\Services\Discount\DiscountService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -18,6 +20,7 @@ class BookingService
 {
     public function __construct(
         private readonly SlotGenerator $slots,
+        private readonly DiscountService $discounts,
     ) {}
 
     /**
@@ -39,8 +42,9 @@ class BookingService
         CarbonImmutable $startsAt,
         ?User $customer = null,
         ?string $notes = null,
+        ?DiscountCode $discount = null,
     ): Appointment {
-        return DB::transaction(function () use ($business, $service, $staff, $customerName, $customerPhone, $startsAt, $customer, $notes) {
+        return DB::transaction(function () use ($business, $service, $staff, $customerName, $customerPhone, $startsAt, $customer, $notes, $discount) {
             $endsAt = $startsAt->addMinutes($service->duration_minutes);
 
             if ($staff !== null) {
@@ -77,6 +81,10 @@ class BookingService
                     : null,
                 'notes' => $notes,
             ]);
+
+            if ($discount !== null) {
+                $this->discounts->apply($appointment, $discount);
+            }
 
             SendBookingSms::dispatch($appointment)->afterCommit();
 

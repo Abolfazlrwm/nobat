@@ -76,6 +76,16 @@ class Business extends Model
             ->orderByDesc('created_at');
     }
 
+    public function discountCodes(): HasMany
+    {
+        return $this->hasMany(DiscountCode::class);
+    }
+
+    public function waitlistEntries(): HasMany
+    {
+        return $this->hasMany(WaitlistEntry::class);
+    }
+
     public function scopeActive(Builder $query): void
     {
         $query->where('is_active', true);

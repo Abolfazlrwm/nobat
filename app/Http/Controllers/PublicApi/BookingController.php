@@ -7,9 +7,12 @@ use App\Http\Requests\Booking\StoreBookingRequest;
 use App\Models\Appointment;
 use App\Models\Business;
 use App\Models\Payment;
+use App\Models\WaitlistEntry;
 use App\Services\Booking\BookingService;
+use App\Services\Booking\Exceptions\DiscountCodeException;
 use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
+use App\Services\Discount\DiscountService;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as HttpResponse;
@@ -20,6 +23,7 @@ class BookingController extends Controller
 {
     public function __construct(
         private readonly BookingService $bookings,
+        private readonly DiscountService $discounts,
     ) {}
 
     public function store(StoreBookingRequest $request, Business $business): RedirectResponse
@@ -32,6 +36,22 @@ class BookingController extends Controller
         }
 
         try {
+            $discount = null;
+            if ($request->filled('discount_code')) {
+                $discount = $this->discounts->resolve(
+                    $business,
+                    $request->string('discount_code')->toString(),
+                    (int) $service->price,
+                    $request->string('customer_phone')->toString(),
+                );
+            }
+        } catch (DiscountCodeException $exception) {
+            return back()
+                ->withErrors(['discount_code' => $exception->getMessage()])
+                ->withInput();
+        }
+
+        try {
             $appointment = $this->bookings->reserve(
                 business: $business,
                 service: $service,
@@ -41,11 +61,16 @@ class BookingController extends Controller
                 startsAt: CarbonImmutable::parse($request->input('starts_at')),
                 customer: $request->user(),
                 notes: $request->input('notes'),
+                discount: $discount,
             );
         } catch (SlotUnavailableException|InvalidSlotException $exception) {
             return back()
                 ->withErrors(['starts_at' => $exception->getMessage()])
                 ->withInput();
+        }
+
+        if (in_array($appointment->status, [Appointment::STATUS_PENDING, Appointment::STATUS_PENDING_PAYMENT], true)) {
+            WaitlistEntry::markBookedFor($appointment);
         }
 
         return to_route('bookings.show', $appointment->code)
@@ -74,6 +99,8 @@ class BookingController extends Controller
                 'business' => $appointment->business->only('name', 'slug', 'phone', 'address'),
                 'service' => $appointment->service->only('name', 'duration_minutes', 'price'),
                 'staff' => $appointment->staff->only('name', 'specialty'),
+                'discount_amount' => $appointment->discount_amount,
+                'discount_code' => $appointment->discountCode?->code,
                 'payment' => $payment ? [
                     'status' => $payment->status,
                     'status_label' => Payment::STATUS_LABELS[$payment->status] ?? $payment->status,

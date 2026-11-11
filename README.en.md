@@ -9,7 +9,7 @@ Persian-first, fully RTL, Jalali calendar — booking without phone calls and wa
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-89%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-108%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -65,6 +65,8 @@ Demo accounts (password for all: `password`):
 - 💳 **Online payment (ZarinPal gateway)**: for payment-required businesses the slot stays locked until the payment deadline; printable invoice and SMS/email confirmation
 - ⭐ **Ratings & reviews**: after a completed booking, the customer rates the business with stars from the tracking page; the average shows on directory cards and approved reviews on the business page
 - 📆 **iCal export**: add the booking to any calendar app (Google Calendar, iOS Calendar…) with one click from the confirmation page
+- 🎟️ **Discount codes**: customers enter a code in the last wizard step and it is validated live; the invoice and payment are charged with the discount applied
+- ⏳ **Waitlist**: a fully booked day opens an inline waitlist form right where the empty slot grid is, so customers queue for the first freed slot
 - 📱 **Installable PWA**: the web app installs on phones with a Persian/RTL manifest and custom icons
 - 🌍 **Bilingual (FA/EN)**: a navbar language switcher flips the whole public experience — landing, booking wizard, confirmation and auth pages — into polished English with the Inter typeface, Latin digits and transliterated Jalali months; the choice persists in a one-year cookie
 - 🛡️ Rate limiting on booking submission (10/min) and slot queries (60/min)
@@ -74,13 +76,15 @@ Demo accounts (password for all: `password`):
 - 📅 Appointment management with status/date/staff filters and a guarded status flow (pending → confirmed → done / cancelled / no-show) — final states are immutable
 - 💼 CRUD for services (duration & price), staff members and working hours (morning/evening shifts)
 - 🗣️ **Review moderation**: approve/delete customer reviews with average-rating stats — only approved reviews go public
+- 🎟️ **Discount code management**: percent or fixed codes with a minimum purchase, total and per-customer usage caps, an activation window and one-click enable/disable
+- ⏳ **Waitlist board**: per-day queue with statuses (waiting / notified / booked), a "customer reached" action and an automatic hint when a booking is cancelled
 - 📈 **Sales reports**: custom date ranges with revenue, status breakdown, top services, a daily trend chart and **CSV export**
 - 👥 **Roles**: `super-admin` (manages every business), `manager` (own business), `staff` (own schedule), `customer`
 
 ### Infrastructure
 - 🔐 **Double-booking prevention** with a transaction + `lockForUpdate` on the staff row
 - 📨 Queued notifications (database + SMS behind a driver architecture — log driver and a real **Kavenegar** gateway driver included)
-- 🧪 **89 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, the full payment cycle, reviews, reports and the bilingual experience
+- 🧪 **108 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, the full payment cycle, reviews, reports, the bilingual experience, discount codes and the waitlist
 - 🐳 Docker (nginx + php-fpm + queue worker + MySQL + Redis) and GitHub Actions CI
 
 ## 🧱 Tech stack
@@ -149,6 +153,7 @@ Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE
 - [x] **v1.4** — online payments (ZarinPal sandbox): Payment/Invoice/Refund models, idempotent callbacks, refunds, invoices and slot locking
 - [x] **v1.5** — ratings & reviews with moderation, sales reports with CSV export, iCal export and an installable PWA
 - [x] **v1.6** — fully bilingual (fa/en): language switcher, dynamic RTL↔LTR, Inter for English, server + client i18n
+- [x] **v1.7** — discount codes (percent/fixed with usage caps and live validation) and a waitlist for fully booked days with a manager board
 - [ ] SMS reminders before appointments (scheduler + database queue in production)
 - [ ] Advanced reports & Excel export
 - [ ] Translated dashboard panels (the public experience is already bilingual)
