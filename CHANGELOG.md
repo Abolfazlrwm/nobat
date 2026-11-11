@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-11-12
+
+### Added
+
+- **Public JSON API (FA: API عمومی)**: a Bearer-token REST API under
+  `/api/v1` — `POST /api/v1/tokens` exchanges email + password for a
+  token (throttled 10/min), then `GET /me`, `GET /businesses` and the
+  paginated, filterable `GET /appointments` (status, date, per_page and
+  a super-admin `business_id` scope) serve programmatic access with the
+  exact same tenancy rules as the dashboard (`visibleTo`).
+- **Hashed tokens**: only the sha-256 of each token is stored
+  (`api_tokens` table with `last_used_at`), so a leaked database can
+  never mint a token; the plain token is returned exactly once at
+  creation. `DELETE /api/v1/tokens/{id}` revokes with immediate effect
+  and refuses foreign tokens with 404.
+- **Token management page**: a new dashboard page (کلیدهای API) creates
+  and revokes tokens without touching curl — the plain token is shown
+  once in a copy-once callout and never persisted server-side.
+- **Zero new dependencies**: the token layer is a small middleware plus
+  a hashed table rather than a new composer package, keeping
+  `composer install` reproducible.
+- **API reference**: `docs/API.md` documents every endpoint with curl
+  examples, filters, pagination shape and status codes (Persian).
+- Covered by 10 new Pest tests (131 total): token issuance and
+  hash-only storage, wrong credentials, the bearer guard, the profile
+  endpoint, tenancy-scoped listings with filters and pagination,
+  business counts, revocation plus the 401-after-revoke guarantee,
+  foreign-token refusal and the `last_used_at` refresh.
+
 ## [1.9.0] - 2026-11-12
 
 ### Added

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\AnalyticsController;
+use App\Http\Controllers\Dashboard\ApiTokenController;
 use App\Http\Controllers\Dashboard\AppointmentController;
 use App\Http\Controllers\Dashboard\AppointmentStatusController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -89,6 +90,10 @@ Route::middleware('auth')->group(function () {
         ->name('appointments.status');
 
     Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
+    Route::get('api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
+    Route::post('api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
+    Route::delete('api-tokens/{apiToken}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
 
     Route::get('reviews', [DashboardReviewController::class, 'index'])->name('reviews.index');
     Route::patch('reviews/{review}/approve', [DashboardReviewController::class, 'approve'])->name('reviews.approve');

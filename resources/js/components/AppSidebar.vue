@@ -11,6 +11,7 @@ import {
     CalendarDays,
     Clock4,
     Hourglass,
+    KeyRound,
     LayoutGrid,
     MessageSquareText,
     TicketPercent,
@@ -44,6 +45,7 @@ const mainNavItems = computed<NavItem[]>(() => {
             { title: 'کدهای تخفیف', href: '/discounts', icon: TicketPercent },
             { title: 'نظرات مشتریان', href: '/reviews', icon: MessageSquareText },
             { title: 'تحلیل', href: '/analytics', icon: TrendingUp },
+            { title: 'کلیدهای API', href: '/api-tokens', icon: KeyRound },
             { title: 'گزارش‌ها', href: '/reports', icon: BarChart3 },
         );
     }
