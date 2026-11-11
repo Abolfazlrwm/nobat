@@ -25,6 +25,8 @@ services:
         value: "false"
       - key: APP_NAME
         value: Nobat
+      - key: APP_LOCALE
+        value: fa
       - key: QUEUE_CONNECTION
         value: sync
       - key: SESSION_LIFETIME
