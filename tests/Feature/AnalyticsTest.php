@@ -60,10 +60,15 @@ it('compares the range against the previous period', function () {
     $staff = $this->addStaff($business);
     $service = $this->serviceOf($business);
 
-    // previous window (31..60 days ago): one completed booking, current window: two
-    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDays(40)->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
-    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDays(3)->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
-    $this->createAppointment($staff, $service, CarbonImmutable::now()->subDays(4)->setTimeFromTimeString('11:00'), Appointment::STATUS_COMPLETED);
+    // previous window (31..60 days ago): three completed bookings,
+    // current window: four — a non-integer +33.3% keeps the deltas float
+    foreach ([40, 45, 50] as $offset) {
+        $this->createAppointment($staff, $service, CarbonImmutable::now()->subDays($offset)->setTimeFromTimeString('10:00'), Appointment::STATUS_COMPLETED);
+    }
+
+    foreach ([3, 4, 5, 6] as $offset) {
+        $this->createAppointment($staff, $service, CarbonImmutable::now()->subDays($offset)->setTimeFromTimeString('11:00'), Appointment::STATUS_COMPLETED);
+    }
 
     $manager = User::query()->whereKey($business->owner_id)->firstOrFail();
 
@@ -71,9 +76,10 @@ it('compares the range against the previous period', function () {
         ->get(route('analytics.index', ['days' => 30]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->where('stats.revenue', 1_000_000)
-            ->where('stats.revenue_delta', 100.0)
-            ->where('stats.bookings_delta', 100.0)
+            ->where('stats.revenue', 2_000_000)
+            ->where('stats.bookings', 4)
+            ->where('stats.revenue_delta', 33.3)
+            ->where('stats.bookings_delta', 33.3)
         );
 });
 
