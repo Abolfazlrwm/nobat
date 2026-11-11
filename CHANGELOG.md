@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-11-11
+
+### Added
+
+- **Bilingual experience (FA/EN)**: a navbar language switcher (and one on the
+  auth pages) flips the whole public experience between Persian and English —
+  landing, directory cards, business page, the 4-step booking wizard, the
+  confirmation page and the login/register forms. The choice persists in a
+  one-year `nobat_locale` cookie and survives hard reloads.
+- **True RTL ↔ LTR flip**: the Blade shell now renders `lang`/`dir` from the
+  cookie (`dir="rtl"` for fa, `dir="ltr"` for en), directional icons (hero
+  arrows, calendar chevrons) mirror themselves and the English shell
+  self-hosts the **Inter** typeface while Persian keeps Vazirmatn.
+- **Locale-aware formatting**: a `useLocale()` composable unifies numbers,
+  prices and dates — Persian keeps Jalali dates with Persian digits and
+  «تومان», English switches to Gregorian dates, Latin digits and Toman.
+- **Server-side i18n**: `SetLocale` middleware + `LocaleController`
+  (`POST /locale`) drive Laravel's translator — booking/review/payment flash
+  messages and slot-availability exceptions resolve from `lang/fa.json` and
+  `lang/en.json`; the shared Inertia payload exposes the resolved locale.
+- **vue-i18n 11** on the frontend with typed `fa`/`en` message catalogs
+  (`resources/js/locales/`) and sync tests that fail the build if the two
+  catalogs ever drift apart.
+- **English Jalali calendar**: the booking date-picker transliterates Jalali
+  month names (Farvardin…Esfand) with Latin digits in English; the month
+  navigation chevrons also follow the reading direction (this fixes the
+  previously inverted fa chevrons).
+
+### Fixed
+
+- The landing badge's Sparkles icon never rendered (unregistered import) —
+  now it shows; the two Persian date-picker chevrons acted inverted to their
+  labels — navigation is now consistent in both locales.
+
+### Notes
+
+- The dashboard stays Persian-first in this release; the public/booking
+  experience is fully bilingual. See `docs/INTERNATIONALIZATION.md` for
+  adding a new language.
+
 ## [1.5.0] - 2026-11-11
 
 ### Added
