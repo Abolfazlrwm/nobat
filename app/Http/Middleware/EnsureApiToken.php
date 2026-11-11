@@ -6,7 +6,6 @@ use App\Models\ApiToken;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Authenticates the public JSON API through an "Authorization: Bearer"
