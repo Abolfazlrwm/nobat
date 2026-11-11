@@ -9,7 +9,7 @@
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-81%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-89%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -41,7 +41,7 @@
 
 ## 🖼️ نمای پروژه
 
-| صفحه اصلی — لندینگ زنده (نسخه ۱.۵.۰) | داشبورد مدیریت |
+| صفحه اصلی — لندینگ زنده (نسخه ۱.۶.۰) | داشبورد مدیریت |
 |:---:|:---:|
 | ![صفحه اصلی نوبت](docs/screenshots/home.png) | ![داشبورد مدیریت](docs/screenshots/dashboard.png) |
 | **ویزارد رزرو ۴ مرحله‌ای** | **درگاه پرداخت زرین‌پال (سندباکس واقعی)** |
@@ -64,6 +64,7 @@
 - ⭐ **امتیازدهی و نظرات**: پس از انجام نوبت، مشتری از همان صفحه‌ی کد پیگیری به کسب‌وکار ستاره می‌دهد؛ میانگین امتیاز روی کارت‌های دایرکتوری و نظرات تأییدشده در صفحه‌ی کسب‌وکار نمایش داده می‌شود
 - 📆 **خروجی iCal**: افزودن نوبت به هر تقویمی (Google Calendar، تقویم iOS و…) با یک کلیک از صفحه‌ی تأیید
 - 📱 **نصب‌شدن مثل اپ (PWA)**: وب‌اپ قابل نصب روی موبایل با manifest فارسی/RTL و آیکون‌های اختصاصی
+- 🌍 **دو زبانه (فارسی/انگلیسی)**: سوییچر زبان در نوبار، کل تجربه‌ی عمومی — لندینگ، ویزارد رزرو، تأیید نوبت و ورود — به انگلیسی روان با فونت Inter، اعداد لاتین و تقویم با ماه‌های transliterate‌شده؛ انتخاب زبان در کوکی یک‌ساله می‌ماند
 - 🛡️ Rate limiting روی ثبت نوبت (۱۰ درخواست در دقیقه) و استعلام اسلات (۶۰ در دقیقه)
 
 ### سمت کسب‌وکار و ادمین
@@ -77,8 +78,9 @@
 ### زیرساخت
 - 🔐 جلوگیری از **رزرو همزمان** با تراکنش + `lockForUpdate` روی رکورد پرسنل
 - 💳 **چرخه‌ی کامل پرداخت** با معماری درایور: قرارداد `PaymentGateway`، درگاه زرین‌پال (sandbox) و درگاه تستِ فوری؛ idempotency سه‌لایه که وب‌هوک تکراری هرگز دو بار پرداخت ثبت نمی‌کند، رفاند خودکار و آزادسازی اسلات‌های منقضی با Scheduler
+- 🌐 **چندزبانه‌ی واقعی (سرور + کلاینت)**: middleware `SetLocale` و `POST /locale` مترجم لاراول را رانند (پیام‌های flash و خطاهای اسلات از `lang/{fa,en}.json`) و vue-i18n 11 با کاتالوگ‌های تایپ‌شده در فرانت؛ تست‌های sync از واگرایی دو کاتالوگ جلوگیری می‌کنند
 - 📨 نوتیفیکیشن صف‌بندی‌شده (Database + SMS با معماری درایور — درایور لاگ و درگاه کاوه‌نگار آماده‌اند)
-- 🧪 **۸۱ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، چرخه‌ی کامل پرداخت، نظرات و گزارش‌ها
+- 🧪 **۸۹ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها و چندزبانه
 - 🐳 Docker (nginx + php-fpm + worker + MySQL + Redis) و GitHub Actions CI
 
 ## 🧱 استک فناوری
@@ -227,7 +229,8 @@ sequenceDiagram
 - [x] **v1.4** — پرداخت آنلاین زرین‌پال (sandbox): مدل Payment/Invoice/Refund، callback با idempotency، رفاند، فاکتور و قفل اسلات تا پایان مهلت پرداخت
 - [ ] یادآوری پیامکی قبل از نوبت (Scheduler + Database queue در production)
 - [ ] گزارش‌های پیشرفته و خروجی Excel
-- [ ] چندزبانه (fa / en) و PWA
+- [x] **v1.6** — دو زبانه‌ی کامل (fa/en): سوییچر زبان، RTL↔LTR داینامیک، فونت Inter برای انگلیسی، i18n سمت سرور و کلاینت
+- [ ] یادداشت: PWA در v1.5 منتشر شد
 
 ایده‌ی جدیدی دارید؟ یک [پیشنهاد فیچر](../../issues/new?template=feature_request.yml) باز کنید.
 

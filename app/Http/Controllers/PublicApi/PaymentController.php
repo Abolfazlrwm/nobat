@@ -22,12 +22,12 @@ class PaymentController extends Controller
     {
         if ($appointment->status !== Appointment::STATUS_PENDING_PAYMENT) {
             return to_route('bookings.show', $appointment->code)
-                ->with('error', 'این نوبت در وضعیت قابل پرداخت نیست.');
+                ->with('error', __('payments.not_payable'));
         }
 
         if ($appointment->paymentExpired()) {
             return to_route('bookings.show', $appointment->code)
-                ->with('error', 'مهلت پرداخت این نوبت به پایان رسیده است.');
+                ->with('error', __('payments.expired'));
         }
 
         $session = $this->payments->startSession($appointment);
@@ -59,11 +59,11 @@ class PaymentController extends Controller
             : to_route('home');
 
         return match ($result['outcome']) {
-            'paid' => $redirect->with('success', 'پرداخت با موفقیت انجام شد و نوبت شما قطعی شد.'),
-            'already_settled', 'busy' => $redirect->with('info', 'این پرداخت قبلاً ثبت شده است.'),
-            'expired_refunded' => $redirect->with('error', 'مهلت پرداخت به پایان رسیده بود و مبلغ به‌صورت خودکار برگشت داده شد.'),
-            'verify_failed', 'canceled_by_user' => $redirect->with('error', 'پرداخت ناموفق بود؛ می‌توانید دوباره تلاش کنید.'),
-            default => $redirect->with('error', 'پرداخت یافت نشد.'),
+            'paid' => $redirect->with('success', __('payments.success')),
+            'already_settled', 'busy' => $redirect->with('info', __('payments.already_settled')),
+            'expired_refunded' => $redirect->with('error', __('payments.expired_refunded')),
+            'verify_failed', 'canceled_by_user' => $redirect->with('error', __('payments.failed_retry')),
+            default => $redirect->with('error', __('payments.not_found')),
         };
     }
 }

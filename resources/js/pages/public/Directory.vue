@@ -3,12 +3,13 @@ import FlashMessages from '@/components/FlashMessages.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
-import { faDigits } from '@/lib/persian';
 import { BusinessSummary } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import {
     ArrowLeft,
+    ArrowRight,
     BarChart3,
     Building2,
     CalendarClock,
@@ -19,6 +20,7 @@ import {
     MapPin,
     MessageSquareText,
     Phone,
+    Sparkles,
     Star,
     Users,
     Zap,
@@ -29,79 +31,56 @@ const props = defineProps<{
     businesses: BusinessSummary[];
 }>();
 
+const { t, isFa, num } = useLocale();
+
 const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
+const APP_VERSION = '1.6.0';
 
 const totalServices = computed(() => props.businesses.reduce((sum, b) => sum + (b.services_count ?? 0), 0));
 const totalStaff = computed(() => props.businesses.reduce((sum, b) => sum + (b.staff_count ?? 0), 0));
 
 const heroStats = computed(() => [
-    { value: faDigits(props.businesses.length), label: 'کسب‌وکار فعال' },
-    { value: faDigits(totalServices.value), label: 'خدمت آماده‌ی رزرو' },
-    { value: faDigits(totalStaff.value), label: 'همکار آنلاین' },
+    { value: num(props.businesses.length), label: t('landing.statBusinesses') },
+    { value: num(totalServices.value), label: t('landing.statServices') },
+    { value: num(totalStaff.value), label: t('landing.statStaff') },
 ]);
 
-const features = [
-    {
-        icon: Building2,
-        title: 'چندکسب‌وکاری',
-        description: 'هر کسب‌وکار دنیای مستقل خودش را دارد: خدمات، پرسنل، ساعات کاری و صفحه‌ی اختصاصی رزرو با آدرس اختصاصی.',
-    },
-    {
-        icon: CalendarClock,
-        title: 'رزرو لحظه‌ای',
-        description: 'اسلات‌های آزاد بر اساس شیفت واقعی پرسنل به‌صورت زنده محاسبه می‌شوند؛ دو نفر هرگز روی یک نوبت نمی‌جنگند.',
-    },
-    {
-        icon: Users,
-        title: 'مدیریت پرسنل و شیفت',
-        description: 'ساعات کاری هر همکار را جداگانه تعریف کن و تغییر شیفت‌ها را بدون تماس تلفنی و جدول اکسل مدیریت کن.',
-    },
-    {
-        icon: MessageSquareText,
-        title: 'پیامک یادآوری',
-        description: 'درایور کاوه‌نگار پشت یک قرارداد ساده‌ی پیامک نشسته است؛ اگر سرویس‌دهنده‌ی دیگری خواستی، فقط یک درایور جدید بنویس.',
-    },
-    {
-        icon: BarChart3,
-        title: 'داشبورد مدیریتی',
-        description: 'وضعیت هر رزرو، نوبت‌های امروز و گردش کار روزانه در یک نگاه؛ تغییر وضعیت با یک کلیک اعمال می‌شود.',
-    },
-    {
-        icon: Languages,
-        title: 'RTL و تقویم جلالی',
-        description: 'رابط کاملاً راست‌به‌چپ با فونت وزیرمتن و اعداد فارسی؛ برای کاربر ایرانی، طبیعی — نه ترجمه‌شده — حس می‌شود.',
-    },
-];
+const featureIcons = [Building2, CalendarClock, Users, MessageSquareText, BarChart3, Languages];
 
-const steps = [
-    {
-        title: 'کسب‌وکار را انتخاب کن',
-        description: 'از فهرست کسب‌وکارهای فعال، کلینیک یا سالن مورد نظرت را باز کن و خدماتش را ببین.',
-    },
-    {
-        title: 'خدمت و زمان دلخواه را بچین',
-        description: 'فقط اسلات‌های واقعاً خالی نمایش داده می‌شوند؛ روز، ساعت و پرسنل را خودت انتخاب می‌کنی.',
-    },
-    {
-        title: 'تأیید بگیر، یادآوری بگیر',
-        description: 'کد پیگیری فوری صادر می‌شود و پیش از موعد نوبت، یادآوری پیامکی دریافت می‌کنی.',
-    },
-];
+const features = computed(() =>
+    featureIcons.map((icon, i) => ({
+        icon,
+        title: t(`landing.features.${i}.title`),
+        description: t(`landing.features.${i}.description`),
+    })),
+);
+
+const steps = computed(() =>
+    [0, 1, 2].map((i) => ({
+        title: t(`landing.steps.${i}.title`),
+        description: t(`landing.steps.${i}.description`),
+    })),
+);
 
 const techStack = ['Laravel 13', 'Inertia 2', 'Vue 3 + TypeScript', 'Tailwind CSS', 'Pest', 'Docker', 'Render'];
 
-const demoAccounts = [
-    { label: 'مدیر کل سامانه', email: 'admin@nobat.ir' },
-    { label: 'مدیر کلینیک پارس', email: 'manager@nobat.ir' },
-    { label: 'پرسنل کلینیک پارس', email: 'staff@nobat.ir' },
-    { label: 'مدیر سالن آفتاب', email: 'salon@nobat.ir' },
-];
+const demoAccounts = computed(() => [
+    { label: t('landing.demoSuperAdmin'), email: 'admin@nobat.ir' },
+    { label: t('landing.demoClinicManager'), email: 'manager@nobat.ir' },
+    { label: t('landing.demoClinicStaff'), email: 'staff@nobat.ir' },
+    { label: t('landing.demoSalonManager'), email: 'salon@nobat.ir' },
+]);
 
-const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰', 'کوتاهی مو — سه‌شنبه، ۱۰:۰۰', 'کنسل با یک کلیک، اسلات فوراً آزاد می‌شود'];
+const bookingPreviewRows = computed(() => [0, 1, 2].map((i) => t(`landing.previewRows.${i}`)));
+
+const forwardIcon = isFa.value ? ArrowLeft : ArrowRight;
+const heroGradient = isFa.value
+    ? 'bg-gradient-to-l from-primary via-primary/80 to-primary/40'
+    : 'bg-gradient-to-r from-primary via-primary/80 to-primary/40';
 </script>
 
 <template>
-    <Head title="نوبت — سامانه نوبت‌دهی آنلاین" />
+    <Head :title="t('landing.pageTitle')" />
 
     <PublicLayout>
         <section class="relative overflow-hidden">
@@ -117,35 +96,34 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
                 <div>
                     <Badge variant="secondary" class="gap-1.5 rounded-full px-3 py-1 text-xs">
                         <Sparkles class="h-3.5 w-3.5 text-amber-500" />
-                        متن‌باز و رایگان — نسخه {{ faDigits('1.5.0') }}
+                        {{ t('landing.badge', { version: num(APP_VERSION) }) }}
                     </Badge>
 
                     <h1 class="mt-5 text-4xl font-bold leading-[1.25] tracking-tight md:text-5xl md:leading-[1.25]">
-                        نوبت آنلاین،
-                        <span class="bg-gradient-to-l from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent">
-                            بدون تماس و بدون معطلی
+                        {{ t('landing.heroTitleA') }}
+                        <span :class="['bg-clip-text text-transparent', heroGradient]">
+                            {{ t('landing.heroTitleB') }}
                         </span>
                     </h1>
 
                     <p class="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">
-                        نوبت، نوبت‌دهی آنلاین را برای کلینیک‌ها، سالن‌ها و هر کسب‌وکار نوبت‌محور ساده می‌کند: مشتری خودش روز و ساعت را برمی‌دارد،
-                        پرسنل شیفتش را مدیریت می‌کند و یادآوری پیامکی خودکار می‌رود.
+                        {{ t('landing.heroSubtitle') }}
                     </p>
 
                     <div class="mt-8 flex flex-wrap items-center gap-3">
                         <Button as-child size="lg" class="gap-2">
                             <a href="#businesses">
-                                رزرو نوبت
-                                <ArrowLeft class="h-4 w-4" />
+                                {{ t('landing.ctaBook') }}
+                                <component :is="forwardIcon" class="h-4 w-4" />
                             </a>
                         </Button>
                         <Button as-child size="lg" variant="outline">
-                            <Link :href="route('login')">ورود به داشبورد دمو</Link>
+                            <Link :href="route('login')">{{ t('landing.ctaDashboard') }}</Link>
                         </Button>
                         <Button as-child size="lg" variant="ghost" class="gap-2 text-muted-foreground">
                             <a :href="GITHUB_URL" target="_blank" rel="noopener">
                                 <Github class="h-4 w-4" />
-                                گیت‌هاب
+                                {{ t('landing.ctaGithub') }}
                             </a>
                         </Button>
                     </div>
@@ -163,7 +141,7 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
                     <div class="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-tr from-primary/10 via-transparent to-primary/5 blur-xl"></div>
                     <Card class="rotate-1 rounded-2xl border-border/60 shadow-xl transition-transform duration-500 hover:rotate-0">
                         <CardHeader class="flex-row items-center justify-between space-y-0">
-                            <CardTitle class="text-base">رزرو نوبت جدید</CardTitle>
+                            <CardTitle class="text-base">{{ t('landing.previewTitle') }}</CardTitle>
                             <CalendarDays class="h-5 w-5 text-primary" />
                         </CardHeader>
                         <CardContent class="space-y-3">
@@ -175,7 +153,7 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
                                 <span class="text-foreground/90">{{ row }}</span>
                                 <CheckCircle2 class="h-4 w-4 shrink-0 text-green-600" />
                             </div>
-                            <p class="pt-1 text-center text-xs text-muted-foreground">همین الان، بدون حتی یک تماس تلفنی</p>
+                            <p class="pt-1 text-center text-xs text-muted-foreground">{{ t('landing.previewNote') }}</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -186,9 +164,9 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
         <section class="border-y bg-background">
             <div class="mx-auto max-w-6xl px-4 py-16">
                 <div class="mx-auto max-w-2xl text-center">
-                    <h2 class="text-2xl font-bold tracking-tight md:text-3xl">هر چیزی که یک کسب‌وکار نوبت‌محور لازم دارد</h2>
+                    <h2 class="text-2xl font-bold tracking-tight md:text-3xl">{{ t('landing.featuresTitle') }}</h2>
                     <p class="mt-3 text-muted-foreground">
-                        از صفحه‌ی رزرو عمومی تا داشبورد مدیریتی؛ همه چیز از همان ابتدا فارسی، راست‌به‌چپ و جلالی.
+                        {{ t('landing.featuresSubtitle') }}
                     </p>
                 </div>
 
@@ -211,8 +189,8 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
         <!-- how it works -->
         <section class="mx-auto max-w-6xl px-4 py-16">
             <div class="mx-auto max-w-2xl text-center">
-                <h2 class="text-2xl font-bold tracking-tight md:text-3xl">رزرو در سه قدم</h2>
-                <p class="mt-3 text-muted-foreground">از انتخاب کسب‌وکار تا کد پیگیری، کمتر از یک دقیقه.</p>
+                <h2 class="text-2xl font-bold tracking-tight md:text-3xl">{{ t('landing.stepsTitle') }}</h2>
+                <p class="mt-3 text-muted-foreground">{{ t('landing.stepsSubtitle') }}</p>
             </div>
 
             <ol class="mt-10 grid gap-6 md:grid-cols-3">
@@ -220,7 +198,7 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
                     <span
                         class="absolute -top-4 start-6 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground"
                     >
-                        {{ faDigits(index + 1) }}
+                        {{ num(index + 1) }}
                     </span>
                     <h3 class="mt-2 font-semibold">{{ step.title }}</h3>
                     <p class="mt-2 text-sm leading-7 text-muted-foreground">{{ step.description }}</p>
@@ -232,8 +210,8 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
         <section id="businesses" class="scroll-mt-16 border-y bg-background">
             <div class="mx-auto max-w-6xl px-4 py-16">
                 <div class="mx-auto max-w-2xl text-center">
-                    <h2 class="text-2xl font-bold tracking-tight md:text-3xl">کسب‌وکارهای فعال</h2>
-                    <p class="mt-3 text-muted-foreground">یکی را انتخاب کن و همین حالا نوبت بگیر.</p>
+                    <h2 class="text-2xl font-bold tracking-tight md:text-3xl">{{ t('landing.dirTitle') }}</h2>
+                    <p class="mt-3 text-muted-foreground">{{ t('landing.dirSubtitle') }}</p>
                 </div>
 
                 <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -251,27 +229,27 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
                             <div class="flex flex-wrap items-center gap-2">
                                 <Badge variant="secondary" class="gap-1">
                                     <CalendarClock class="size-3" />
-                                    {{ faDigits(business.services_count ?? 0) }} خدمت
+                                    {{ t('landing.serviceCount', { n: num(business.services_count ?? 0) }) }}
                                 </Badge>
                                 <Badge variant="secondary" class="gap-1">
                                     <Phone class="size-3" />
-                                    {{ faDigits(business.staff_count ?? 0) }} همکار
+                                    {{ t('landing.staffCount', { n: num(business.staff_count ?? 0) }) }}
                                 </Badge>
                                 <Badge v-if="business.rating_avg" variant="secondary" class="gap-1 text-amber-600 dark:text-amber-400">
                                     <Star class="size-3 fill-amber-400 text-amber-400" />
-                                    {{ faDigits(business.rating_avg ?? 0) }} از ۵
-                                    <span class="text-muted-foreground">({{ faDigits(business.rating_count ?? 0) }} نظر)</span>
+                                    {{ num(business.rating_avg ?? 0) }} {{ t('landing.ratingOutOf') }}
+                                    <span class="text-muted-foreground">{{ t('landing.reviewCount', { n: num(business.rating_count ?? 0) }) }}</span>
                                 </Badge>
                             </div>
 
                             <Button as-child class="w-full">
-                                <Link :href="`/b/${business.slug}`">مشاهده و رزرو نوبت</Link>
+                                <Link :href="`/b/${business.slug}`">{{ t('landing.viewAndBook') }}</Link>
                             </Button>
                         </CardContent>
                     </Card>
                 </div>
 
-                <div v-if="businesses.length === 0" class="mt-16 text-center text-muted-foreground">هنوز کسب‌وکاری ثبت نشده است.</div>
+                <div v-if="businesses.length === 0" class="mt-16 text-center text-muted-foreground">{{ t('landing.empty') }}</div>
             </div>
         </section>
 
@@ -284,18 +262,18 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
                     <div>
                         <Badge class="gap-1.5 border-white/20 bg-white/10 text-primary-foreground hover:bg-white/15">
                             <Zap class="h-3.5 w-3.5 text-amber-300" />
-                            دموی زنده
+                            {{ t('landing.demoBadge') }}
                         </Badge>
-                        <h2 class="mt-4 text-2xl font-bold md:text-3xl">قبل از هر چیز، سامانه را زنده ببین</h2>
+                        <h2 class="mt-4 text-2xl font-bold md:text-3xl">{{ t('landing.demoTitle') }}</h2>
                         <p class="mt-3 max-w-lg leading-8 text-primary-foreground/80">
-                            با حساب‌های آماده‌ی دمو وارد شو: از نمای مدیر کل تا پرسنل کلینیک. رمز همه‌ی حساب‌ها
+                            {{ t('landing.demoText1') }}
                             <code dir="ltr" class="rounded bg-white/15 px-1.5 py-0.5 font-mono text-sm">password</code>
-                            است و با یک کلیک وارد می‌شوی.
+                            {{ t('landing.demoText2') }}
                         </p>
                         <Button as-child size="lg" variant="secondary" class="mt-6 gap-2">
                             <Link :href="route('login')">
-                                ورود با یک کلیک
-                                <ArrowLeft class="h-4 w-4" />
+                                {{ t('landing.demoCta') }}
+                                <component :is="forwardIcon" class="h-4 w-4" />
                             </Link>
                         </Button>
                     </div>
@@ -317,7 +295,7 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
         <!-- tech stack -->
         <section class="mx-auto max-w-6xl px-4 pb-20">
             <div class="flex flex-col items-center gap-5 rounded-2xl border bg-background px-6 py-8">
-                <p class="text-sm font-medium text-muted-foreground">ساخته‌شده با تکنولوژی‌های مدرن و آزمون‌پذیر</p>
+                <p class="text-sm font-medium text-muted-foreground">{{ t('landing.techNote') }}</p>
                 <div class="flex flex-wrap items-center justify-center gap-2">
                     <Badge v-for="tech in techStack" :key="tech" variant="secondary" class="px-3 py-1 text-xs">
                         {{ tech }}
@@ -329,7 +307,7 @@ const bookingPreviewRows = ['ویزیت عمومی — دوشنبه، ۱۴:۳۰'
                     rel="noopener"
                     class="text-xs text-muted-foreground underline-offset-4 hover:underline"
                 >
-                    تاریخچه‌ی نسخه‌ها را در CHANGELOG بخوان
+                    {{ t('landing.changelogLink') }}
                 </a>
             </div>
         </section>

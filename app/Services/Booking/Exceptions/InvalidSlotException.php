@@ -6,8 +6,8 @@ use RuntimeException;
 
 class InvalidSlotException extends RuntimeException
 {
-    public function __construct(string $message = 'بازه زمانی انتخاب‌شده معتبر نیست.')
+    public function __construct(?string $message = null)
     {
-        parent::__construct($message);
+        parent::__construct($message ?? __('bookings.slot_invalid'));
     }
 }

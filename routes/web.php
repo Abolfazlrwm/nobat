@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\AppointmentStatusController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\ReviewController as DashboardReviewController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Management\BusinessAdminController;
 use App\Http\Controllers\Management\ServiceController;
 use App\Http\Controllers\Management\StaffController;
@@ -26,6 +27,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::post('locale', [LocaleController::class, 'switch'])->name('locale.switch');
 
 Route::get('b/{business:slug}', [BusinessController::class, 'show'])->name('businesses.show');
 
