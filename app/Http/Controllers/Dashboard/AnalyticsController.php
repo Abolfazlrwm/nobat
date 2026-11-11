@@ -6,7 +6,6 @@ use App\Http\Controllers\Concerns\ResolvesManagedBusiness;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\DiscountRedemption;
-use App\Models\Review;
 use App\Models\WorkingHour;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
