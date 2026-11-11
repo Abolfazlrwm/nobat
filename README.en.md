@@ -41,13 +41,15 @@ Demo accounts (password for all: `password`):
 
 ## 🖼️ Screenshots
 
-| Public landing | Admin dashboard |
+| Live landing (v1.5.0) | Admin dashboard |
 |:---:|:---:|
 | ![Nobat home](docs/screenshots/home.png) | ![Admin dashboard](docs/screenshots/dashboard.png) |
 | **4-step booking wizard** | **ZarinPal sandbox gateway** |
 | ![Booking wizard](docs/screenshots/booking-wizard.png) | ![ZarinPal payment gateway](docs/screenshots/zarinpal.png) |
-| **Booking confirmation with payment deadline** | **Login** |
-| ![Booking confirmation and payment](docs/screenshots/payment.png) | ![Login](docs/screenshots/login.png) |
+| **Booking confirmation + calendar export (iCal)** | **⭐ Customer ratings & reviews** |
+| ![Booking confirmation and payment](docs/screenshots/payment.png) | ![Business ratings and reviews](docs/screenshots/business-reviews-full.png) |
+| **📈 Sales reports with CSV export** | **🗣️ Review moderation** |
+| ![Sales reports](docs/screenshots/reports.png) | ![Review moderation](docs/screenshots/reviews-moderation.png) |
 
 ---
 
