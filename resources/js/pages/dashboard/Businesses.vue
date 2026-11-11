@@ -67,11 +67,7 @@ function toggle(business: AdminBusiness): void {
                                 />
                             </td>
                             <td class="px-4 py-3">
-                                <Button
-                                    :variant="business.is_active ? 'outline' : 'default'"
-                                    size="sm"
-                                    @click="toggle(business)"
-                                >
+                                <Button :variant="business.is_active ? 'outline' : 'default'" size="sm" @click="toggle(business)">
                                     <Power class="ml-1 size-4" />
                                     {{ business.is_active ? 'غیرفعال کن' : 'فعال کن' }}
                                 </Button>
@@ -79,9 +75,7 @@ function toggle(business: AdminBusiness): void {
                         </tr>
 
                         <tr v-if="businesses.length === 0">
-                            <td colspan="7" class="px-4 py-10 text-center text-muted-foreground">
-                                کسب‌وکاری ثبت نشده است.
-                            </td>
+                            <td colspan="7" class="px-4 py-10 text-center text-muted-foreground">کسب‌وکاری ثبت نشده است.</td>
                         </tr>
                     </tbody>
                 </table>

@@ -65,11 +65,15 @@ export interface BusinessSummary {
     address?: string | null;
     services_count?: number;
     staff_count?: number;
+    rating_avg?: number | null;
+    rating_count?: number;
 }
 
 export interface BusinessWithServices extends BusinessSummary {
     services: ServiceItem[];
     staff: StaffItem[];
+    reviews_summary?: ReviewSummary | null;
+    reviews?: ReviewItem[];
 }
 
 export interface ServiceItem {
@@ -167,7 +171,24 @@ export interface BookingConfirmation {
     service: { name: string; duration_minutes: number; price: number };
     staff: { name: string; specialty?: string | null };
     payment?: PaymentSummary | null;
+    has_review?: boolean;
+    review?: { rating: number; comment?: string | null } | null;
 }
+
+export interface ReviewItem {
+    id: number;
+    customer_name: string;
+    rating: number;
+    comment?: string | null;
+    is_approved: boolean;
+    created_at?: string | null;
+}
+
+export interface ReviewSummary {
+    average: number | null;
+    count: number;
+}
+
 
 export type BreadcrumbItemType = BreadcrumbItem;
 

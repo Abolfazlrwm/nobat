@@ -18,6 +18,12 @@ class BusinessController extends Controller
             'activeStaff',
         ]);
 
+        $approvedReviews = $business->approvedReviews()
+            ->limit(6)
+            ->get(['id', 'customer_name', 'rating', 'comment', 'created_at']);
+
+        $average = $business->approvedReviews()->avg('rating');
+
         return Inertia::render('public/BusinessShow', [
             'business' => [
                 'id' => $business->id,
@@ -36,6 +42,17 @@ class BusinessController extends Controller
                     'id' => $staff->id,
                     'name' => $staff->name,
                     'specialty' => $staff->specialty,
+                ]),
+                'reviews_summary' => [
+                    'average' => $average ? round((float) $average, 1) : null,
+                    'count' => (int) $business->approvedReviews()->count(),
+                ],
+                'reviews' => $approvedReviews->map(fn ($review) => [
+                    'id' => $review->id,
+                    'customer_name' => $review->customer_name,
+                    'rating' => (int) $review->rating,
+                    'comment' => $review->comment,
+                    'created_at' => $review->created_at?->format('Y-m-d'),
                 ]),
             ],
         ]);

@@ -218,7 +218,7 @@ class DemoContentSeeder extends Seeder
                         default => $index % 3 === 0 ? Appointment::STATUS_CONFIRMED : Appointment::STATUS_PENDING,
                     };
 
-                    $business->appointments()->create([
+                    $appointment = $business->appointments()->create([
                         'code' => strtolower((string) Str::ulid()),
                         'service_id' => $service->id,
                         'staff_id' => $member->id,
@@ -228,10 +228,40 @@ class DemoContentSeeder extends Seeder
                         'ends_at' => $date->setTimeFromTimeString($time)->addMinutes($service->duration_minutes),
                         'status' => $status,
                     ]);
+
+                    if ($status === Appointment::STATUS_COMPLETED && $index % 2 === 0) {
+                        [$rating, $comment] = $this->reviewFor($index);
+
+                        $appointment->review()->create([
+                            'business_id' => $business->id,
+                            'customer_name' => $name,
+                            'rating' => $rating,
+                            'comment' => $comment,
+                            'is_approved' => $index % 4 !== 0,
+                        ]);
+                    }
                 }
 
                 $index++;
             }
         }
+    }
+
+    /**
+     * Persian demo reviews — mostly happy customers, one pending moderation.
+     *
+     * @return array{0: int, 1: ?string}
+     */
+    private function reviewFor(int $index): array
+    {
+        $reviews = [
+            [5, 'خیلی دقیق و باحوصله بودند، به‌موقع هم تشریف می‌رسیدند. پیشنهاد می‌کنم.'],
+            [4, 'زمان‌بندی خوب بود، فقط کمی منتظر ماندم.'],
+            [5, 'از رزرو آنلاین خیلی راحتم؛ دیگه سراغ تماس تلفنی نمی‌روم.'],
+            [3, 'نوبتم سریع تأیید شد، پرسنل مؤدب بودند.'],
+            [4, 'محیط تمیز و کارکنان حرفه‌ای. ممنون از نوبت.'],
+        ];
+
+        return $reviews[$index % count($reviews)];
     }
 }

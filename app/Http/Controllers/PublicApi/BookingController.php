@@ -12,6 +12,7 @@ use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -80,7 +81,54 @@ class BookingController extends Controller
                     'ref_id' => $payment->ref_id,
                     'invoice_number' => $payment->invoice?->number ?? $appointment->invoice?->number,
                 ] : null,
+                'has_review' => $appointment->review()->exists(),
+                'review' => $appointment->review?->only('rating', 'comment'),
             ],
+        ]);
+    }
+
+    /**
+     * iCal export so customers can add the appointment to any calendar app.
+     */
+    public function ics(string $code): HttpResponse
+    {
+        $appointment = Appointment::query()
+            ->where('code', $code)
+            ->with(['business:id,name,address', 'service:id,name'])
+            ->firstOrFail();
+
+        $status = in_array($appointment->status, [Appointment::STATUS_CANCELLED, Appointment::STATUS_EXPIRED])
+            ? 'CANCELLED'
+            : 'CONFIRMED';
+
+        $escape = fn (?string $text) => str_replace(
+            ['\\', ';', ',', "\n", "\r"],
+            ['\\\\', '\;', '\,', '\n', ''],
+            $text ?? '',
+        );
+
+        $ics = implode("\r\n", [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//Nobat//Booking//FA',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH',
+            'BEGIN:VEVENT',
+            'UID:'.$appointment->code.'@nobat',
+            'DTSTAMP:'.now()->utc()->format('Ymd\THis\Z'),
+            'DTSTART:'.$appointment->starts_at->utc()->format('Ymd\THis\Z'),
+            'DTEND:'.$appointment->ends_at->utc()->format('Ymd\THis\Z'),
+            'SUMMARY:'.$escape($appointment->service->name.' | '.$appointment->business->name),
+            'LOCATION:'.$escape($appointment->business->address),
+            'DESCRIPTION:'.$escape('کد پیگیری نوبت: '.$appointment->code),
+            'STATUS:'.$status,
+            'END:VEVENT',
+            'END:VCALENDAR',
+        ]);
+
+        return response($ics, 200, [
+            'Content-Type' => 'text/calendar; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="nobat-'.$appointment->code.'.ics"',
         ]);
     }
 }
