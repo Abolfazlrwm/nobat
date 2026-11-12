@@ -8,6 +8,7 @@ use App\Models\Appointment;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -132,7 +133,7 @@ class CustomerController extends Controller
      * name/price and staff name, newest first — the raw material the
      * aggregation below collapses into customers.
      */
-    private function appointmentsOf(int $businessId, ?string $phone = null): \Illuminate\Support\Collection
+    private function appointmentsOf(int $businessId, ?string $phone = null): Collection
     {
         return Appointment::query()
             ->where('appointments.business_id', $businessId)
@@ -149,11 +150,11 @@ class CustomerController extends Controller
      * completed/cancelled/no-show split, lifetime spend and the no-show
      * rate counted over the visits that reached the chair.
      */
-    private function aggregate(\Illuminate\Support\Collection $appointments): \Illuminate\Support\Collection
+    private function aggregate(Collection $appointments): Collection
     {
         return $appointments
             ->groupBy('customer_phone')
-            ->map(function (\Illuminate\Support\Collection $rows, string $phone): array {
+            ->map(function (Collection $rows, string $phone): array {
                 $completed = $rows->where('status', Appointment::STATUS_COMPLETED);
                 $noShows = $rows->where('status', Appointment::STATUS_NO_SHOW);
 
