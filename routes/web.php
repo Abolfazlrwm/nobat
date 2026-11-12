@@ -4,6 +4,7 @@ use App\Http\Controllers\Dashboard\AnalyticsController;
 use App\Http\Controllers\Dashboard\ApiTokenController;
 use App\Http\Controllers\Dashboard\AppointmentController;
 use App\Http\Controllers\Dashboard\AppointmentStatusController;
+use App\Http\Controllers\Dashboard\CustomerController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\ReviewController as DashboardReviewController;
@@ -88,6 +89,11 @@ Route::middleware('auth')->group(function () {
     Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::patch('appointments/{appointment}/status', [AppointmentStatusController::class, 'update'])
         ->name('appointments.status');
+
+    Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('customers/{phone}', [CustomerController::class, 'show'])
+        ->where('phone', '[0-9]{10,15}')
+        ->name('customers.show');
 
     Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
