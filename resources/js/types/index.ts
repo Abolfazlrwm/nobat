@@ -253,6 +253,31 @@ export interface ReviewSummary {
     count: number;
 }
 
+/** One aggregated customer row of the customer book (per phone). */
+export interface CustomerSummary {
+    phone: string;
+    name: string;
+    appointments_count: number;
+    completed_count: number;
+    cancelled_count: number;
+    no_show_count: number;
+    no_show_rate: number;
+    total_spent: number;
+    last_visit_at?: string | null;
+}
+
+/** One appointment row of a customer profile history. */
+export interface CustomerHistoryItem {
+    id: number;
+    code: string;
+    service_name?: string;
+    staff_name?: string;
+    starts_at: string;
+    status: string;
+    status_label: string;
+    price: number;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
 
 export interface Paginated<T> {

@@ -17,6 +17,7 @@ import {
     TicketPercent,
     TrendingUp,
     Users,
+    UsersRound,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
@@ -44,6 +45,7 @@ const mainNavItems = computed<NavItem[]>(() => {
             { title: 'لیست انتظار', href: '/waitlist', icon: Hourglass },
             { title: 'کدهای تخفیف', href: '/discounts', icon: TicketPercent },
             { title: 'نظرات مشتریان', href: '/reviews', icon: MessageSquareText },
+            { title: 'مشتری‌ها', href: '/customers', icon: UsersRound },
             { title: 'تحلیل', href: '/analytics', icon: TrendingUp },
             { title: 'کلیدهای API', href: '/api-tokens', icon: KeyRound },
             { title: 'گزارش‌ها', href: '/reports', icon: BarChart3 },
