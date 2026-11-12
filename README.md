@@ -16,6 +16,9 @@
 
 <p align="center"><sub>فارسی — <a href="README.en.md">English README</a> 🌍</sub></p>
 
+<p align="center"><img src="assets/demo.gif" alt="demo" width="100%"></p>
+
+
 ---
 
 ## 🔴 دموی زنده
