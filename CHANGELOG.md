@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     switching and delete — the cover role is never left empty.
   - The public business page renders the photos as a responsive grid with
     a lightbox (prev / next / close) on top of the existing booking flow.
+  - Photos stream through a `media/gallery/{photo}` route with long-lived
+    cache headers — `artisan serve` hosts cannot serve the /storage symlink
+    statically, so Laravel hands out the bytes itself.
   - Demo content ships with 10 real photos (5 per demo business) seeded
     from the repository at boot, so the demo shows the gallery instantly.
 - Covered by 8 new Pest tests (150 total): upload with the auto-cover
