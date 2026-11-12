@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-11-12
+
+### Added
+
+- **SMS reminders (FA: یادآوری پیامکی)**: the hourly scheduled
+  `nobat:send-reminders` command queues a reminder for every confirmed
+  appointment starting within the next 24 hours (widenable with
+  `--within`), delivered over the existing SMS driver architecture —
+  the `log` driver in development and the real Kavenegar gateway in
+  production.
+- **Send first, stamp after**: `SendReminderSms` stamps
+  `appointments.reminder_sent_at` only once the gateway accepted the
+  message, so a failed send stays queued for retry and a successful one
+  is never repeated; cancelled or already-reminded appointments are
+  skipped on every retry.
+- **Kill switch**: `NOBAT_SMS_REMINDERS=false` silences the reminders
+  without touching the driver configuration.
+- Covered by 4 new Pest tests (121 total): window scoping with
+  pending / out-of-window / already-reminded skips, delivery plus the
+  reminder stamp through the log driver, the no-stamp-on-failure
+  guarantee against a rejecting gateway, and the disabled flag.
+
 ## [1.8.0] - 2026-11-12
 
 ### Added
