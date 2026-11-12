@@ -5,9 +5,9 @@ import StatusBadge from '@/components/StatusBadge.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toJalaali } from '@/lib/jalali';
-import { faDigits, faPrice, WEEKDAYS } from '@/lib/persian';
 import { AnalyticsHeatCell, AnalyticsHourPeak, AnalyticsPoint, AnalyticsStats, BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { ArrowDownRight, ArrowUpRight, CalendarCheck2, Hourglass, Star, Ticket, TrendingUp, Users, Wallet } from 'lucide-vue-next';
@@ -35,12 +35,17 @@ const props = defineProps<{
     heatmap: AnalyticsHeatCell[];
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-    { title: 'تحلیل', href: '/analytics' },
-];
+const { t, num, price, weekdayShort, isFa } = useLocale();
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
+    { title: t('panel.dashboard.title'), href: '/dashboard' },
+    { title: t('panel.analytics.title'), href: '/analytics' },
+]);
 
 const RANGES = [7, 30, 90];
+
+// Iranian weekday rows (شنبه = 0); English abbreviations share the same order.
+const EN_WEEKDAYS = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
 function pickRange(days: number): void {
     if (days === props.days) return;
@@ -50,62 +55,78 @@ function pickRange(days: number): void {
 
 function deltaBadge(delta: number | null) {
     if (delta === null || delta === 0) {
-        return { icon: null, class: 'bg-muted text-muted-foreground', text: 'بدون تغییر نسبت به دوره‌ی قبل' };
+        return { icon: null, class: 'bg-muted text-muted-foreground', text: t('panel.analytics.noChange') };
     }
+
+    const pretty = num(String(Math.abs(delta)).replace('.', isFa.value ? '٫' : '.'));
 
     return delta > 0
         ? {
               icon: ArrowUpRight,
               class: 'bg-emerald-500/15 text-emerald-600',
-              text: `٪${faDigits(String(delta).replace('.', '٫'))} نسبت به دوره‌ی قبل`,
+              text: t('panel.analytics.delta', { n: pretty }),
           }
         : {
               icon: ArrowDownRight,
               class: 'bg-red-500/15 text-red-600',
-              text: `٪${faDigits(String(Math.abs(delta)).replace('.', '٫'))} نسبت به دوره‌ی قبل`,
+              text: t('panel.analytics.delta', { n: pretty }),
           };
 }
 
 const rangeLabel = computed(() => {
-    if (props.days === 7) return 'هفت روز گذشته';
-    if (props.days === 90) return 'نود روز گذشته';
+    if (props.days === 7) return t('panel.analytics.range7');
+    if (props.days === 90) return t('panel.analytics.range90');
 
-    return 'سی روز گذشته';
+    return t('panel.analytics.range30');
 });
 
-// Day-of-month (Jalali) for the x axis; weekday names for the 7-day view.
+// Day-of-month for the x axis; weekday names for the 7-day view.
 const bookingPoints = computed(() =>
     props.series.map((point) => ({
-        label: props.days === 7 ? weekdayShort(point.date) : faDigits(toJalaali(new Date(point.date + 'T00:00:00')).jd),
+        label: props.days === 7 ? weekdayShort(point.date) : axisDayLabel(point.date),
         value: point.count,
     })),
 );
 
 const revenuePoints = computed(() =>
     props.series.map((point) => ({
-        label: props.days === 7 ? weekdayShort(point.date) : faDigits(toJalaali(new Date(point.date + 'T00:00:00')).jd),
+        label: props.days === 7 ? weekdayShort(point.date) : axisDayLabel(point.date),
         value: point.revenue,
     })),
 );
 
-function weekdayShort(date: string): string {
-    const jsDay = new Date(date + 'T00:00:00').getDay();
+function axisDayLabel(date: string): string {
+    if (isFa.value) {
+        return num(toJalaali(new Date(date + 'T00:00:00')).jd);
+    }
 
-    return WEEKDAYS[(jsDay + 1) % 7].slice(0, 3);
+    return String(new Date(date + 'T00:00:00').getDate());
 }
 
 const revenueFormatter = (value: number): string => {
-    if (value >= 1_000_000) return `${faDigits((value / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 1 }))} م`;
+    if (isFa.value) {
+        if (value >= 1_000_000) return `${num((value / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 1 }))} م`;
 
-    if (value >= 1_000) return `${faDigits(Math.round(value / 1_000).toLocaleString('en-US'))} هـ`;
+        if (value >= 1_000) return `${num(Math.round(value / 1_000).toLocaleString('en-US'))} هـ`;
 
-    return faPrice(value);
+        return price(value);
+    }
+
+    if (value >= 1_000_000) return `${(value / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 1 })}M`;
+
+    if (value >= 1_000) return `${Math.round(value / 1_000).toLocaleString('en-US')}K`;
+
+    return price(value);
 };
 
 // Heatmap grid: Iranian weekday rows (شنبه = 0) and the booked hours as columns.
 const heatmapHours = computed(() => [...new Set(props.heatmap.map((cell) => cell.hour))].sort((a, b) => a - b));
 
 const heatMax = computed(() => Math.max(1, ...props.heatmap.map((cell) => cell.count)));
+
+const heatWeekdays = computed(() =>
+    Array.from({ length: 7 }, (_, weekday) => ({ weekday, label: isFa.value ? t(`panel.weekdays.${weekday}`) : EN_WEEKDAYS[weekday] })),
+);
 
 function heatCount(weekday: number, hour: number): number {
     return props.heatmap.find((cell) => cell.weekday === weekday && cell.hour === hour)?.count ?? 0;
@@ -129,63 +150,63 @@ function heatStyle(weekday: number, hour: number): Record<string, string> {
 const peakMax = computed(() => Math.max(1, ...props.peak_hours.map((p) => p.count)));
 
 function hourLabel(hour: number): string {
-    return `${faDigits(hour)}:۰۰`;
+    return `${num(hour)}:00`;
 }
 
 const statCards = computed(() => [
     {
         key: 'revenue',
-        label: 'درآمد بازه',
+        label: t('panel.analytics.statRevenue'),
         icon: Wallet,
-        value: faPrice(props.stats.revenue),
+        value: price(props.stats.revenue),
         delta: props.stats.revenue_delta,
-        hint: `${faDigits(props.stats.completed)} نوبت انجام‌شده`,
+        hint: t('panel.analytics.hintRevenue', { n: num(props.stats.completed) }),
     },
     {
         key: 'bookings',
-        label: 'کل نوبت‌ها',
+        label: t('panel.analytics.statBookings'),
         icon: Ticket,
-        value: faDigits(props.stats.bookings),
+        value: num(props.stats.bookings),
         delta: props.stats.bookings_delta,
-        hint: `${faDigits(props.stats.completed)} انجام‌شده از ${faDigits(props.stats.bookings)} نوبت`,
+        hint: t('panel.analytics.hintBookings', { n: num(props.stats.completed), m: num(props.stats.bookings) }),
     },
     {
         key: 'completion',
-        label: 'نرخ تکمیل',
+        label: t('panel.analytics.statCompletion'),
         icon: CalendarCheck2,
-        value: `٪${faDigits(props.stats.completion_rate)}`,
+        value: `${isFa.value ? '٪' : ''}${num(props.stats.completion_rate)}${isFa.value ? '' : '%'}`,
         delta: null,
-        hint: `لغو: ٪${faDigits(props.stats.cancellation_rate)}`,
+        hint: t('panel.analytics.hintCompletion', { n: num(props.stats.cancellation_rate) }),
     },
     {
         key: 'ticket',
-        label: 'میانگین سند',
+        label: t('panel.analytics.statTicket'),
         icon: TrendingUp,
-        value: props.stats.avg_ticket !== null ? faPrice(props.stats.avg_ticket) : '—',
+        value: props.stats.avg_ticket !== null ? price(props.stats.avg_ticket) : '—',
         delta: null,
-        hint: 'درآمد تقسیم بر نوبت‌های انجام‌شده',
+        hint: t('panel.analytics.hintTicket'),
     },
     {
         key: 'customers',
-        label: 'مشتریان یکتا',
+        label: t('panel.analytics.statCustomers'),
         icon: Users,
-        value: faDigits(props.stats.unique_customers),
+        value: num(props.stats.unique_customers),
         delta: null,
-        hint: 'بر اساس شماره تماس',
+        hint: t('panel.analytics.hintCustomers'),
     },
     {
         key: 'rating',
-        label: 'میانگین امتیاز',
+        label: t('panel.analytics.statRating'),
         icon: Star,
-        value: props.stats.avg_rating !== null ? `${faDigits(props.stats.avg_rating)} از ۵` : '—',
+        value: props.stats.avg_rating !== null ? t('panel.analytics.ratingValue', { n: num(props.stats.avg_rating) }) : '—',
         delta: null,
-        hint: 'نظرات تأییدشده در بازه',
+        hint: t('panel.analytics.hintRating'),
     },
 ]);
 </script>
 
 <template>
-    <Head title="تحلیل" />
+    <Head :title="t('panel.analytics.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
@@ -193,8 +214,8 @@ const statCards = computed(() => [
 
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <h1 class="text-xl font-bold">تحلیل و آمار</h1>
-                    <p class="text-sm text-muted-foreground">تصویر کلان عملکرد کسب‌وکار در {{ rangeLabel }} — با مقایسه‌ی دوره‌ی قبل</p>
+                    <h1 class="text-xl font-bold">{{ t('panel.analytics.title') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ t('panel.analytics.subtitle', { range: rangeLabel }) }}</p>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -205,7 +226,7 @@ const statCards = computed(() => [
                         :variant="range === props.days ? 'default' : 'outline'"
                         @click="pickRange(range)"
                     >
-                        {{ faDigits(range) }} روز
+                        {{ t('panel.analytics.days', { n: num(range) }) }}
                     </Button>
                 </div>
             </div>
@@ -237,8 +258,8 @@ const statCards = computed(() => [
             <div class="grid gap-6 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">روند نوبت‌های روزانه</CardTitle>
-                        <CardDescription>تعداد نوبت‌های ثبت‌شده در هر روز از بازه</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.analytics.bookingTrend') }}</CardTitle>
+                        <CardDescription>{{ t('panel.analytics.bookingTrendDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <BarSeries :points="bookingPoints" :compact="props.days > 7" />
@@ -247,8 +268,8 @@ const statCards = computed(() => [
 
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">روند درآمد روزانه</CardTitle>
-                        <CardDescription>درآمد نوبت‌های انجام‌شده، پس از کسر تخفیف</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.analytics.revenueTrend') }}</CardTitle>
+                        <CardDescription>{{ t('panel.analytics.revenueTrendDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <BarSeries :points="revenuePoints" :compact="props.days > 7" :value-formatter="revenueFormatter" />
@@ -259,32 +280,34 @@ const statCards = computed(() => [
             <div class="grid gap-6 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">ساعت‌های پرترافیک</CardTitle>
-                        <CardDescription>شلوغ‌ترین ساعات شروع نوبت در بازه</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.analytics.peakHours') }}</CardTitle>
+                        <CardDescription>{{ t('panel.analytics.peakHoursDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-3">
                         <div v-for="peak in peak_hours" :key="peak.hour" class="flex items-center gap-3 text-sm">
-                            <span class="w-14 shrink-0 font-medium">{{ hourLabel(peak.hour) }}</span>
+                            <span class="w-14 shrink-0 font-medium" dir="ltr">{{ hourLabel(peak.hour) }}</span>
                             <div class="h-2 flex-1 overflow-hidden rounded-full bg-muted">
                                 <div class="h-full rounded-full bg-primary/80" :style="{ width: `${(peak.count / peakMax) * 100}%` }" />
                             </div>
-                            <span class="w-20 shrink-0 text-left text-xs text-muted-foreground"> {{ faDigits(peak.count) }} نوبت </span>
+                            <span class="w-20 shrink-0 text-left text-xs text-muted-foreground">
+                                {{ t('panel.analytics.peakCount', { n: num(peak.count) }) }}
+                            </span>
                         </div>
-                        <p v-if="peak_hours.length === 0" class="text-sm text-muted-foreground">در این بازه نوبتی ثبت نشده است.</p>
+                        <p v-if="peak_hours.length === 0" class="text-sm text-muted-foreground">{{ t('panel.analytics.emptyRange') }}</p>
                     </CardContent>
                 </Card>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">تفکیک وضعیت</CardTitle>
-                        <CardDescription>ترکیب وضعیت نوبت‌ها در بازه</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.analytics.statusSplit') }}</CardTitle>
+                        <CardDescription>{{ t('panel.analytics.statusSplitDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-3">
                         <div v-for="row in by_status" :key="row.status" class="flex items-center justify-between text-sm">
                             <StatusBadge :status="row.status" />
-                            <span class="font-semibold">{{ faDigits(row.count) }}</span>
+                            <span class="font-semibold">{{ num(row.count) }}</span>
                         </div>
-                        <p v-if="by_status.length === 0" class="text-sm text-muted-foreground">در این بازه نوبتی ثبت نشده است.</p>
+                        <p v-if="by_status.length === 0" class="text-sm text-muted-foreground">{{ t('panel.analytics.emptyRange') }}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -292,8 +315,8 @@ const statCards = computed(() => [
             <div class="grid gap-6 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">نقشه‌ی حرارتی شلوغی</CardTitle>
-                        <CardDescription>تراکم نوبت‌ها بر اساس روز هفته و ساعت شروع</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.analytics.heatmap') }}</CardTitle>
+                        <CardDescription>{{ t('panel.analytics.heatmapDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div v-if="heatmap.length > 0" class="overflow-x-auto">
@@ -302,49 +325,49 @@ const statCards = computed(() => [
                                     <tr>
                                         <th class="w-14"></th>
                                         <th v-for="hour in heatmapHours" :key="hour" class="font-medium text-muted-foreground">
-                                            {{ faDigits(hour) }}
+                                            {{ num(hour) }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(weekdayName, weekday) in WEEKDAYS" :key="weekday">
-                                        <td class="text-right text-xs font-medium text-muted-foreground">{{ weekdayName }}</td>
+                                    <tr v-for="row in heatWeekdays" :key="row.weekday">
+                                        <td class="text-right text-xs font-medium text-muted-foreground">{{ row.label }}</td>
                                         <td v-for="hour in heatmapHours" :key="hour">
                                             <div
                                                 class="mx-auto flex h-7 w-full min-w-7 items-center justify-center rounded-md"
-                                                :style="heatStyle(weekday, hour)"
+                                                :style="heatStyle(row.weekday, hour)"
                                             >
-                                                <span v-if="heatCount(weekday, hour)">{{ faDigits(heatCount(weekday, hour)) }}</span>
+                                                <span v-if="heatCount(row.weekday, hour)">{{ num(heatCount(row.weekday, hour)) }}</span>
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <p v-else class="text-sm text-muted-foreground">داده‌ای برای نمایش وجود ندارد.</p>
+                        <p v-else class="text-sm text-muted-foreground">{{ t('panel.analytics.emptyData') }}</p>
                     </CardContent>
                 </Card>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">خدمات پرسود</CardTitle>
-                        <CardDescription>پنج خدمت با بیشترین درآمد در بازه</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.analytics.topServices') }}</CardTitle>
+                        <CardDescription>{{ t('panel.analytics.topServicesDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-3">
                         <div v-for="service in top_services" :key="service.name" class="flex items-center justify-between text-sm">
                             <div>
                                 <span class="font-medium">{{ service.name }}</span>
                                 <span class="block text-xs text-muted-foreground">
-                                    {{ faDigits(service.count) }} نوبت • {{ faPrice(service.revenue) }}
+                                    {{ t('panel.analytics.peakCount', { n: num(service.count) }) }} • {{ price(service.revenue) }}
                                 </span>
                             </div>
                             <span class="rounded-md bg-muted px-2 py-1 text-xs font-semibold">
-                                {{ faPrice(service.revenue) }}
+                                {{ price(service.revenue) }}
                             </span>
                         </div>
                         <p v-if="top_services.length === 0" class="flex items-center gap-2 text-sm text-muted-foreground">
                             <Hourglass class="size-4" />
-                            آماری برای نمایش وجود ندارد.
+                            {{ t('panel.analytics.emptyStats') }}
                         </p>
                     </CardContent>
                 </Card>

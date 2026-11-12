@@ -10,12 +10,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDateTime, faDigits } from '@/lib/persian';
 import { AppointmentItem, BreadcrumbItem, Paginated } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { MoreHorizontal } from 'lucide-vue-next';
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 
 const props = defineProps<{
     appointments: Paginated<AppointmentItem>;
@@ -24,10 +24,12 @@ const props = defineProps<{
     staff_options: { id: number; name: string }[];
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-    { title: 'نوبت‌ها', href: '/appointments' },
-];
+const { t, num, dateTime, statusLabel } = useLocale();
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
+    { title: t('panel.dashboard.title'), href: '/dashboard' },
+    { title: t('panel.appointments.title'), href: '/appointments' },
+]);
 
 const filters = reactive({
     status: props.filters.status ?? '',
@@ -53,7 +55,7 @@ function setStatus(appointment: AppointmentItem, status: string): void {
 </script>
 
 <template>
-    <Head title="نوبت‌ها" />
+    <Head :title="t('panel.appointments.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
@@ -61,20 +63,20 @@ function setStatus(appointment: AppointmentItem, status: string): void {
 
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h1 class="text-xl font-bold">نوبت‌ها</h1>
-                    <p class="text-sm text-muted-foreground">مدیریت و پیگیری نوبت‌های ثبت‌شده</p>
+                    <h1 class="text-xl font-bold">{{ t('panel.appointments.title') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ t('panel.appointments.subtitle') }}</p>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
                     <select v-model="filters.status" class="h-9 rounded-md border border-input bg-background px-3 text-sm" @change="applyFilters">
-                        <option value="">همه وضعیت‌ها</option>
+                        <option value="">{{ t('panel.appointments.allStatuses') }}</option>
                         <option v-for="status in statuses" :key="status.value" :value="status.value">
-                            {{ status.label }}
+                            {{ statusLabel(status.value, status.label) }}
                         </option>
                     </select>
 
                     <select v-model="filters.staff_id" class="h-9 rounded-md border border-input bg-background px-3 text-sm" @change="applyFilters">
-                        <option value="">همه پرسنل</option>
+                        <option value="">{{ t('panel.appointments.allStaff') }}</option>
                         <option v-for="staff in staff_options" :key="staff.id" :value="String(staff.id)">
                             {{ staff.name }}
                         </option>
@@ -94,25 +96,28 @@ function setStatus(appointment: AppointmentItem, status: string): void {
                 <table class="w-full text-sm">
                     <thead class="border-b bg-muted/50 text-right text-xs text-muted-foreground">
                         <tr>
-                            <th class="px-4 py-3 font-medium">مشتری</th>
-                            <th class="px-4 py-3 font-medium">خدمت</th>
-                            <th class="px-4 py-3 font-medium">پرسنل</th>
-                            <th class="px-4 py-3 font-medium">زمان</th>
-                            <th class="px-4 py-3 font-medium">وضعیت</th>
-                            <th class="px-4 py-3 font-medium">عملیات</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.appointments.customer') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.appointments.service') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.appointments.staff') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.appointments.time') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.appointments.status') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.appointments.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="appointment in appointments.data" :key="appointment.id" class="border-b last:border-0">
                             <td class="px-4 py-3">
                                 <div class="font-medium">{{ appointment.customer_name }}</div>
-                                <div class="text-xs text-muted-foreground" dir="ltr">{{ faDigits(appointment.customer_phone) }}</div>
+                                <div class="text-xs text-muted-foreground" dir="ltr">{{ num(appointment.customer_phone) }}</div>
                             </td>
                             <td class="px-4 py-3">{{ appointment.service_name }}</td>
                             <td class="px-4 py-3">{{ appointment.staff_name }}</td>
-                            <td class="px-4 py-3 text-xs">{{ faDateTime(appointment.starts_at) }}</td>
+                            <td class="px-4 py-3 text-xs" dir="ltr">{{ dateTime(appointment.starts_at) }}</td>
                             <td class="px-4 py-3">
-                                <StatusBadge :status="appointment.status" :label="appointment.status_label" />
+                                <StatusBadge
+                                    :status="appointment.status"
+                                    :label="statusLabel(appointment.status, appointment.status_label)"
+                                />
                             </td>
                             <td class="px-4 py-3">
                                 <DropdownMenu>
@@ -122,7 +127,7 @@ function setStatus(appointment: AppointmentItem, status: string): void {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="start">
-                                        <DropdownMenuLabel>تغییر وضعیت</DropdownMenuLabel>
+                                        <DropdownMenuLabel>{{ t('panel.appointments.changeStatus') }}</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem
                                             v-for="status in statuses"
@@ -130,7 +135,7 @@ function setStatus(appointment: AppointmentItem, status: string): void {
                                             :disabled="status.value === appointment.status"
                                             @click="setStatus(appointment, status.value)"
                                         >
-                                            {{ status.label }}
+                                            {{ statusLabel(status.value, status.label) }}
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
@@ -138,7 +143,7 @@ function setStatus(appointment: AppointmentItem, status: string): void {
                         </tr>
 
                         <tr v-if="appointments.data.length === 0">
-                            <td colspan="6" class="px-4 py-10 text-center text-muted-foreground">نوبتی با این فیلترها پیدا نشد.</td>
+                            <td colspan="6" class="px-4 py-10 text-center text-muted-foreground">{{ t('panel.appointments.empty') }}</td>
                         </tr>
                     </tbody>
                 </table>

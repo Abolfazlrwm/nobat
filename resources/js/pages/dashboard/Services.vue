@@ -5,22 +5,24 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDigits, faPrice } from '@/lib/persian';
 import { BreadcrumbItem, ServiceItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 
 defineProps<{
     business: { id: number; name: string };
     services: ServiceItem[];
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-    { title: 'خدمات', href: '/services' },
-];
+const { t, num, price } = useLocale();
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
+    { title: t('panel.dashboard.title'), href: '/dashboard' },
+    { title: t('panel.services.title'), href: '/services' },
+]);
 
 const showDialog = ref(false);
 const editingService = ref<ServiceItem | null>(null);
@@ -68,14 +70,14 @@ function save(): void {
 }
 
 function destroy(service: ServiceItem): void {
-    if (!confirm(`حذف خدمت «${service.name}» مطمئن هستید؟`)) return;
+    if (!confirm(t('panel.common.confirmDelete', { name: service.name }))) return;
 
     router.delete(route('services.destroy', service.id), { preserveScroll: true });
 }
 </script>
 
 <template>
-    <Head title="خدمات" />
+    <Head :title="t('panel.services.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
@@ -83,13 +85,13 @@ function destroy(service: ServiceItem): void {
 
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-xl font-bold">خدمات</h1>
+                    <h1 class="text-xl font-bold">{{ t('panel.services.title') }}</h1>
                     <p class="text-sm text-muted-foreground">{{ business.name }}</p>
                 </div>
 
                 <Button @click="openCreate">
                     <Plus class="ml-2 size-4" />
-                    خدمت جدید
+                    {{ t('panel.services.new') }}
                 </Button>
             </div>
 
@@ -97,21 +99,21 @@ function destroy(service: ServiceItem): void {
                 <table class="w-full text-sm">
                     <thead class="border-b bg-muted/50 text-right text-xs text-muted-foreground">
                         <tr>
-                            <th class="px-4 py-3 font-medium">نام خدمت</th>
-                            <th class="px-4 py-3 font-medium">مدت</th>
-                            <th class="px-4 py-3 font-medium">قیمت</th>
-                            <th class="px-4 py-3 font-medium">وضعیت</th>
-                            <th class="px-4 py-3 font-medium">عملیات</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.services.thName') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.services.thDuration') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.services.thPrice') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.common.status') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.common.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="service in services" :key="service.id" class="border-b last:border-0">
                             <td class="px-4 py-3 font-medium">{{ service.name }}</td>
-                            <td class="px-4 py-3">{{ faDigits(service.duration_minutes) }} دقیقه</td>
-                            <td class="px-4 py-3">{{ faPrice(service.price) }}</td>
+                            <td class="px-4 py-3">{{ t('panel.common.minutes', { n: num(service.duration_minutes) }) }}</td>
+                            <td class="px-4 py-3">{{ price(service.price) }}</td>
                             <td class="px-4 py-3">
                                 <Badge :variant="service.is_active ? 'secondary' : 'outline'">
-                                    {{ service.is_active ? 'فعال' : 'غیرفعال' }}
+                                    {{ service.is_active ? t('panel.common.active') : t('panel.common.inactive') }}
                                 </Badge>
                             </td>
                             <td class="px-4 py-3">
@@ -127,7 +129,7 @@ function destroy(service: ServiceItem): void {
                         </tr>
 
                         <tr v-if="services.length === 0">
-                            <td colspan="5" class="px-4 py-10 text-center text-muted-foreground">هنوز خدمتی ثبت نشده است.</td>
+                            <td colspan="5" class="px-4 py-10 text-center text-muted-foreground">{{ t('panel.services.empty') }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -136,36 +138,36 @@ function destroy(service: ServiceItem): void {
             <Dialog v-model:open="showDialog">
                 <DialogContent class="sm:max-w-md">
                     <DialogHeader>
-                        <DialogTitle>{{ editingService ? 'ویرایش خدمت' : 'خدمت جدید' }}</DialogTitle>
-                        <DialogDescription> مدت زمان هر خدمت تعیین می‌کند بازه‌های رزرو با چه گام‌هایی ساخته شوند. </DialogDescription>
+                        <DialogTitle>{{ editingService ? t('panel.services.editTitle') : t('panel.services.newTitle') }}</DialogTitle>
+                        <DialogDescription>{{ t('panel.services.desc') }}</DialogDescription>
                     </DialogHeader>
 
                     <div class="space-y-4">
                         <div class="space-y-2">
-                            <Label for="name">نام خدمت</Label>
-                            <Input id="name" v-model="form.name" placeholder="مثلاً ویزیت عمومی" />
+                            <Label for="name">{{ t('panel.services.name') }}</Label>
+                            <Input id="name" v-model="form.name" :placeholder="t('panel.services.namePlaceholder')" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
                             <div class="space-y-2">
-                                <Label for="duration">مدت (دقیقه)</Label>
+                                <Label for="duration">{{ t('panel.services.duration') }}</Label>
                                 <Input id="duration" v-model="form.duration_minutes" type="number" min="5" max="480" dir="ltr" />
                             </div>
                             <div class="space-y-2">
-                                <Label for="price">قیمت (تومان)</Label>
+                                <Label for="price">{{ t('panel.services.price') }}</Label>
                                 <Input id="price" v-model="form.price" type="number" min="0" dir="ltr" />
                             </div>
                         </div>
 
                         <div class="flex items-center justify-between">
-                            <Label for="active">فعال باشد؟</Label>
+                            <Label for="active">{{ t('panel.services.isActive') }}</Label>
                             <input id="active" v-model="form.is_active" type="checkbox" class="size-4" />
                         </div>
                     </div>
 
                     <DialogFooter>
-                        <Button variant="outline" @click="showDialog = false">انصراف</Button>
-                        <Button @click="save">ذخیره</Button>
+                        <Button variant="outline" @click="showDialog = false">{{ t('panel.common.cancel') }}</Button>
+                        <Button @click="save">{{ t('panel.common.save') }}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
