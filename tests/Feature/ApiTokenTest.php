@@ -140,6 +140,9 @@ it('lists the managed businesses with appointment counts', function () {
     $admin->assignRole(User::ROLE_SUPER_ADMIN);
     [$adminToken, $adminPlain] = apiTokenFor($admin, 'admin-cli');
 
+    // a second business owned by someone else: the admin sees every one
+    $this->makeBusiness(['name' => 'کسب‌وکار دوم']);
+
     $this->getJson('/api/v1/businesses', bearer($adminPlain))
         ->assertOk()
         ->assertJsonCount(2, 'data');
