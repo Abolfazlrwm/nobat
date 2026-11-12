@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class BusinessPhoto extends Model
 {
@@ -28,10 +27,10 @@ class BusinessPhoto extends Model
         return $this->belongsTo(Business::class);
     }
 
-    /** Public URL of the stored photo on the public disk. */
+    /** Public URL of the stored photo, streamed through the media route. */
     public function getUrlAttribute(): string
     {
-        return Storage::disk('public')->url($this->path);
+        return route('media.photo', ['photo' => $this->id]);
     }
 
     /**
