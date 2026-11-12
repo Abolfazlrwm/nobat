@@ -9,7 +9,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { faDigits, faPrice } from '@/lib/persian';
 import { BreadcrumbItem, ChartPoint } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
-import { CalendarCheck2, CalendarX2, Download, ListChecks, Wallet } from 'lucide-vue-next';
+import { CalendarCheck2, CalendarX2, Download, FileSpreadsheet, ListChecks, Wallet } from 'lucide-vue-next';
 import { reactive } from 'vue';
 
 interface StatusRow {
@@ -65,7 +65,7 @@ const statCards = [
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
                     <h1 class="text-xl font-bold">گزارش‌ها</h1>
-                    <p class="text-sm text-muted-foreground">عملکرد نوبت‌ها و درآمد در بازه‌ی دلخواه — با خروجی CSV</p>
+                    <p class="text-sm text-muted-foreground">عملکرد نوبت‌ها و درآمد در بازه‌ی دلخواه — با خروجی CSV و اکسل</p>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
@@ -74,6 +74,12 @@ const statCards = [
                     <Input v-model="range.to" type="date" class="h-9 w-36" />
                     <Button size="sm" variant="outline" @click="applyRange">اعمال</Button>
                     <Button size="sm" variant="secondary" class="gap-1" as-child>
+                        <a :href="route('reports.export', { ...range, format: 'excel' })">
+                            <FileSpreadsheet class="size-4" />
+                            خروجی اکسل
+                        </a>
+                    </Button>
+                    <Button size="sm" variant="outline" class="gap-1" as-child>
                         <a :href="route('reports.export', range)">
                             <Download class="size-4" />
                             خروجی CSV
