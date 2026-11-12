@@ -16,7 +16,12 @@ const { t, num, dateShort } = useLocale();
 </script>
 
 <template>
-    <Head :title="business.name" />
+    <Head :title="business.name">
+        <meta name="description" :content="business.description || business.name">
+        <meta property="og:title" :content="business.name">
+        <meta property="og:description" :content="business.description || ''">
+        <meta property="og:type" content="business.business">
+    </Head>
 
     <PublicLayout>
         <section class="mx-auto max-w-6xl px-4 py-8">

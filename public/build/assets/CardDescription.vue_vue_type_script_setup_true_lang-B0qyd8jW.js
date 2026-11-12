@@ -1,0 +1,1 @@
+import{c as o}from"./useLocale-BfeWcVza.js";import{d as t,o as a,h as n,n as c,u as l,r as p}from"./app-KKgublag.js";const d=t({__name:"CardDescription",props:{class:{type:[Boolean,null,String,Object,Array]}},setup(e){const s=e;return(r,m)=>(a(),n("p",{class:c(l(o)("text-sm text-muted-foreground",s.class))},[p(r.$slots,"default")],2))}});export{d as _};
