@@ -9,7 +9,7 @@ Persian-first, fully RTL, Jalali calendar — booking without phone calls and wa
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-137%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-142%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -92,7 +92,7 @@ Demo accounts (password for all: `password`):
 - 🔐 **Double-booking prevention** with a transaction + `lockForUpdate` on the staff row
 - 📨 Queued notifications (database + SMS behind a driver architecture — log driver and a real **Kavenegar** gateway driver included)
 - ⏰ **SMS reminders (v1.9.0)**: the hourly `nobat:send-reminders` command covers every confirmed appointment in the next 24 hours; "send first, stamp after" — a gateway failure is retried, a success is never repeated; switch off with `NOBAT_SMS_REMINDERS=false`
-- 🧪 **137 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, reminders, the full payment cycle, reviews, reports, analytics, the bilingual experience, discount codes, the waitlist and the public API
+- 🧪 **142 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, reminders, the full payment cycle, reviews, reports, analytics, the bilingual experience, discount codes, the waitlist, the public API and the customers panel
 - 🛡️ **Professional hardening (v1.12.0)**: a security header set on every web and API response (nosniff, frame protection, referrer policy, permissions policy, HSTS in production), branded RTL Persian error pages for 403/404/419/500/503 with no build dependency, SEO + OpenGraph meta with a 1280x640 preview image, secure demo cookies, config/route/view boot caching on the demo and an `npm audit fix` sweep
 - 🐳 Docker (nginx + php-fpm + queue worker + MySQL + Redis) and GitHub Actions CI
 
@@ -167,6 +167,7 @@ Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE
 - [x] **v1.9** — automatic SMS reminders 24 hours before the appointment: an hourly command plus a queued job with a send-once guarantee on the existing SMS driver
 - [x] **v1.10** — token-based public API on `/api/v1`: issue/revoke tokens (only hashes stored), `me`, `businesses` and paginated filtered `appointments` — reference in [`docs/API.md`](docs/API.md)
 - [x] **v1.11** — Excel (xlsx) export for reports: a pure-PHP OOXML writer with zero new dependencies (stored ZIP with crc32, RTL sheet, bold header) — covered by archive-integrity tests that verify every part's crc and offsets
+- [x] **v1.13** — customers panel: the per-phone customer book with lifetime spend, the status split, the no-show rate and a full profile with the appointment history
 - [ ] Translated dashboard panels (the public experience is already bilingual)
 
 Have an idea? Open a [feature request](../../issues/new?template=feature_request.yml).

@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2026-11-12
+
+### Added
+
+- **Customers panel (FA: پنل مشتری‌ها)** — the last open roadmap item:
+  the customer book of every business, one row per customer phone,
+  aggregated live from the appointment history — lifetime spend, the
+  completed/cancelled/no-show split and the no-show rate counted over
+  the visits that actually reached the chair.
+  - `dashboard/Customers` lists the book sorted by lifetime spend with
+    total/active/revenue stat cards, a client-side name/phone search
+    and a «پروفایل» link per row.
+  - `dashboard/CustomerProfile` opens per customer: four lifetime
+    stats plus the full appointment history (newest first) with
+    service, staff, status badge and per-visit price.
+  - Routes `GET /customers` and `GET /customers/{phone}` (digits-only
+    constraint) sit in the auth group scoped by `ResolvesManagedBusiness`
+    — a manager only ever sees their own book; staff users and
+    strangers get a 404.
+- Covered by 5 new Pest tests (142 total): the aggregation maths
+  (1,000,000 vs 500,000 spend and a 50% no-show rate), per-business
+  scoping across two businesses, the profile history order, a 404
+  for a phone that never booked and staff exclusion.
+
 ## [1.12.0] - 2026-11-12
 
 ### Added
