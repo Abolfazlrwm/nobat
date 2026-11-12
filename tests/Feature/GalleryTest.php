@@ -212,13 +212,14 @@ it('refuses an order list that does not cover exactly this gallery', function ()
     $other = $this->makeBusiness();
 
     $a = $business->photos()->create(['path' => "gallery/{$business->slug}/a.jpg", 'sort_order' => 1]);
+    $b = $business->photos()->create(['path' => "gallery/{$business->slug}/b.jpg", 'sort_order' => 2]);
     $foreign = $other->photos()->create(['path' => "gallery/{$other->slug}/x.jpg", 'sort_order' => 1]);
 
     // a partial list
     $this->actingAs($manager)->patch(route('gallery.reorder'), ['ids' => [$a->id]])
         ->assertSessionHasErrors('ids');
 
-    // a forged foreign id
+    // a forged foreign id slipped in beside a valid one
     $this->actingAs($manager)->patch(route('gallery.reorder'), ['ids' => [$a->id, $foreign->id]])
         ->assertSessionHasErrors('ids');
 
@@ -227,6 +228,7 @@ it('refuses an order list that does not cover exactly this gallery', function ()
         ->assertSessionHasErrors('ids');
 
     expect($a->refresh()->sort_order)->toBe(1)
+        ->and($b->refresh()->sort_order)->toBe(2)
         ->and($foreign->refresh()->sort_order)->toBe(1);
 });
 

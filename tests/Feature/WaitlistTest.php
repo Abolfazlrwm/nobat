@@ -1,9 +1,11 @@
 <?php
 
+use App\Jobs\SendWaitlistPromoSms;
 use App\Models\Appointment;
 use App\Models\User;
 use App\Models\WaitlistEntry;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Queue;
 
 function waitlistPayload($business, $service, string $date, array $overrides = []): array
 {
@@ -115,6 +117,8 @@ it('marks an entry as notified and cancelled', function () {
 });
 
 it('hints the manager about waitlisted customers when a slot frees up', function () {
+    Queue::fake();
+
     $business = $this->makeBusiness();
     $service = $this->serviceOf($business);
     $staff = $this->addStaff($business);
@@ -139,12 +143,16 @@ it('hints the manager about waitlisted customers when a slot frees up', function
         ->assertRedirect()
         ->assertSessionHas('info');
 
-    $freed = WaitlistEntry::query()
+    // The freed slot announced itself: the entry flipped to notified and
+    // a promo sms went out with the booking url.
+    $entry = WaitlistEntry::query()
         ->whereDate('desired_date', $startsAt->format('Y-m-d'))
-        ->waiting()
-        ->count();
+        ->first();
 
-    expect($freed)->toBe(1);
+    expect($entry->status)->toBe(WaitlistEntry::STATUS_NOTIFIED)
+        ->and($entry->notified_at)->not->toBeNull();
+
+    Queue::assertPushed(SendWaitlistPromoSms::class, 1);
 });
 
 it('closes a waitlist entry as booked when that customer books the day', function () {

@@ -43,9 +43,14 @@ class CustomerController extends Controller
         ];
 
         $customers = $this->customerQuery($business->id)
-            ->when($search !== '', function (Builder $query) use ($search) {
+            ->when($search !== '', function (Builder $query) use ($search, $business) {
                 $like = '%'.$search.'%';
-                $query->havingRaw('(name LIKE ? OR appointments.customer_phone LIKE ?)', [$like, $like]);
+                // Name matching rides the same newest-visit subquery as the
+                // select, so the filter never depends on alias resolution.
+                $query->havingRaw(
+                    '(SELECT a2.customer_name FROM appointments a2 WHERE a2.business_id = ? AND a2.customer_phone = appointments.customer_phone ORDER BY a2.starts_at DESC, a2.id DESC LIMIT 1) LIKE ? OR appointments.customer_phone LIKE ?',
+                    [$business->id, $like, $like],
+                );
             })
             ->orderByDesc('total_spent')
             ->paginate(self::PER_PAGE)

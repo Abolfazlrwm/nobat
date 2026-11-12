@@ -2,7 +2,7 @@
 
 use App\Models\Appointment;
 use App\Models\Payment;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonImmutable;
 
 it('lets a guest cancel their own booking by proving the booking phone', function () {
     $business = $this->makeBusiness();
@@ -85,7 +85,7 @@ it('refuses a guest cancellation once the appointment time has passed', function
     $appointment = $this->createAppointment(
         $staff,
         $this->serviceOf($business),
-        Carbon::yesterday()->setTimeFromTimeString('10:00'),
+        CarbonImmutable::yesterday()->setTimeFromTimeString('10:00'),
         Appointment::STATUS_CONFIRMED,
     );
 
