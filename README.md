@@ -55,7 +55,8 @@
 | **🎟️ مدیریت کدهای تخفیف (نسخه ۱.۷.۰)** | **📊 داشبورد تحلیل (نسخه ۱.۸.۰)** |
 | ![کدهای تخفیف](docs/screenshots/discounts.png) | ![داشبورد تحلیل](docs/screenshots/analytics.png) |
 | **⏳ برد لیست انتظار** | |
-| ![لیست انتظار](docs/screenshots/waitlist.png) | |
+| ![لیست انتظار](docs/screenshots/waitlist.png) | ![پنل مشتری‌ها](docs/screenshots/customers.png) |
+| ![پروفایل مشتری](docs/screenshots/customers-profile.png) | |
 
 ---
 
