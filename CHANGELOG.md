@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-11-12
+
+### Added
+
+- **Excel export (FA: خروجی اکسل)**: the reports route now accepts
+  `?format=excel` and streams a real `.xlsx` workbook — same header and
+  rows as the CSV export (code, customer, phone, service, staff, time,
+  status, amount) with numeric amount cells, a bold header row and a
+  right-to-left sheet view; the reports page gains a «خروجی اکسل»
+  button next to the existing CSV one.
+- **Zero-dependency OOXML writer**: `App\Support\XlsxWriter` builds the
+  workbook by hand — a stored (uncompressed) ZIP archive with per-part
+  crc32 checksums written via `pack()`, so no ext-zip and no composer
+  package are needed; `composer.json` stays untouched.
+- Covered by 3 new Pest tests (134 total): the archive-integrity test
+  walks every local header, recomputes each part's crc32, verifies the
+  central-directory offsets and the end-of-central-directory record,
+  checks the Persian content and numeric cells of the sheet, an
+  empty-range export still yields a valid header-only workbook and the
+  CSV default behaviour is kept.
+
 ## [1.10.0] - 2026-11-12
 
 ### Added
