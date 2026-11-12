@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Concerns\ResolvesManagedBusiness;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Business;
+use App\Support\XlsxWriter;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportController extends Controller
@@ -68,10 +71,14 @@ class ReportController extends Controller
         ]);
     }
 
-    public function export(Request $request): StreamedResponse
+    public function export(Request $request): StreamedResponse|SymfonyResponse
     {
         $business = $this->managedBusiness($request);
         [$from, $to] = $this->resolveRange($request);
+
+        if ($request->input('format') === 'excel') {
+            return $this->exportExcel($business, $from, $to);
+        }
 
         $filename = 'nobat-report-'.$business->slug.'-'.$from->format('Ymd').'-'.$to->format('Ymd').'.csv';
 
@@ -100,6 +107,37 @@ class ReportController extends Controller
             fclose($out);
         }, $filename, [
             'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
+
+    /**
+     * Build the xlsx workbook for the requested range — same rows and
+     * header as the CSV export, but as a real Excel file.
+     */
+    private function exportExcel(Business $business, CarbonImmutable $from, CarbonImmutable $to): SymfonyResponse
+    {
+        $rows = $this->appointmentsBetween($business->id, $from, $to)
+            ->map(fn (Appointment $appointment) => [
+                $appointment->code,
+                $appointment->customer_name,
+                $appointment->customer_phone,
+                $appointment->service_name,
+                $appointment->staff?->name ?? '—',
+                $appointment->starts_at->format('Y-m-d H:i'),
+                Appointment::STATUS_LABELS[$appointment->status] ?? $appointment->status,
+                (int) $appointment->service_price,
+            ])
+            ->all();
+
+        $content = XlsxWriter::make('گزارش نوبت‌ها', [
+            'کد پیگیری', 'مشتری', 'تلفن', 'خدمت', 'پرسنل', 'زمان شروع', 'وضعیت', 'مبلغ (تومان)',
+        ], $rows);
+
+        $filename = 'nobat-report-'.$business->slug.'-'.$from->format('Ymd').'-'.$to->format('Ymd').'.xlsx';
+
+        return response($content, 200, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ]);
     }
 
