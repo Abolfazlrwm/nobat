@@ -52,8 +52,10 @@ Demo accounts (password for all: `password`):
 | ![Sales reports](docs/screenshots/reports.png) | ![Review moderation](docs/screenshots/reviews-moderation.png) |
 | **🌍 The English experience (LTR, Inter typeface)** | **🔐 Demo sign-in in English** |
 | ![English landing](docs/screenshots/home-en.png) | ![English sign-in](docs/screenshots/login-en.png) |
-| **🎟️ Discount code management (v1.7.0)** | **⏳ The waitlist board** |
-| ![Discount codes](docs/screenshots/discounts.png) | ![Waitlist board](docs/screenshots/waitlist.png) |
+| **🎟️ Discount code management (v1.7.0)** | **📊 Analytics dashboard (v1.8.0)** |
+| ![Discount codes](docs/screenshots/discounts.png) | ![Analytics dashboard](docs/screenshots/analytics.png) |
+| **⏳ The waitlist board** | |
+| ![Waitlist board](docs/screenshots/waitlist.png) | |
 
 ---
 
