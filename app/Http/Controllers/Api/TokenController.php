@@ -25,7 +25,7 @@ class TokenController extends Controller
 
         if ($user === null || ! Hash::check($data['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => 'اعتبارنامه‌ی ورود نادرست است.',
+                'email' => __('auth.invalid_credentials'),
             ]);
         }
 

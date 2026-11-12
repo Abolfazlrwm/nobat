@@ -58,9 +58,16 @@ how to add a third language.
 5. **Tests** — extend `LocaleTest` with the new cookie value and keep the
    catalog-sync tests green.
 
-## Scope notes (v1.6.0)
+## Scope notes (v1.6.0, updated in v1.14.0)
 
 - The **public + booking + auth experience** is fully bilingual.
-- The **dashboard** (manager/staff/admin panels) is Persian-first; its layout
-  already uses logical Tailwind utilities (`ms-*`/`me-*`/`start-*`/`end-*`),
-  so translating it later is a catalog effort, not a layout rewrite.
+- Since v1.14.0 the **dashboard** (manager/staff/admin panels) is fully
+  bilingual as well: all 14 dashboard pages, the 3 settings pages and the
+  sidebar navigation read from the `panel.*` namespace of
+  `resources/js/locales/{fa,en}.json`, the language switcher sits in the
+  panel header, and every server-side flash message, validation error and
+  report-export header comes from `lang/{fa,en}.json`. Formatting helpers
+  (`num`, `price`, `dateShort`, `dateTime`, `weekdayShort`, `statusLabel`)
+  live in `resources/js/composables/useLocale.ts`; Persian keeps the Jalali
+  calendar and Persian digits, English switches to Gregorian dates and
+  Latin digits.

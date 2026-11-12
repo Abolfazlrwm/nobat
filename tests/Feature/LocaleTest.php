@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Appointment;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 it('serves the persian RTL shell by default', function () {
@@ -80,6 +81,22 @@ it('keeps persian flash messages for default visitors', function () {
     $this->get(route('bookings.show', $appointment->code))
         ->assertOk()
         ->assertInertia(fn ($page) => $page->where('flash.success', 'ممنون از نظر شما! پس از تأیید مدیر کسب‌وکار نمایش داده می‌شود.'));
+});
+
+it('translates the management dashboard flash messages to english', function () {
+    $business = $this->makeBusiness();
+    $manager = User::find($business->owner_id);
+
+    $this->withCookie('nobat_locale', 'en')
+        ->actingAs($manager)
+        ->post(route('services.store'), [
+            'name' => 'Dental check',
+            'duration_minutes' => 30,
+            'price' => 400_000,
+            'is_active' => true,
+            'sort_order' => 0,
+        ])
+        ->assertSessionHas('success', 'New service saved.');
 });
 
 it('keeps fa and en server translation files in sync', function () {

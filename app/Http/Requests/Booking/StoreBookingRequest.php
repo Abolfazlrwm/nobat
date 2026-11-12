@@ -27,16 +27,16 @@ class StoreBookingRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'service_id.required' => 'انتخاب خدمت الزامی است.',
+            'service_id.required' => __('validation.booking_service_required'),
             'service_id.exists' => 'خدمت انتخاب‌شده معتبر نیست.',
-            'starts_at.required' => 'انتخاب بازه زمانی الزامی است.',
-            'starts_at.date' => 'بازه زمانی معتبر نیست.',
-            'starts_at.after' => 'بازه زمانی انتخابی باید در آینده باشد.',
-            'customer_name.required' => 'نام و نام خانوادگی الزامی است.',
-            'customer_name.max' => 'نام حداکثر می‌تواند ۱۰۰ کاراکتر باشد.',
-            'customer_phone.required' => 'شماره موبایل الزامی است.',
-            'customer_phone.regex' => 'شماره موبایل باید با فرمت ۰۹xxxxxxxxx وارد شود.',
-            'notes.max' => 'توضیحات حداکثر می‌تواند ۵۰۰ کاراکتر باشد.',
+            'starts_at.required' => __('validation.booking_slot_required'),
+            'starts_at.date' => __('validation.booking_slot_date'),
+            'starts_at.after' => __('validation.booking_slot_future'),
+            'customer_name.required' => __('validation.booking_name_required'),
+            'customer_name.max' => __('validation.booking_name_max'),
+            'customer_phone.required' => __('validation.booking_phone_required'),
+            'customer_phone.regex' => __('validation.booking_phone_regex'),
+            'notes.max' => __('validation.booking_notes_max'),
         ];
     }
 }

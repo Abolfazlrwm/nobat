@@ -58,7 +58,7 @@ class ReviewController extends Controller
         $review->update(['is_approved' => true]);
         Cache::forget('nobat.directory');
 
-        return back()->with('success', 'نظر تأیید شد و اکنون عمومی است.');
+        return back()->with('success', __('review.approved'));
     }
 
     public function destroy(Request $request, Review $review): RedirectResponse
@@ -68,7 +68,7 @@ class ReviewController extends Controller
         $review->delete();
         Cache::forget('nobat.directory');
 
-        return back()->with('success', 'نظر حذف شد.');
+        return back()->with('success', __('review.deleted'));
     }
 
     /**

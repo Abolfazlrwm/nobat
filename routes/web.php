@@ -12,6 +12,7 @@ use App\Http\Controllers\Dashboard\WaitlistController as DashboardWaitlistContro
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Management\BusinessAdminController;
 use App\Http\Controllers\Management\DiscountController as ManagementDiscountController;
+use App\Http\Controllers\Management\GalleryController;
 use App\Http\Controllers\Management\ServiceController;
 use App\Http\Controllers\Management\StaffController;
 use App\Http\Controllers\Management\WorkingHourController;
@@ -128,6 +129,12 @@ Route::middleware('auth')->group(function () {
     Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
     Route::put('staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
     Route::delete('staff/{staff}', [StaffController::class, 'destroy'])->name('staff.destroy');
+
+    Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
+    Route::post('gallery', [GalleryController::class, 'store'])->name('gallery.store');
+    Route::put('gallery/{photo}', [GalleryController::class, 'update'])->name('gallery.update');
+    Route::patch('gallery/{photo}/cover', [GalleryController::class, 'cover'])->name('gallery.cover');
+    Route::delete('gallery/{photo}', [GalleryController::class, 'destroy'])->name('gallery.destroy');
 
     Route::get('working-hours', [WorkingHourController::class, 'index'])->name('working-hours.index');
     Route::post('working-hours', [WorkingHourController::class, 'store'])->name('working-hours.store');

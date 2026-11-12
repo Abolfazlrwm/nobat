@@ -29,11 +29,11 @@ class StoreReviewRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'code.required' => 'کد پیگیری نوبت الزامی است.',
-            'rating.required' => 'انتخاب امتیاز الزامی است.',
-            'rating.integer' => 'امتیاز نامعتبر است.',
+            'code.required' => __('validation.review_code_required'),
+            'rating.required' => __('validation.review_rating_required'),
+            'rating.integer' => __('validation.review_rating_integer'),
             'rating.between' => 'امتیاز باید بین ۱ تا ۵ ستاره باشد.',
-            'comment.max' => 'متن نظر حداکثر ۱۰۰۰ کاراکتر است.',
+            'comment.max' => __('validation.review_comment_max'),
         ];
     }
 }

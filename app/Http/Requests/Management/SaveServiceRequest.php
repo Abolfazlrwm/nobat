@@ -25,11 +25,11 @@ class SaveServiceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'نام خدمت الزامی است.',
-            'duration_minutes.required' => 'مدت زمان خدمت الزامی است.',
-            'duration_minutes.min' => 'حداقل مدت زمان ۵ دقیقه است.',
-            'price.required' => 'قیمت خدمت الزامی است.',
-            'price.min' => 'قیمت نمی‌تواند منفی باشد.',
+            'name.required' => __('validation.service_name_required'),
+            'duration_minutes.required' => __('validation.service_duration_required'),
+            'duration_minutes.min' => __('validation.service_duration_min'),
+            'price.required' => __('validation.service_price_required'),
+            'price.min' => __('validation.service_price_min'),
         ];
     }
 }

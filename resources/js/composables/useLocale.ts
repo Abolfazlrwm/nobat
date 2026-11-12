@@ -1,4 +1,4 @@
-import { faDate, faDigits, faPrice, parseLocal } from '@/lib/persian';
+import { faDate, faDigits, faPrice, parseLocal, weekdayName } from '@/lib/persian';
 import { router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n';
 export type AppLocale = 'fa' | 'en';
 
 const GREGORIAN_SHORT = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const GREGORIAN_WEEKDAY = new Intl.DateTimeFormat('en-GB', { weekday: 'short' });
 
 /**
  * Locale-aware formatting helpers shared across the public experience.
@@ -26,6 +27,13 @@ export function useLocale() {
         const date = iso instanceof Date ? iso : parseLocal(iso);
 
         return isFa.value ? faDate(iso) : GREGORIAN_SHORT.format(date);
+    };
+
+    /** Short weekday label: Persian names for fa, English abbreviations for en. */
+    const weekdayShort = (iso: string | Date): string => {
+        const date = iso instanceof Date ? iso : parseLocal(iso);
+
+        return isFa.value ? weekdayName(iso).slice(0, 3) : GREGORIAN_WEEKDAY.format(date);
     };
 
     const dateTime = (iso: string | Date): string => {
@@ -57,5 +65,5 @@ export function useLocale() {
         );
     }
 
-    return { t, locale, isFa, isEn, num, price, dateShort, dateTime, statusLabel, setLocale };
+    return { t, locale, isFa, isEn, num, price, dateShort, dateTime, weekdayShort, statusLabel, setLocale };
 }

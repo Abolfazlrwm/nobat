@@ -61,7 +61,7 @@ class WorkingHourController extends Controller
             ]);
         }
 
-        return back()->with('success', 'ساعات کاری ذخیره شد.');
+        return back()->with('success', __('hours.saved'));
     }
 
     public function destroy(WorkingHour $workingHour)
@@ -70,6 +70,6 @@ class WorkingHourController extends Controller
 
         $workingHour->delete();
 
-        return back()->with('success', 'بازه کاری حذف شد.');
+        return back()->with('success', __('hours.deleted'));
     }
 }

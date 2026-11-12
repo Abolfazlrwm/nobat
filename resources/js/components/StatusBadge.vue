@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { cn } from '@/lib/utils';
 import { computed } from 'vue';
 
@@ -6,6 +7,8 @@ const props = defineProps<{
     status: string;
     label?: string;
 }>();
+
+const { t, te } = useI18n();
 
 const styles: Record<string, string> = {
     pending: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
@@ -16,10 +19,14 @@ const styles: Record<string, string> = {
 };
 
 const classes = computed(() => styles[props.status] ?? 'bg-muted text-muted-foreground');
+
+const display = computed(
+    () => props.label ?? (te(`status.${props.status}`) ? t(`status.${props.status}`) : props.status),
+);
 </script>
 
 <template>
     <span :class="cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium', classes)">
-        {{ label ?? status }}
+        {{ display }}
     </span>
 </template>

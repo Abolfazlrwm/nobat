@@ -1,18 +1,40 @@
 <script setup lang="ts">
 import BookingWizard from '@/components/booking/BookingWizard.vue';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BusinessWithServices } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import { Clock, MapPin, Phone, Star } from 'lucide-vue-next';
+import { ChevronLeft, ChevronRight, Clock, MapPin, Phone, Star, X } from 'lucide-vue-next';
+import { ref } from 'vue';
 
 defineProps<{
     business: BusinessWithServices;
 }>();
 
 const { t, num, dateShort } = useLocale();
+
+const lightbox = ref<number | null>(null);
+
+const photos = (business: BusinessWithServices) => business.photos ?? [];
+
+const lightboxPhoto = (business: BusinessWithServices) =>
+    lightbox.value === null ? null : photos(business)[lightbox.value] ?? null;
+
+function closeLightbox(): void {
+    lightbox.value = null;
+}
+
+function stepLightbox(business: BusinessWithServices, step: number): void {
+    const count = photos(business).length;
+
+    if (lightbox.value === null || count === 0) return;
+
+    lightbox.value = (lightbox.value + step + count) % count;
+}
 </script>
 
 <template>
@@ -74,6 +96,32 @@ const { t, num, dateShort } = useLocale();
                 </div>
             </div>
 
+            <div v-if="business.photos && business.photos.length > 0" class="mt-6">
+                <h2 class="mb-3 text-lg font-semibold">{{ t('business.galleryTitle') }}</h2>
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                    <button
+                        v-for="(photo, index) in business.photos"
+                        :key="photo.id"
+                        type="button"
+                        class="group relative aspect-video overflow-hidden rounded-xl border"
+                        @click="lightbox = index"
+                    >
+                        <img
+                            :src="photo.url"
+                            :alt="photo.caption ?? ''"
+                            class="size-full object-cover transition-transform group-hover:scale-105"
+                            loading="lazy"
+                        />
+                        <span
+                            v-if="photo.caption"
+                            class="absolute inset-x-0 bottom-0 truncate bg-gradient-to-t from-black/70 to-transparent px-2 pb-1 pt-4 text-[11px] text-white"
+                        >
+                            {{ photo.caption }}
+                        </span>
+                    </button>
+                </div>
+            </div>
+
             <div class="mt-6 grid gap-6 lg:grid-cols-3">
                 <div class="lg:col-span-2">
                     <BookingWizard :business="business" />
@@ -125,6 +173,34 @@ const { t, num, dateShort } = useLocale();
                     </div>
                 </CardContent>
             </Card>
+
+            <Dialog :open="lightbox !== null" @update:open="(open: boolean) => (open ? null : closeLightbox())">
+                <DialogContent class="max-w-3xl border-none bg-transparent p-2 shadow-none sm:max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle class="text-sm text-white">{{ lightboxPhoto(business)?.caption ?? '' }}</DialogTitle>
+                    </DialogHeader>
+
+                    <div v-if="lightboxPhoto(business)" class="space-y-3">
+                        <img
+                            :src="lightboxPhoto(business)?.url"
+                            :alt="lightboxPhoto(business)?.caption ?? ''"
+                            class="max-h-[70vh] w-full rounded-lg object-contain"
+                        />
+
+                        <div class="flex items-center justify-center gap-2">
+                            <Button size="sm" variant="secondary" @click="stepLightbox(business, -1)">
+                                <ChevronRight class="size-4" />
+                            </Button>
+                            <Button size="sm" variant="secondary" @click="closeLightbox()">
+                                <X class="size-4" />
+                            </Button>
+                            <Button size="sm" variant="secondary" @click="stepLightbox(business, 1)">
+                                <ChevronLeft class="size-4" />
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </section>
     </PublicLayout>
 </template>

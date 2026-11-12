@@ -25,15 +25,15 @@ class ReviewController extends Controller
             ->first();
 
         if ($appointment === null) {
-            return back()->withErrors(['code' => 'نوبتی با این کد پیگیری در این کسب‌وکار پیدا نشد.']);
+            return back()->withErrors(['code' => __('review.code_not_found')]);
         }
 
         if ($appointment->status !== Appointment::STATUS_COMPLETED) {
-            return back()->withErrors(['code' => 'فقط پس از انجام‌شدن نوبت می‌توانید امتیاز ثبت کنید.']);
+            return back()->withErrors(['code' => __('review.not_completed')]);
         }
 
         if ($appointment->review()->exists()) {
-            return back()->withErrors(['code' => 'برای این نوبت قبلاً امتیاز ثبت شده است.']);
+            return back()->withErrors(['code' => __('review.duplicate')]);
         }
 
         Review::query()->create([

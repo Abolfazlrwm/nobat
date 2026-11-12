@@ -86,6 +86,16 @@ class Business extends Model
         return $this->hasMany(WaitlistEntry::class);
     }
 
+    public function photos(): HasMany
+    {
+        return $this->hasMany(BusinessPhoto::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    public function coverPhoto(): ?BusinessPhoto
+    {
+        return $this->photos()->where('is_cover', true)->first() ?? $this->photos()->first();
+    }
+
     public function scopeActive(Builder $query): void
     {
         $query->where('is_active', true);

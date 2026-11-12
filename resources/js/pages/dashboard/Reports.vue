@@ -5,12 +5,12 @@ import WeekChart from '@/components/WeekChart.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDigits, faPrice } from '@/lib/persian';
 import { BreadcrumbItem, ChartPoint } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { CalendarCheck2, CalendarX2, Download, FileSpreadsheet, ListChecks, Wallet } from 'lucide-vue-next';
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 
 interface StatusRow {
     status: string;
@@ -33,10 +33,12 @@ const props = defineProps<{
     series: ChartPoint[];
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-    { title: 'گزارش‌ها', href: '/reports' },
-];
+const { t, num, price } = useLocale();
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
+    { title: t('panel.dashboard.title'), href: '/dashboard' },
+    { title: t('panel.reports.title'), href: '/reports' },
+]);
 
 const range = reactive({
     from: props.from,
@@ -47,16 +49,16 @@ function applyRange(): void {
     router.get(route('reports.index'), range, { preserveState: true });
 }
 
-const statCards = [
-    { key: 'total', label: 'کل نوبت‌ها', icon: ListChecks, value: () => faDigits(props.stats.total) },
-    { key: 'completed', label: 'انجام‌شده', icon: CalendarCheck2, value: () => faDigits(props.stats.completed) },
-    { key: 'cancelled', label: 'لغوشده', icon: CalendarX2, value: () => faDigits(props.stats.cancelled) },
-    { key: 'revenue', label: 'درآمد بازه', icon: Wallet, value: () => faPrice(props.stats.revenue) },
-];
+const statCards = computed(() => [
+    { key: 'total', label: t('panel.reports.statTotal'), icon: ListChecks, value: () => num(props.stats.total) },
+    { key: 'completed', label: t('panel.reports.statCompleted'), icon: CalendarCheck2, value: () => num(props.stats.completed) },
+    { key: 'cancelled', label: t('panel.reports.statCancelled'), icon: CalendarX2, value: () => num(props.stats.cancelled) },
+    { key: 'revenue', label: t('panel.reports.statRevenue'), icon: Wallet, value: () => price(props.stats.revenue) },
+]);
 </script>
 
 <template>
-    <Head title="گزارش‌ها" />
+    <Head :title="t('panel.reports.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
@@ -64,25 +66,25 @@ const statCards = [
 
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <h1 class="text-xl font-bold">گزارش‌ها</h1>
-                    <p class="text-sm text-muted-foreground">عملکرد نوبت‌ها و درآمد در بازه‌ی دلخواه — با خروجی CSV و اکسل</p>
+                    <h1 class="text-xl font-bold">{{ t('panel.reports.title') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ t('panel.reports.subtitle') }}</p>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
                     <Input v-model="range.from" type="date" class="h-9 w-36" />
-                    <span class="text-sm text-muted-foreground">تا</span>
+                    <span class="text-sm text-muted-foreground">{{ t('panel.reports.to') }}</span>
                     <Input v-model="range.to" type="date" class="h-9 w-36" />
-                    <Button size="sm" variant="outline" @click="applyRange">اعمال</Button>
+                    <Button size="sm" variant="outline" @click="applyRange">{{ t('panel.reports.apply') }}</Button>
                     <Button size="sm" variant="secondary" class="gap-1" as-child>
                         <a :href="route('reports.export', { ...range, format: 'excel' })">
                             <FileSpreadsheet class="size-4" />
-                            خروجی اکسل
+                            {{ t('panel.reports.exportExcel') }}
                         </a>
                     </Button>
                     <Button size="sm" variant="outline" class="gap-1" as-child>
                         <a :href="route('reports.export', range)">
                             <Download class="size-4" />
-                            خروجی CSV
+                            {{ t('panel.reports.exportCsv') }}
                         </a>
                     </Button>
                 </div>
@@ -102,8 +104,8 @@ const statCards = [
 
             <Card>
                 <CardHeader>
-                    <CardTitle class="text-base">روند نوبت‌های روزانه</CardTitle>
-                    <CardDescription>تعداد نوبت‌های ثبت‌شده در هر روز از بازه</CardDescription>
+                    <CardTitle class="text-base">{{ t('panel.reports.trend') }}</CardTitle>
+                    <CardDescription>{{ t('panel.reports.trendDesc') }}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <WeekChart :points="series" />
@@ -113,36 +115,36 @@ const statCards = [
             <div class="grid gap-6 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">تفکیک وضعیت</CardTitle>
-                        <CardDescription>ترکیب وضعیت نوبت‌ها در بازه</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.reports.statusSplit') }}</CardTitle>
+                        <CardDescription>{{ t('panel.reports.statusSplitDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-3">
                         <div v-for="row in by_status" :key="row.status" class="flex items-center justify-between text-sm">
                             <StatusBadge :status="row.status" />
-                            <span class="font-semibold">{{ faDigits(row.count) }}</span>
+                            <span class="font-semibold">{{ num(row.count) }}</span>
                         </div>
-                        <p v-if="by_status.length === 0" class="text-sm text-muted-foreground">در این بازه نوبتی ثبت نشده است.</p>
+                        <p v-if="by_status.length === 0" class="text-sm text-muted-foreground">{{ t('panel.reports.emptyStatus') }}</p>
                     </CardContent>
                 </Card>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">خدمات پرتکرار</CardTitle>
-                        <CardDescription>پنج خدمت با بیشترین نوبت و درآمد</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.reports.topServices') }}</CardTitle>
+                        <CardDescription>{{ t('panel.reports.topServicesDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-3">
                         <div v-for="service in top_services" :key="service.name" class="flex items-center justify-between text-sm">
                             <div>
                                 <span class="font-medium">{{ service.name }}</span>
                                 <span class="block text-xs text-muted-foreground">
-                                    {{ faDigits(service.count) }} نوبت • {{ faPrice(service.revenue) }}
+                                    {{ num(service.count) }} {{ t('panel.reports.appointmentsUnit') }} • {{ price(service.revenue) }}
                                 </span>
                             </div>
                             <span class="rounded-md bg-muted px-2 py-1 text-xs font-semibold">
-                                {{ faDigits(service.count) }}
+                                {{ num(service.count) }}
                             </span>
                         </div>
-                        <p v-if="top_services.length === 0" class="text-sm text-muted-foreground">آماری برای نمایش وجود ندارد.</p>
+                        <p v-if="top_services.length === 0" class="text-sm text-muted-foreground">{{ t('panel.reports.emptyStats') }}</p>
                     </CardContent>
                 </Card>
             </div>
