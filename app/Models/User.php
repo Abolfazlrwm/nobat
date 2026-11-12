@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->hasMany(Business::class, 'owner_id');
     }
 
+    public function apiTokens(): HasMany
+    {
+        return $this->hasMany(ApiToken::class);
+    }
+
     public function staffProfiles(): HasMany
     {
         return $this->hasMany(Staff::class);
