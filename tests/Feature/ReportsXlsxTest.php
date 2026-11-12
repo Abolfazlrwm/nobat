@@ -131,5 +131,5 @@ it('keeps the csv export as the default format', function () {
 
     $response->assertOk();
     expect($response->headers->get('content-type'))->toContain('text/csv');
-    expect(str_starts_with((string) $response->getContent(), "\xEF\xBB\xBF"))->toBeTrue();
+    expect($response->streamedContent())->toStartWith("\xEF\xBB\xBF");
 });
