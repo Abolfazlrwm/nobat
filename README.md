@@ -9,7 +9,7 @@
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-121%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-131%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -85,6 +85,7 @@
 - 📈 **گزارش‌های فروش**: بازه‌ی تاریخ دلخواه با درآمد، تفکیک وضعیت، خدمات پرتکرار، نمودار روزانه و **خروجی CSV**
 - 📊 **داشبورد تحلیل (نسخه ۱.۸.۰)**: KPIهای درآمد، نوبت، نرخ تکمیل/لغو، میانگین سند، مشتری یکتا و امتیاز با **مقایسه‌ی دوره‌ی قبل**؛ روند روزانه‌ی درآمد و نوبت در بازه‌های ۷/۳۰/۹۰ روزه، ساعت‌های پرترافیک، نقشه‌ی حرارتی روز-ساعت و خدمات پرسود — درآمد تحلیل **تخفیف‌آگاه** است
 - 👥 **نقش‌ها**: `super-admin` (مدیریت همه کسب‌وکارها)، `manager` (کسب‌وکار خودش)، `staff` (برنامه خودش)، `customer`
+- 🔌 **API عمومی (نسخه ۱.۱۰.۰)**: REST توکن‌محور روی `/api/v1` — ساخت توکن با ایمیل/رمز (فقط هش SHA-256 ذخیره می‌شود)، endpointهای `me` / `businesses` / `appointments` (فیلتر وضعیت و تاریخ + پیجینیشن) با همان قوانین دامنه‌ی داشبورد؛ مدیریت توکن از صفحه‌ی «کلیدهای API» و مستندات کامل در [`docs/API.md`](docs/API.md)
 
 ### زیرساخت
 - 🔐 جلوگیری از **رزرو همزمان** با تراکنش + `lockForUpdate` روی رکورد پرسنل
@@ -92,7 +93,7 @@
 - 🌐 **چندزبانه‌ی واقعی (سرور + کلاینت)**: middleware `SetLocale` و `POST /locale` مترجم لاراول را رانند (پیام‌های flash و خطاهای اسلات از `lang/{fa,en}.json`) و vue-i18n 11 با کاتالوگ‌های تایپ‌شده در فرانت؛ تست‌های sync از واگرایی دو کاتالوگ جلوگیری می‌کنند
 - 📨 نوتیفیکیشن صف‌بندی‌شده (Database + SMS با معماری درایور — درایور لاگ و درگاه کاوه‌نگار آماده‌اند)
 - ⏰ **یادآوری پیامکی (نسخه ۱.۹.۰)**: کامند ساعتی `nobat:send-reminders` برای همه‌ی نوبت‌های تأییدشده‌ی ۲۴ ساعت آینده؛ «اول ارسال، بعد مهر» — خطای درگاه پیامک دوباره تلاش می‌شود و موفق هرگز تکرار نمی‌شود؛ با `NOBAT_SMS_REMINDERS=false` خاموش می‌شود
-- 🧪 **۱۲۱ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، چندزبانه، تخفیف و لیست انتظار
+- 🧪 **۱۳۱ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، چندزبانه، تخفیف، لیست انتظار و API عمومی
 - 🐳 Docker (nginx + php-fpm + worker + MySQL + Redis) و GitHub Actions CI
 
 ## 🧱 استک فناوری
@@ -150,7 +151,7 @@ docker compose exec app php artisan migrate --seed
 ## 🧪 اجرای تست‌ها
 
 ```bash
-php artisan test     # ۱۲۱ تست — SQLite درون‌حافظه‌ای
+php artisan test     # ۱۳۱ تست — SQLite درون‌حافظه‌ای
 vendor/bin/pint --test
 ```
 
@@ -244,6 +245,7 @@ sequenceDiagram
 - [x] **v1.7** — کد تخفیف (درصدی/ثابت با سقف مصرف و اعتبارسنجی زنده) و لیست انتظار روزهای پر با برد مدیریتی
 - [x] **v1.8** — داشبورد تحلیل: KPI و مقایسه‌ی دوره‌ی قبل، روند روزانه‌ی درآمد/نوبت (۷/۳۰/۹۰ روز)، ساعت‌های پرترافیک، نقشه‌ی حرارتی و خدمات پرسود
 - [x] **v1.9** — یادآوری پیامکی خودکار ۲۴ ساعت قبل از نوبت: کامند ساعتی + job صف‌بندی‌شده با تضمین «ارسال یک‌بار» روی درایور SMS موجود
+- [x] **v1.10** — API عمومی توکن‌محور روی `/api/v1`: ساخت/باطل‌کردن توکن (فقط هش ذخیره می‌شود)، `me`، `businesses` و `appointments` پیجینیت‌شده با فیلتر — مستندات در [`docs/API.md`](docs/API.md)
 - [ ] خروجی Excel (xlsx) برای گزارش‌ها
 
 ایده‌ی جدیدی دارید؟ یک [پیشنهاد فیچر](../../issues/new?template=feature_request.yml) باز کنید.
