@@ -40,5 +40,12 @@ php artisan db:seed --force
 
 php artisan storage:link >/dev/null 2>&1 || true
 
+# Cache the framework artifacts — a cold free-tier container serves its
+# first page noticeably faster with config/routes/views precompiled.
+echo ">> caching config, routes and views"
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
 echo ">> serving on http://0.0.0.0:${PORT:-8080}"
 exec php artisan serve --host=0.0.0.0 --port="${PORT:-8080}"
