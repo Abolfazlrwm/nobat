@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2026-11-13
+
+### Added
+
+- **Bilingual management panels (FA: پنل‌های چندزبانه)** — the whole dashboard
+  now follows the visitor's language, not just the public pages:
+  - All 14 dashboard pages, the 3 settings pages, the sidebar navigation and
+    the shared status badges are wired to vue-i18n through a fresh `panel.*`
+    namespace (~200 keys per language).
+  - The language switcher now lives in the panel header too — one click
+    flips every label, breadcrumb, dialog, empty state and confirmation.
+  - Numbers, prices, dates and status names are locale-aware across the
+    panels: Persian keeps the Jalali calendar and Persian digits, English
+    switches to Gregorian dates with Latin digits and Toman prices.
+  - Server side, every flash message, validation error and report export
+    (CSV headers and the Excel sheet title) is translated through the
+    `lang/{fa,en}.json` files — including appointment status labels via the
+    new `localizedStatusLabel()` model helper.
+- **Business photo gallery (FA: گالری تصاویر)** — photos of businesses:
+  - A `business_photos` table with caption, sort order and a single cover
+    photo; the manager panel gains a Gallery page with multi-file upload
+    (up to 6 per batch, max 12 photos, 2 MB each), caption editing, cover
+    switching and delete — the cover role is never left empty.
+  - The public business page renders the photos as a responsive grid with
+    a lightbox (prev / next / close) on top of the existing booking flow.
+  - Demo content ships with 10 real photos (5 per demo business) seeded
+    from the repository at boot, so the demo shows the gallery instantly.
+- Covered by 8 new Pest tests (150 total): upload with the auto-cover
+  first photo, the twelve-photo ceiling, upload validation (mime + size),
+  caption and cover switching, cover handover on delete, manager/staff/
+  stranger lockout, the public payload and an English dashboard flash.
+
 ## [1.13.0] - 2026-11-12
 
 ### Added

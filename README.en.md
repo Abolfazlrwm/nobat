@@ -9,7 +9,7 @@ Persian-first, fully RTL, Jalali calendar — booking without phone calls and wa
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-142%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-150%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -85,6 +85,8 @@ Demo accounts (password for all: `password`):
 - 📈 **Sales reports**: custom date ranges with revenue, status breakdown, top services, a daily trend chart and **CSV export**
 - 📑 **Excel export (v1.11.0)**: a real .xlsx file from the same report route — built by Nobat's own OOXML writer with **zero new dependencies** (a stored ZIP with per-part crc32, a right-to-left sheet and a bold header row); the «خروجی اکسل» button sits next to CSV on the reports page
 - 📊 **Analytics dashboard (v1.8.0)**: KPI cards for revenue, bookings, completion/cancellation rate, average ticket, unique customers and rating — each compared against the previous period; daily booking & revenue trends over 7/30/90-day ranges, peak hours, a weekday×hour demand heatmap and top services by revenue — with **discount-aware** revenue
+- 🖼️ **Photo gallery (v1.14.0)**: every business keeps up to 12 photos with captions and a single cover; managers upload multiple files at once from the new Gallery page (caption editing, cover switching, delete) and the public booking page shows a responsive grid with a lightbox; 10 demo photos (5 per demo business) are seeded at boot
+- 🌐 **Bilingual panels (v1.14.0)**: all 14 dashboard pages, the 3 settings pages, the sidebar navigation and every server-side message (flash, validation errors and even the CSV/Excel export headers) now follow the language switcher inside the panel header — Persian keeps the Jalali calendar and Persian digits, English switches to Gregorian dates with Latin digits
 - 👥 **Roles**: `super-admin` (manages every business), `manager` (own business), `staff` (own schedule), `customer`
 - 🔌 **Public API (v1.10.0)**: a token-based REST API under `/api/v1` — exchange email/password for a Bearer token (only its SHA-256 is stored), then read `me`, `businesses` and paginated, filterable `appointments` under the same tenancy rules as the dashboard; manage tokens from the «کلیدهای API» dashboard page and read the full reference in [`docs/API.md`](docs/API.md)
 
@@ -92,7 +94,7 @@ Demo accounts (password for all: `password`):
 - 🔐 **Double-booking prevention** with a transaction + `lockForUpdate` on the staff row
 - 📨 Queued notifications (database + SMS behind a driver architecture — log driver and a real **Kavenegar** gateway driver included)
 - ⏰ **SMS reminders (v1.9.0)**: the hourly `nobat:send-reminders` command covers every confirmed appointment in the next 24 hours; "send first, stamp after" — a gateway failure is retried, a success is never repeated; switch off with `NOBAT_SMS_REMINDERS=false`
-- 🧪 **142 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, reminders, the full payment cycle, reviews, reports, analytics, the bilingual experience, discount codes, the waitlist, the public API and the customers panel
+- 🧪 **150 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, reminders, the full payment cycle, reviews, reports, analytics, the bilingual experience (public pages and panels), discount codes, the waitlist, the public API, the customers panel and the photo gallery
 - 🛡️ **Professional hardening (v1.12.0)**: a security header set on every web and API response (nosniff, frame protection, referrer policy, permissions policy, HSTS in production), branded RTL Persian error pages for 403/404/419/500/503 with no build dependency, SEO + OpenGraph meta with a 1280x640 preview image, secure demo cookies, config/route/view boot caching on the demo and an `npm audit fix` sweep
 - 🐳 Docker (nginx + php-fpm + queue worker + MySQL + Redis) and GitHub Actions CI
 
@@ -168,6 +170,7 @@ Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE
 - [x] **v1.10** — token-based public API on `/api/v1`: issue/revoke tokens (only hashes stored), `me`, `businesses` and paginated filtered `appointments` — reference in [`docs/API.md`](docs/API.md)
 - [x] **v1.11** — Excel (xlsx) export for reports: a pure-PHP OOXML writer with zero new dependencies (stored ZIP with crc32, RTL sheet, bold header) — covered by archive-integrity tests that verify every part's crc and offsets
 - [x] **v1.13** — customers panel: the per-phone customer book with lifetime spend, the status split, the no-show rate and a full profile with the appointment history
+- [x] **v1.14** — bilingual management panels (the full dashboard in fa/en) and the business photo gallery with multi-file upload, a cover photo and a lightbox
 - [ ] Translated dashboard panels (the public experience is already bilingual)
 
 Have an idea? Open a [feature request](../../issues/new?template=feature_request.yml).
