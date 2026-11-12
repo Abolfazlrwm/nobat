@@ -54,9 +54,11 @@
 | ![نسخه‌ی انگلیسی لندینگ](docs/screenshots/home-en.png) | ![ورود به انگلیسی](docs/screenshots/login-en.png) |
 | **🎟️ مدیریت کدهای تخفیف (نسخه ۱.۷.۰)** | **📊 داشبورد تحلیل (نسخه ۱.۸.۰)** |
 | ![کدهای تخفیف](docs/screenshots/discounts.png) | ![داشبورد تحلیل](docs/screenshots/analytics.png) |
-| **⏳ برد لیست انتظار** | |
+| **⏳ برد لیست انتظار** | **👥 کتاب مشتری‌ها (نسخه ۱.۱۳.۰)** |
 | ![لیست انتظار](docs/screenshots/waitlist.png) | ![پنل مشتری‌ها](docs/screenshots/customers.png) |
 | ![پروفایل مشتری](docs/screenshots/customers-profile.png) | |
+| **🖼️ گالری تصاویر کسب‌وکار (نسخه ۱.۱۴.۰)** | **🌐 پنل چندزبانه — گالری به انگلیسی (LTR)** |
+| ![گالری تصاویر](docs/screenshots/gallery.png) | ![داشبورد انگلیسی](docs/screenshots/dashboard-en.png) |
 
 ---
 

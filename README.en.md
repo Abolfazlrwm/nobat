@@ -56,6 +56,8 @@ Demo accounts (password for all: `password`):
 | ![Discount codes](docs/screenshots/discounts.png) | ![Analytics dashboard](docs/screenshots/analytics.png) |
 | **⏳ The waitlist board** | |
 | ![Waitlist board](docs/screenshots/waitlist.png) | |
+| **🖼️ The photo gallery (v1.14.0)** | **🌐 The bilingual panels — gallery in English (LTR)** |
+| ![Photo gallery](docs/screenshots/gallery.png) | ![English gallery page](docs/screenshots/dashboard-en.png) |
 
 ---
 
