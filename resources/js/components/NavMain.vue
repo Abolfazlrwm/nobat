@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { useLocale } from '@/composables/useLocale';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import type { Component } from 'vue';
@@ -16,11 +17,12 @@ defineProps<{
 }>();
 
 const page = usePage<SharedData>();
+const { t } = useLocale();
 </script>
 
 <template>
     <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>{{ label ?? 'منو' }}</SidebarGroupLabel>
+        <SidebarGroupLabel>{{ label ?? t('panel.nav.menu') }}</SidebarGroupLabel>
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
                 <SidebarMenuButton as-child :is-active="item.url === page.url">
