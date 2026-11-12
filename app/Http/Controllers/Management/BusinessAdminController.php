@@ -45,7 +45,7 @@ class BusinessAdminController extends Controller
         cache()->forget('nobat.directory');
 
         return back()->with('success', $business->is_active
-            ? 'کسب‌وکار فعال شد.'
-            : 'کسب‌وکار غیرفعال شد.');
+            ? __('business.activated')
+            : __('business.deactivated'));
     }
 }

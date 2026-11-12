@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PublicApi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use App\Models\BusinessPhoto;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,6 +17,7 @@ class BusinessController extends Controller
         $business->load([
             'activeServices' => fn ($query) => $query->orderBy('sort_order'),
             'activeStaff',
+            'photos',
         ]);
 
         $approvedReviews = $business->approvedReviews()
@@ -32,6 +34,12 @@ class BusinessController extends Controller
                 'description' => $business->description,
                 'phone' => $business->phone,
                 'address' => $business->address,
+                'photos' => $business->photos->map(fn (BusinessPhoto $photo) => [
+                    'id' => $photo->id,
+                    'url' => $photo->url,
+                    'caption' => $photo->caption,
+                    'is_cover' => $photo->is_cover,
+                ]),
                 'services' => $business->activeServices->map(fn ($service) => [
                     'id' => $service->id,
                     'name' => $service->name,

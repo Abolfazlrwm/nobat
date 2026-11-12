@@ -88,7 +88,16 @@ class ReportController extends Controller
             // UTF-8 BOM so Excel renders Persian text correctly.
             fwrite($out, "\xEF\xBB\xBF");
 
-            fputcsv($out, ['کد پیگیری', 'مشتری', 'تلفن', 'خدمت', 'پرسنل', 'زمان شروع', 'وضعیت', 'مبلغ (تومان)']);
+            fputcsv($out, [
+                __('report.track_code'),
+                __('report.customer'),
+                __('report.phone'),
+                __('report.service'),
+                __('report.staff'),
+                __('report.starts_at'),
+                __('report.status'),
+                __('report.amount'),
+            ]);
 
             $this->appointmentsBetween($business->id, $from, $to)
                 ->each(function (Appointment $appointment) use ($out) {
@@ -99,7 +108,7 @@ class ReportController extends Controller
                         $appointment->service_name,
                         $appointment->staff?->name ?? '—',
                         $appointment->starts_at->format('Y-m-d H:i'),
-                        Appointment::STATUS_LABELS[$appointment->status] ?? $appointment->status,
+                        $appointment->localizedStatusLabel(),
                         $appointment->service_price,
                     ]);
                 });
@@ -124,13 +133,20 @@ class ReportController extends Controller
                 $appointment->service_name,
                 $appointment->staff?->name ?? '—',
                 $appointment->starts_at->format('Y-m-d H:i'),
-                Appointment::STATUS_LABELS[$appointment->status] ?? $appointment->status,
+                $appointment->localizedStatusLabel(),
                 (int) $appointment->service_price,
             ])
             ->all();
 
-        $content = XlsxWriter::make('گزارش نوبت‌ها', [
-            'کد پیگیری', 'مشتری', 'تلفن', 'خدمت', 'پرسنل', 'زمان شروع', 'وضعیت', 'مبلغ (تومان)',
+        $content = XlsxWriter::make(__('report.title'), [
+            __('report.track_code'),
+            __('report.customer'),
+            __('report.phone'),
+            __('report.service'),
+            __('report.staff'),
+            __('report.starts_at'),
+            __('report.status'),
+            __('report.amount'),
         ], $rows);
 
         $filename = 'nobat-report-'.$business->slug.'-'.$from->format('Ymd').'-'.$to->format('Ymd').'.xlsx';

@@ -38,15 +38,15 @@ class SaveDiscountCodeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'code.required' => 'کد تخفیف الزامی است.',
-            'code.regex' => 'کد فقط می‌تواند حروف انگلیسی، عدد، خط تیره و زیرخط داشته باشد (حداقل ۳ کاراکتر).',
-            'code.unique' => 'این کد قبلاً برای همین کسب‌وکار ثبت شده است.',
-            'type.required' => 'نوع تخفیف الزامی است.',
-            'type.in' => 'نوع تخفیف معتبر نیست.',
-            'value.required' => 'مقدار تخفیف الزامی است.',
-            'value.integer' => 'مقدار تخفیف باید عدد باشد.',
-            'value.min' => 'مقدار تخفیف باید مثبت باشد.',
-            'value.max' => 'اگر نوع «درصدی» است، مقدار باید حداکثر ۱۰۰ باشد.',
+            'code.required' => __('validation.discount_code_required'),
+            'code.regex' => __('validation.discount_code_regex'),
+            'code.unique' => __('discount.duplicate'),
+            'type.required' => __('validation.discount_type_required'),
+            'type.in' => __('validation.discount_type_in'),
+            'value.required' => __('validation.discount_value_required'),
+            'value.integer' => __('validation.discount_value_integer'),
+            'value.min' => __('validation.discount_value_min'),
+            'value.max' => __('validation.discount_value_max'),
             'expires_at.after_or_equal' => 'تاریخ پایان باید بعد یا هم‌زمان با تاریخ شروع باشد.',
         ];
     }

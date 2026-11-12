@@ -4,12 +4,12 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDateTime } from '@/lib/persian';
 import { BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { KeyRound, Plus, Trash2 } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 interface TokenRow {
     id: number;
@@ -23,10 +23,12 @@ const props = defineProps<{
     tokens: TokenRow[];
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-    { title: 'کلیدهای API', href: '/api-tokens' },
-];
+const { t, dateTime } = useLocale();
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
+    { title: t('panel.dashboard.title'), href: '/dashboard' },
+    { title: t('panel.apiTokens.title'), href: '/api-tokens' },
+]);
 
 const form = useForm({ name: '' });
 
@@ -52,16 +54,16 @@ async function copyToken(): Promise<void> {
 </script>
 
 <template>
-    <Head title="کلیدهای API" />
+    <Head :title="t('panel.apiTokens.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
             <FlashMessages />
 
             <div>
-                <h1 class="text-xl font-bold">کلیدهای API</h1>
+                <h1 class="text-xl font-bold">{{ t('panel.apiTokens.title') }}</h1>
                 <p class="text-sm text-muted-foreground">
-                    توکن Bearer برای استفاده از API عمومی نوبت — راهنمای کامل در
+                    {{ t('panel.apiTokens.subtitle') }}
                     <a class="font-medium text-primary underline" href="#" @click.prevent>docs/API.md</a>
                 </p>
             </div>
@@ -70,31 +72,29 @@ async function copyToken(): Promise<void> {
                 <CardHeader>
                     <CardTitle class="flex items-center gap-2 text-base">
                         <KeyRound class="size-4 text-emerald-600" />
-                        توکن ساخته شد — فقط همین یک بار نمایش داده می‌شود
+                        {{ t('panel.apiTokens.issuedTitle') }}
                     </CardTitle>
-                    <CardDescription>
-                        این مقدار را همین حالا جایی امن ذخیره کنید؛ سرور فقط هش آن را نگه می‌دارد و بعداً قابل بازیابی نیست.
-                    </CardDescription>
+                    <CardDescription>{{ t('panel.apiTokens.issuedDesc') }}</CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-3">
                     <code class="block overflow-x-auto rounded-md bg-muted p-3 text-xs" dir="ltr">{{ issued }}</code>
                     <Button size="sm" variant="outline" @click="copyToken">
-                        {{ copied ? 'کپی شد ✓' : 'کپی توکن' }}
+                        {{ copied ? t('panel.common.copied') : t('panel.apiTokens.copy') }}
                     </Button>
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle class="text-base">توکن جدید</CardTitle>
-                    <CardDescription>یک نام برای شناسایی این توکن انتخاب کنید (مثلاً «داشبورد شخصی»).</CardDescription>
+                    <CardTitle class="text-base">{{ t('panel.apiTokens.newTitle') }}</CardTitle>
+                    <CardDescription>{{ t('panel.apiTokens.newDesc') }}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form class="flex flex-wrap items-center gap-2" @submit.prevent="createToken">
-                        <Input v-model="form.name" type="text" placeholder="نام توکن" class="h-9 w-64" />
+                        <Input v-model="form.name" type="text" :placeholder="t('panel.apiTokens.namePlaceholder')" class="h-9 w-64" />
                         <Button size="sm" class="gap-1" :disabled="form.processing">
                             <Plus class="size-4" />
-                            ساخت توکن
+                            {{ t('panel.apiTokens.create') }}
                         </Button>
                     </form>
                 </CardContent>
@@ -102,8 +102,8 @@ async function copyToken(): Promise<void> {
 
             <Card>
                 <CardHeader>
-                    <CardTitle class="text-base">توکن‌های فعال</CardTitle>
-                    <CardDescription>توکن‌های شما با تاریخ ساخت و آخرین استفاده — حذف فوری اعتبار را قطع می‌کند.</CardDescription>
+                    <CardTitle class="text-base">{{ t('panel.apiTokens.listTitle') }}</CardTitle>
+                    <CardDescription>{{ t('panel.apiTokens.listDesc') }}</CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-3">
                     <div v-for="token in props.tokens" :key="token.id" class="flex items-center justify-between gap-3 rounded-md border p-3">
@@ -113,18 +113,19 @@ async function copyToken(): Promise<void> {
                                 <span class="truncate">{{ token.name }}</span>
                             </div>
                             <p class="mt-1 text-xs text-muted-foreground">
-                                ساخته: {{ token.created_at ? faDateTime(token.created_at) : '—' }} • آخرین استفاده:
-                                {{ token.last_used_at ? faDateTime(token.last_used_at) : 'هرگز' }}
+                                {{ t('panel.apiTokens.created') }} {{ token.created_at ? dateTime(token.created_at) : '—' }} •
+                                {{ t('panel.apiTokens.lastUsed') }}
+                                {{ token.last_used_at ? dateTime(token.last_used_at) : t('panel.apiTokens.never') }}
                             </p>
                         </div>
                         <div class="flex shrink-0 items-center gap-2">
-                            <Badge v-if="token.last_used_at" variant="secondary">استفاده‌شده</Badge>
+                            <Badge v-if="token.last_used_at" variant="secondary">{{ t('panel.apiTokens.usedBadge') }}</Badge>
                             <Button size="sm" variant="ghost" class="text-red-600 hover:text-red-700" @click="revoke(token)">
                                 <Trash2 class="size-4" />
                             </Button>
                         </div>
                     </div>
-                    <p v-if="props.tokens.length === 0" class="text-sm text-muted-foreground">هنوز توکنی نساخته‌اید.</p>
+                    <p v-if="props.tokens.length === 0" class="text-sm text-muted-foreground">{{ t('panel.apiTokens.empty') }}</p>
                 </CardContent>
             </Card>
         </div>

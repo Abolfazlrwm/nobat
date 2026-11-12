@@ -3,8 +3,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDate, faDigits, faPrice } from '@/lib/persian';
 import { BreadcrumbItem, CustomerSummary } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import { Search, UserCheck, UsersRound, Wallet } from 'lucide-vue-next';
@@ -16,10 +16,12 @@ const props = defineProps<{
     stats: { total: number; active: number; revenue: number };
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-    { title: 'مشتری‌ها', href: '/customers' },
-];
+const { t, num, price, dateShort } = useLocale();
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
+    { title: t('panel.dashboard.title'), href: '/dashboard' },
+    { title: t('panel.customers.title'), href: '/customers' },
+]);
 
 const query = ref('');
 
@@ -30,28 +32,28 @@ const filtered = computed(() => {
     return props.customers.filter((c) => c.name.includes(q) || c.phone.includes(q));
 });
 
-const statCards = [
-    { key: 'total', label: 'مشتری‌ها', icon: UsersRound, value: () => faDigits(props.stats.total) },
-    { key: 'active', label: 'مشتری فعال', icon: UserCheck, value: () => faDigits(props.stats.active) },
-    { key: 'revenue', label: 'درآمد کل', icon: Wallet, value: () => faPrice(props.stats.revenue) },
-];
+const statCards = computed(() => [
+    { key: 'total', label: t('panel.customers.statTotal'), icon: UsersRound, value: () => num(props.stats.total) },
+    { key: 'active', label: t('panel.customers.statActive'), icon: UserCheck, value: () => num(props.stats.active) },
+    { key: 'revenue', label: t('panel.customers.statRevenue'), icon: Wallet, value: () => price(props.stats.revenue) },
+]);
 
 const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
     rate >= 50 ? 'destructive' : rate > 0 ? 'secondary' : 'outline';
 </script>
 
 <template>
-    <Head title="مشتری‌ها" />
+    <Head :title="t('panel.customers.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
             <div>
                 <h1 class="flex items-center gap-2 text-xl font-bold">
                     <UsersRound class="size-5 text-primary" />
-                    مشتری‌ها
+                    {{ t('panel.customers.title') }}
                 </h1>
                 <p class="text-sm text-muted-foreground">
-                    {{ business.name }} — پروفایل مشتری‌ها بر پایه‌ی تاریخچه‌ی نوبت‌ها: مبلغ مصرف، نرخ عدم حضور و آخرین مراجعه.
+                    {{ t('panel.customers.subtitle', { name: business.name }) }}
                 </p>
             </div>
 
@@ -69,7 +71,7 @@ const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
 
             <div class="relative max-w-sm">
                 <Search class="absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input v-model="query" placeholder="جستجو بر اساس نام یا شماره…" class="pr-9" />
+                <Input v-model="query" :placeholder="t('panel.customers.search')" class="pr-9" />
             </div>
 
             <div class="space-y-3">
@@ -82,19 +84,19 @@ const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="font-medium">{{ customer.name }}</span>
                             <span class="font-mono text-sm text-muted-foreground" dir="ltr">{{ customer.phone }}</span>
-                            <Badge variant="outline">{{ faDigits(customer.completed_count) }} انجام‌شده</Badge>
+                            <Badge variant="outline">{{ t('panel.customers.completedBadge', { n: num(customer.completed_count) }) }}</Badge>
                             <Badge v-if="customer.no_show_count > 0" :variant="noShowVariant(customer.no_show_rate)">
-                                عدم حضور {{ faDigits(customer.no_show_rate) }}٪
+                                {{ t('panel.customers.noShowBadge', { n: num(customer.no_show_rate) }) }}
                             </Badge>
                         </div>
                         <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                            <span>{{ faDigits(customer.appointments_count) }} نوبت • {{ faPrice(customer.total_spent) }}</span>
-                            <span v-if="customer.last_visit_at">آخرین مراجعه: {{ faDate(customer.last_visit_at) }}</span>
+                            <span>{{ t('panel.customers.appointmentsLine', { n: num(customer.appointments_count), price: price(customer.total_spent) }) }}</span>
+                            <span v-if="customer.last_visit_at">{{ t('panel.customers.lastVisit', { date: dateShort(customer.last_visit_at) }) }}</span>
                         </div>
                     </div>
 
                     <Button variant="outline" size="sm" as-child>
-                        <Link :href="route('customers.show', { phone: customer.phone })">پروفایل</Link>
+                        <Link :href="route('customers.show', { phone: customer.phone })">{{ t('panel.customers.profile') }}</Link>
                     </Button>
                 </div>
 
@@ -102,7 +104,7 @@ const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
                     v-if="filtered.length === 0"
                     class="rounded-xl border border-dashed px-4 py-10 text-center text-muted-foreground"
                 >
-                    {{ query ? 'مشتری‌ای با این جستجو پیدا نشد.' : 'هنوز نوبتی ثبت نشده تا مشتری‌ای شکل بگیرد.' }}
+                    {{ query ? t('panel.customers.emptySearch') : t('panel.customers.empty') }}
                 </div>
             </div>
         </div>

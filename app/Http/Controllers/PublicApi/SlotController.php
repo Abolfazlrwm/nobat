@@ -39,7 +39,7 @@ class SlotController extends Controller
             $date = CarbonImmutable::parse($data['date']);
         } catch (\Throwable) {
             throw ValidationException::withMessages([
-                'date' => 'تاریخ واردشده معتبر نیست.',
+                'date' => __('slots.date_invalid'),
             ]);
         }
 

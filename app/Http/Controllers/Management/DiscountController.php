@@ -52,12 +52,12 @@ class DiscountController extends Controller
         }
 
         if ($this->duplicateExists($business, $request->input('code'))) {
-            return back()->withErrors(['code' => 'این کد قبلاً برای همین کسب‌وکار ثبت شده است.']);
+            return back()->withErrors(['code' => __('discount.duplicate')]);
         }
 
         $business->discountCodes()->create($request->validated());
 
-        return back()->with('success', 'کد تخفیف ایجاد شد.');
+        return back()->with('success', __('discount.created'));
     }
 
     public function update(SaveDiscountCodeRequest $request, DiscountCode $discountCode)
@@ -67,12 +67,12 @@ class DiscountController extends Controller
         $business = $this->managedBusiness($request, $request->integer('business_id') ?: null);
 
         if ($this->duplicateExists($business, $request->input('code'), $discountCode->id)) {
-            return back()->withErrors(['code' => 'این کد قبلاً برای همین کسب‌وکار ثبت شده است.']);
+            return back()->withErrors(['code' => __('discount.duplicate')]);
         }
 
         $discountCode->update($request->validated());
 
-        return back()->with('success', 'کد تخفیف به‌روزرسانی شد.');
+        return back()->with('success', __('discount.updated'));
     }
 
     public function toggle(Request $request, DiscountCode $discountCode)
@@ -84,8 +84,8 @@ class DiscountController extends Controller
         $discountCode->update(['is_active' => ! $wasActive]);
 
         return back()->with('success', $wasActive
-            ? 'کد تخفیف غیرفعال شد.'
-            : 'کد تخفیف فعال شد.');
+            ? __('discount.deactivated')
+            : __('discount.activated'));
     }
 
     public function destroy(DiscountCode $discountCode)
@@ -94,13 +94,13 @@ class DiscountController extends Controller
 
         if ($discountCode->used_count > 0) {
             return back()->withErrors([
-                'code' => 'به دلیل وجود استفاده‌ی ثبت‌شده، امکان حذف این کد نیست؛ آن را غیرفعال کنید.',
+                'code' => __('discount.has_redemptions'),
             ]);
         }
 
         $discountCode->delete();
 
-        return back()->with('success', 'کد تخفیف حذف شد.');
+        return back()->with('success', __('discount.deleted'));
     }
 
     private function duplicateExists($business, string $code, ?int $ignoreId = null): bool

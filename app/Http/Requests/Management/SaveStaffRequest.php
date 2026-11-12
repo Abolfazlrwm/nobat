@@ -23,7 +23,7 @@ class SaveStaffRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'نام همکار الزامی است.',
+            'name.required' => __('validation.staff_name_required'),
         ];
     }
 }

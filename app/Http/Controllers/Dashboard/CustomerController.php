@@ -45,7 +45,7 @@ class CustomerController extends Controller
 
         $appointments = $this->appointmentsOf($business->id, $phone);
 
-        abort_if($appointments->isEmpty(), 404, 'مشتری‌ای با این شماره در این کسب‌وکار پیدا نشد.');
+        abort_if($appointments->isEmpty(), 404, __('customers.not_found'));
 
         return Inertia::render('dashboard/CustomerProfile', [
             'business' => ['id' => $business->id, 'name' => $business->name],

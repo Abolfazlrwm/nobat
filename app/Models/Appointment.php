@@ -55,6 +55,21 @@ class Appointment extends Model
         self::STATUS_EXPIRED => 'منقضی شده',
     ];
 
+    /**
+     * Status label translated through the "status.*" lang keys, falling back
+     * to the built-in Persian constant for statuses that lack a translation.
+     */
+    public function localizedStatusLabel(): string
+    {
+        $key = "status.{$this->status}";
+
+        if (trans()->has($key)) {
+            return __($key);
+        }
+
+        return self::STATUS_LABELS[$this->status] ?? $this->status;
+    }
+
     protected $fillable = [
         'code',
         'business_id',

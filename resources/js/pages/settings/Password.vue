@@ -4,12 +4,13 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { TransitionRoot } from '@headlessui/vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useLocale } from '@/composables/useLocale';
 import { type BreadcrumbItem } from '@/types';
 
 interface Props {
@@ -18,12 +19,14 @@ interface Props {
 
 defineProps<Props>();
 
-const breadcrumbItems: BreadcrumbItem[] = [
+const { t } = useLocale();
+
+const breadcrumbItems = computed<BreadcrumbItem[]>(() => [
     {
-        title: 'تنظیمات رمز عبور',
+        title: t('panel.settings.passwordBreadcrumb'),
         href: '/settings/password',
     },
-];
+]);
 
 const passwordInput = ref<HTMLInputElement>();
 const currentPasswordInput = ref<HTMLInputElement>();
@@ -59,15 +62,15 @@ const updatePassword = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Profile settings" />
+        <Head :title="t('panel.settings.passwordPageTitle')" />
 
         <SettingsLayout>
             <div class="space-y-6">
-                <HeadingSmall title="تغییر رمز عبور" description="برای امنیت بیشتر از رمز عبور طولانی و تصادفی استفاده کنید" />
+                <HeadingSmall :title="t('panel.settings.passwordTitle')" :description="t('panel.settings.passwordDesc')" />
 
                 <form @submit.prevent="updatePassword" class="space-y-6">
                     <div class="grid gap-2">
-                        <Label for="current_password">رمز عبور فعلی</Label>
+                        <Label for="current_password">{{ t('panel.settings.currentPassword') }}</Label>
                         <Input
                             id="current_password"
                             ref="currentPasswordInput"
@@ -75,13 +78,12 @@ const updatePassword = () => {
                             type="password"
                             class="mt-1 block w-full"
                             autocomplete="current-password"
-                            placeholder="Current password"
                         />
                         <InputError :message="form.errors.current_password" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password">New password</Label>
+                        <Label for="password">{{ t('panel.settings.newPassword') }}</Label>
                         <Input
                             id="password"
                             ref="passwordInput"
@@ -89,26 +91,24 @@ const updatePassword = () => {
                             type="password"
                             class="mt-1 block w-full"
                             autocomplete="new-password"
-                            placeholder="New password"
                         />
                         <InputError :message="form.errors.password" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password_confirmation">Confirm password</Label>
+                        <Label for="password_confirmation">{{ t('panel.settings.confirmPassword') }}</Label>
                         <Input
                             id="password_confirmation"
                             v-model="form.password_confirmation"
                             type="password"
                             class="mt-1 block w-full"
                             autocomplete="new-password"
-                            placeholder="Confirm password"
                         />
                         <InputError :message="form.errors.password_confirmation" />
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <Button :disabled="form.processing">Save password</Button>
+                        <Button :disabled="form.processing">{{ t('panel.settings.savePassword') }}</Button>
 
                         <TransitionRoot
                             :show="form.recentlySuccessful"
@@ -117,7 +117,7 @@ const updatePassword = () => {
                             leave="transition ease-in-out"
                             leave-to="opacity-0"
                         >
-                            <p class="text-sm text-neutral-600">Saved</p>
+                            <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ t('panel.settings.savedShort') }}</p>
                         </TransitionRoot>
                     </div>
                 </form>

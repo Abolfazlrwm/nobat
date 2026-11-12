@@ -5,21 +5,24 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, StaffItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 
 defineProps<{
     business: { id: number; name: string };
     staff: StaffItem[];
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-    { title: 'پرسنل', href: '/staff' },
-];
+const { t } = useLocale();
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
+    { title: t('panel.dashboard.title'), href: '/dashboard' },
+    { title: t('panel.staff.title'), href: '/staff' },
+]);
 
 const showDialog = ref(false);
 const editingStaff = ref<StaffItem | null>(null);
@@ -61,14 +64,14 @@ function save(): void {
 }
 
 function destroy(member: StaffItem): void {
-    if (!confirm(`حذف «${member.name}» مطمئن هستید؟`)) return;
+    if (!confirm(t('panel.common.confirmDeleteName', { name: member.name }))) return;
 
     router.delete(route('staff.destroy', member.id), { preserveScroll: true });
 }
 </script>
 
 <template>
-    <Head title="پرسنل" />
+    <Head :title="t('panel.staff.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
@@ -76,13 +79,13 @@ function destroy(member: StaffItem): void {
 
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-xl font-bold">پرسنل</h1>
+                    <h1 class="text-xl font-bold">{{ t('panel.staff.title') }}</h1>
                     <p class="text-sm text-muted-foreground">{{ business.name }}</p>
                 </div>
 
                 <Button @click="openCreate">
                     <Plus class="ml-2 size-4" />
-                    همکار جدید
+                    {{ t('panel.staff.new') }}
                 </Button>
             </div>
 
@@ -90,11 +93,11 @@ function destroy(member: StaffItem): void {
                 <table class="w-full text-sm">
                     <thead class="border-b bg-muted/50 text-right text-xs text-muted-foreground">
                         <tr>
-                            <th class="px-4 py-3 font-medium">نام</th>
-                            <th class="px-4 py-3 font-medium">تخصص</th>
-                            <th class="px-4 py-3 font-medium">حساب کاربری</th>
-                            <th class="px-4 py-3 font-medium">وضعیت</th>
-                            <th class="px-4 py-3 font-medium">عملیات</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.staff.thName') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.staff.thSpecialty') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.staff.thAccount') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.common.status') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.common.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,12 +105,12 @@ function destroy(member: StaffItem): void {
                             <td class="px-4 py-3 font-medium">{{ member.name }}</td>
                             <td class="px-4 py-3">{{ member.specialty ?? '—' }}</td>
                             <td class="px-4 py-3">
-                                <Badge v-if="member.has_account" variant="secondary">دارد</Badge>
+                                <Badge v-if="member.has_account" variant="secondary">{{ t('panel.common.has') }}</Badge>
                                 <span v-else class="text-muted-foreground">—</span>
                             </td>
                             <td class="px-4 py-3">
                                 <Badge :variant="member.is_active ? 'secondary' : 'outline'">
-                                    {{ member.is_active ? 'فعال' : 'غیرفعال' }}
+                                    {{ member.is_active ? t('panel.common.active') : t('panel.common.inactive') }}
                                 </Badge>
                             </td>
                             <td class="px-4 py-3">
@@ -123,7 +126,7 @@ function destroy(member: StaffItem): void {
                         </tr>
 
                         <tr v-if="staff.length === 0">
-                            <td colspan="5" class="px-4 py-10 text-center text-muted-foreground">هنوز همکاری اضافه نشده است.</td>
+                            <td colspan="5" class="px-4 py-10 text-center text-muted-foreground">{{ t('panel.staff.empty') }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -132,32 +135,30 @@ function destroy(member: StaffItem): void {
             <Dialog v-model:open="showDialog">
                 <DialogContent class="sm:max-w-md">
                     <DialogHeader>
-                        <DialogTitle>{{ editingStaff ? 'ویرایش همکار' : 'همکار جدید' }}</DialogTitle>
-                        <DialogDescription>
-                            همکاران در ویزارد رزرو قابل انتخاب هستند و می‌توانند نوبت‌های خود را در داشبورد ببینند.
-                        </DialogDescription>
+                        <DialogTitle>{{ editingStaff ? t('panel.staff.editTitle') : t('panel.staff.newTitle') }}</DialogTitle>
+                        <DialogDescription>{{ t('panel.staff.desc') }}</DialogDescription>
                     </DialogHeader>
 
                     <div class="space-y-4">
                         <div class="space-y-2">
-                            <Label for="name">نام</Label>
-                            <Input id="name" v-model="form.name" placeholder="مثلاً دکتر سارا محمدی" />
+                            <Label for="name">{{ t('panel.staff.name') }}</Label>
+                            <Input id="name" v-model="form.name" :placeholder="t('panel.staff.namePlaceholder')" />
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="specialty">تخصص</Label>
-                            <Input id="specialty" v-model="form.specialty" placeholder="مثلاً پزشک عمومی" />
+                            <Label for="specialty">{{ t('panel.staff.specialty') }}</Label>
+                            <Input id="specialty" v-model="form.specialty" :placeholder="t('panel.staff.specialtyPlaceholder')" />
                         </div>
 
                         <div class="flex items-center justify-between">
-                            <Label for="active">فعال باشد؟</Label>
+                            <Label for="active">{{ t('panel.staff.isActive') }}</Label>
                             <input id="active" v-model="form.is_active" type="checkbox" class="size-4" />
                         </div>
                     </div>
 
                     <DialogFooter>
-                        <Button variant="outline" @click="showDialog = false">انصراف</Button>
-                        <Button @click="save">ذخیره</Button>
+                        <Button variant="outline" @click="showDialog = false">{{ t('panel.common.cancel') }}</Button>
+                        <Button @click="save">{{ t('panel.common.save') }}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

@@ -2,6 +2,7 @@
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { useLocale } from '@/composables/useLocale';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
@@ -11,6 +12,7 @@ import {
     CalendarDays,
     Clock4,
     Hourglass,
+    Images,
     KeyRound,
     LayoutGrid,
     MessageSquareText,
@@ -24,6 +26,7 @@ import AppLogo from './AppLogo.vue';
 
 const page = usePage<SharedData>();
 const user = computed(() => page.props.auth.user);
+const { t } = useLocale();
 
 const canManage = computed(() => {
     if (!user.value) return false;
@@ -33,27 +36,28 @@ const canManage = computed(() => {
 
 const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
-        { title: 'داشبورد', href: '/dashboard', icon: LayoutGrid },
-        { title: 'نوبت‌ها', href: '/appointments', icon: CalendarDays },
+        { title: t('panel.nav.dashboard'), href: '/dashboard', icon: LayoutGrid },
+        { title: t('panel.nav.appointments'), href: '/appointments', icon: CalendarDays },
     ];
 
     if (canManage.value) {
         items.push(
-            { title: 'خدمات', href: '/services', icon: Briefcase },
-            { title: 'پرسنل', href: '/staff', icon: Users },
-            { title: 'ساعات کاری', href: '/working-hours', icon: Clock4 },
-            { title: 'لیست انتظار', href: '/waitlist', icon: Hourglass },
-            { title: 'کدهای تخفیف', href: '/discounts', icon: TicketPercent },
-            { title: 'نظرات مشتریان', href: '/reviews', icon: MessageSquareText },
-            { title: 'مشتری‌ها', href: '/customers', icon: UsersRound },
-            { title: 'تحلیل', href: '/analytics', icon: TrendingUp },
-            { title: 'کلیدهای API', href: '/api-tokens', icon: KeyRound },
-            { title: 'گزارش‌ها', href: '/reports', icon: BarChart3 },
+            { title: t('panel.nav.services'), href: '/services', icon: Briefcase },
+            { title: t('panel.nav.staff'), href: '/staff', icon: Users },
+            { title: t('panel.nav.workingHours'), href: '/working-hours', icon: Clock4 },
+            { title: t('panel.nav.gallery'), href: '/gallery', icon: Images },
+            { title: t('panel.nav.waitlist'), href: '/waitlist', icon: Hourglass },
+            { title: t('panel.nav.discounts'), href: '/discounts', icon: TicketPercent },
+            { title: t('panel.nav.reviews'), href: '/reviews', icon: MessageSquareText },
+            { title: t('panel.nav.customers'), href: '/customers', icon: UsersRound },
+            { title: t('panel.nav.analytics'), href: '/analytics', icon: TrendingUp },
+            { title: t('panel.nav.apiTokens'), href: '/api-tokens', icon: KeyRound },
+            { title: t('panel.nav.reports'), href: '/reports', icon: BarChart3 },
         );
     }
 
     if (user.value?.is_super_admin) {
-        items.push({ title: 'کسب‌وکارها', href: '/businesses', icon: Building2 });
+        items.push({ title: t('panel.nav.businesses'), href: '/businesses', icon: Building2 });
     }
 
     return items;
@@ -75,7 +79,7 @@ const mainNavItems = computed<NavItem[]>(() => {
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" label="پنل مدیریت" />
+            <NavMain :items="mainNavItems" :label="t('panel.nav.managePanel')" />
         </SidebarContent>
 
         <SidebarFooter>

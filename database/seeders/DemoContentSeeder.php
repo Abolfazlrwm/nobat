@@ -12,6 +12,7 @@ use App\Models\WaitlistEntry;
 use App\Models\WorkingHour;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DemoContentSeeder extends Seeder
@@ -86,6 +87,14 @@ class DemoContentSeeder extends Seeder
 
         $this->seedClinicHours($clinic);
 
+        $this->seedGallery($clinic, 'pars-clinic', [
+            'reception.jpg' => 'پذیرش کلینیک',
+            'exam-room.jpg' => 'اتاق معاینه',
+            'waiting-area.jpg' => 'فضای انتظار',
+            'lab.jpg' => 'آزمایشگاه',
+            'corridor.jpg' => 'راهروی کلینیک',
+        ]);
+
         // ------------------------------------------------------------------
         // Business 2: beauty salon
         // ------------------------------------------------------------------
@@ -125,6 +134,14 @@ class DemoContentSeeder extends Seeder
         ])->map(fn (array $service) => $salon->services()->create($service + ['is_active' => true]));
 
         $this->seedSalonHours($salon);
+
+        $this->seedGallery($salon, 'aftab-salon', [
+            'interior.jpg' => 'محیط سالن',
+            'styling-station.jpg' => 'میز آرایش مو',
+            'nail-station.jpg' => 'ست ناخن',
+            'hair-wash.jpg' => 'شست‌وشوی مو',
+            'products.jpg' => 'محصولات مراقبت',
+        ]);
 
         // ------------------------------------------------------------------
         // Demo appointments across the last 5 and next 7 days
@@ -228,6 +245,40 @@ class DemoContentSeeder extends Seeder
             'customer_phone' => '09124440000',
             'status' => WaitlistEntry::STATUS_WAITING,
         ]);
+    }
+
+    /**
+     * Copy the bundled demo photos into the public storage disk and register
+     * them as the business gallery. The first entry becomes the cover photo.
+     *
+     * @param  array<string, string>  $photos  filename => caption
+     */
+    private function seedGallery(Business $business, string $slug, array $photos): void
+    {
+        $source = database_path('seeders/photos/'.$slug);
+
+        if (! is_dir($source)) {
+            return;
+        }
+
+        $index = 0;
+
+        foreach ($photos as $filename => $caption) {
+            $path = 'gallery/'.$slug.'/'.$filename;
+
+            if (! Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->put($path, file_get_contents($source.'/'.$filename));
+            }
+
+            $business->photos()->create([
+                'path' => $path,
+                'caption' => $caption,
+                'is_cover' => $index === 0,
+                'sort_order' => $index + 1,
+            ]);
+
+            $index++;
+        }
     }
 
     private function seedClinicHours(Business $clinic): void

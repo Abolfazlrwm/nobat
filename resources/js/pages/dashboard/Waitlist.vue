@@ -2,8 +2,8 @@
 import FlashMessages from '@/components/FlashMessages.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDate, faDigits } from '@/lib/persian';
 import { BreadcrumbItem, WaitlistItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { BellRing, Ban, Trash2, Hourglass } from 'lucide-vue-next';
@@ -15,10 +15,12 @@ const props = defineProps<{
     counts: { waiting: number; notified: number; total: number };
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'داشبورد', href: '/dashboard' },
-    { title: 'لیست انتظار', href: '/waitlist' },
-];
+const { t, num, dateShort, locale } = useLocale();
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
+    { title: t('panel.dashboard.title'), href: '/dashboard' },
+    { title: t('panel.waitlist.title'), href: '/waitlist' },
+]);
 
 const filter = ref<'all' | 'waiting' | 'notified' | 'closed'>('all');
 
@@ -30,12 +32,12 @@ const filtered = computed(() => {
     return props.entries.filter((e) => e.status === 'booked' || e.status === 'cancelled');
 });
 
-const tabs: { key: 'all' | 'waiting' | 'notified' | 'closed'; label: string }[] = [
-    { key: 'waiting', label: `در انتظار (${faDigits(props.counts.waiting)})` },
-    { key: 'notified', label: `مطلع شده (${faDigits(props.counts.notified)})` },
-    { key: 'closed', label: 'بسته‌شده' },
-    { key: 'all', label: 'همه' },
-];
+const tabs = computed<{ key: 'all' | 'waiting' | 'notified' | 'closed'; label: string }[]>(() => [
+    { key: 'waiting', label: t('panel.waitlist.tabWaiting', { n: num(props.counts.waiting) }) },
+    { key: 'notified', label: t('panel.waitlist.tabNotified', { n: num(props.counts.notified) }) },
+    { key: 'closed', label: t('panel.waitlist.tabClosed') },
+    { key: 'all', label: t('panel.waitlist.tabAll') },
+]);
 
 function notify(entry: WaitlistItem): void {
     router.patch(route('waitlist.notify', entry.id), {}, { preserveScroll: true });
@@ -46,17 +48,21 @@ function cancel(entry: WaitlistItem): void {
 }
 
 function destroy(entry: WaitlistItem): void {
-    if (!confirm(`حذف ثبت‌نام «${entry.customer_name}» مطمئن هستید؟`)) return;
+    if (!confirm(t('panel.common.confirmDeleteName', { name: entry.customer_name }))) return;
 
     router.delete(route('waitlist.destroy', entry.id), { preserveScroll: true });
 }
 
 const statusVariant = (status: string): 'secondary' | 'outline' | 'default' =>
     status === 'waiting' ? 'default' : status === 'notified' ? 'secondary' : 'outline';
+
+/** Server labels are Persian; overlay the localized waitlist status. */
+const waitlistLabel = (entry: WaitlistItem): string =>
+    locale.value === 'fa' ? entry.status_label : t(`panel.waitlistStatus.${entry.status}`);
 </script>
 
 <template>
-    <Head title="لیست انتظار" />
+    <Head :title="t('panel.waitlist.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
@@ -65,10 +71,10 @@ const statusVariant = (status: string): 'secondary' | 'outline' | 'default' =>
             <div>
                 <h1 class="flex items-center gap-2 text-xl font-bold">
                     <Hourglass class="size-5 text-primary" />
-                    لیست انتظار
+                    {{ t('panel.waitlist.title') }}
                 </h1>
                 <p class="text-sm text-muted-foreground">
-                    {{ business.name }} — مشتری‌هایی که برای روزهای پرِ رزرو ثبت‌نام کرده‌اند.
+                    {{ t('panel.waitlist.subtitle', { name: business.name }) }}
                 </p>
             </div>
 
@@ -99,13 +105,13 @@ const statusVariant = (status: string): 'secondary' | 'outline' | 'default' =>
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="font-medium">{{ entry.customer_name }}</span>
                             <span class="font-mono text-sm text-muted-foreground" dir="ltr">{{ entry.customer_phone }}</span>
-                            <Badge :variant="statusVariant(entry.status)">{{ entry.status_label }}</Badge>
+                            <Badge :variant="statusVariant(entry.status)">{{ waitlistLabel(entry) }}</Badge>
                         </div>
                         <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                            <span>{{ faDate(entry.desired_date) }}</span>
+                            <span>{{ dateShort(entry.desired_date) }}</span>
                             <span v-if="entry.service">{{ entry.service.name }}</span>
                             <span v-if="entry.staff">— {{ entry.staff.name }}</span>
-                            <span v-if="entry.notified_at">(مطلع‌سازی: {{ faDate(entry.notified_at) }})</span>
+                            <span v-if="entry.notified_at">{{ t('panel.waitlist.notifiedAt', { date: dateShort(entry.notified_at) }) }}</span>
                             <span v-if="entry.note">{{ entry.note }}</span>
                         </div>
                     </div>
@@ -113,13 +119,13 @@ const statusVariant = (status: string): 'secondary' | 'outline' | 'default' =>
                     <div class="flex items-center gap-1">
                         <Button v-if="entry.status === 'waiting'" variant="outline" size="sm" class="gap-2" @click="notify(entry)">
                             <BellRing class="size-4" />
-                            مطلع شد
+                            {{ t('panel.waitlist.notify') }}
                         </Button>
                         <Button
                             v-if="entry.status === 'waiting' || entry.status === 'notified'"
                             variant="ghost"
                             size="icon"
-                            title="لغو"
+                            :title="t('panel.waitlist.cancel')"
                             @click="cancel(entry)"
                         >
                             <Ban class="size-4 text-amber-600" />
@@ -131,7 +137,7 @@ const statusVariant = (status: string): 'secondary' | 'outline' | 'default' =>
                 </div>
 
                 <div v-if="filtered.length === 0" class="rounded-xl border border-dashed px-4 py-10 text-center text-muted-foreground">
-                    چیزی برای نمایش نیست.
+                    {{ t('panel.waitlist.empty') }}
                 </div>
             </div>
         </div>

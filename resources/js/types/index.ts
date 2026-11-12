@@ -74,6 +74,7 @@ export interface BusinessSummary {
 export interface BusinessWithServices extends BusinessSummary {
     services: ServiceItem[];
     staff: StaffItem[];
+    photos?: GalleryPhoto[];
     reviews_summary?: ReviewSummary | null;
     reviews?: ReviewItem[];
 }
@@ -251,6 +252,14 @@ export interface ReviewItem {
 export interface ReviewSummary {
     average: number | null;
     count: number;
+}
+
+/** One photo of the business gallery. */
+export interface GalleryPhoto {
+    id: number;
+    url: string;
+    caption?: string | null;
+    is_cover: boolean;
 }
 
 /** One aggregated customer row of the customer book (per phone). */

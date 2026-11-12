@@ -3,26 +3,30 @@ import { Head } from '@inertiajs/vue3';
 
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
+import { useLocale } from '@/composables/useLocale';
 import { type BreadcrumbItem } from '@/types';
+import { computed } from 'vue';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 
-const breadcrumbItems: BreadcrumbItem[] = [
+const { t } = useLocale();
+
+const breadcrumbItems = computed<BreadcrumbItem[]>(() => [
     {
-        title: 'تنظیمات ظاهر',
+        title: t('panel.settings.appearanceBreadcrumb'),
         href: '/settings/appearance',
     },
-];
+]);
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Appearance settings" />
+        <Head :title="t('panel.settings.appearancePageTitle')" />
 
         <SettingsLayout>
             <div class="space-y-6">
-                <HeadingSmall title="تنظیمات ظاهر" description="حالت نمایش (روشن/تاریک) را انتخاب کنید" />
+                <HeadingSmall :title="t('panel.settings.appearanceTitle')" :description="t('panel.settings.appearanceDesc')" />
                 <AppearanceTabs />
             </div>
         </SettingsLayout>

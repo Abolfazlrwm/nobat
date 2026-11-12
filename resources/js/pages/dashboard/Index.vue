@@ -4,11 +4,12 @@ import StatusBadge from '@/components/StatusBadge.vue';
 import WeekChart from '@/components/WeekChart.vue';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { faDateTime, faDigits, faPrice } from '@/lib/persian';
 import { AppointmentItem, BreadcrumbItem, BusinessSummary, ChartPoint, StatCardData } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { CalendarDays, Clock3, Hourglass, Wallet } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 const props = defineProps<{
     stats: StatCardData;
@@ -19,14 +20,16 @@ const props = defineProps<{
     business_id: number | null;
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [{ title: 'داشبورد', href: '/dashboard' }];
+const { t, num, price, dateTime, statusLabel } = useLocale();
 
-const statCards = [
-    { key: 'today_count', label: 'نوبت‌های امروز', icon: CalendarDays, value: () => faDigits(props.stats.today_count) },
-    { key: 'pending_count', label: 'در انتظار تأیید', icon: Hourglass, value: () => faDigits(props.stats.pending_count) },
-    { key: 'week_count', label: 'هفت روز آینده', icon: Clock3, value: () => faDigits(props.stats.week_count) },
-    { key: 'month_revenue', label: 'درآمد این ماه', icon: Wallet, value: () => faPrice(props.stats.month_revenue) },
-];
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [{ title: t('panel.dashboard.title'), href: '/dashboard' }]);
+
+const statCards = computed(() => [
+    { key: 'today_count', label: t('panel.dashboard.statToday'), icon: CalendarDays, value: () => num(props.stats.today_count) },
+    { key: 'pending_count', label: t('panel.dashboard.statPending'), icon: Hourglass, value: () => num(props.stats.pending_count) },
+    { key: 'week_count', label: t('panel.dashboard.statWeek'), icon: Clock3, value: () => num(props.stats.week_count) },
+    { key: 'month_revenue', label: t('panel.dashboard.statRevenue'), icon: Wallet, value: () => price(props.stats.month_revenue) },
+]);
 
 function changeBusiness(businessId: number): void {
     router.get(route('dashboard'), { business_id: businessId }, { preserveState: true });
@@ -34,7 +37,7 @@ function changeBusiness(businessId: number): void {
 </script>
 
 <template>
-    <Head title="داشبورد" />
+    <Head :title="t('panel.dashboard.title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex-1 space-y-6 p-4 md:p-6">
@@ -42,8 +45,8 @@ function changeBusiness(businessId: number): void {
 
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-xl font-bold">داشبورد</h1>
-                    <p class="text-sm text-muted-foreground">خلاصه وضعیت نوبت‌ها در یک نگاه</p>
+                    <h1 class="text-xl font-bold">{{ t('panel.dashboard.title') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ t('panel.dashboard.subtitle') }}</p>
                 </div>
 
                 <select
@@ -52,7 +55,7 @@ function changeBusiness(businessId: number): void {
                     class="h-9 rounded-md border border-input bg-background px-3 text-sm"
                     @change="changeBusiness(Number(($event.target as HTMLSelectElement).value))"
                 >
-                    <option value="" disabled>انتخاب کسب‌وکار</option>
+                    <option value="" disabled>{{ t('panel.dashboard.chooseBusiness') }}</option>
                     <option v-for="business in businesses" :key="business.id" :value="business.id">
                         {{ business.name }}
                     </option>
@@ -76,8 +79,8 @@ function changeBusiness(businessId: number): void {
             <div class="grid gap-4 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">نوبت‌های امروز</CardTitle>
-                        <CardDescription>به ترتیب ساعت</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.dashboard.todayTitle') }}</CardTitle>
+                        <CardDescription>{{ t('panel.dashboard.todayDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-2">
                         <Link
@@ -91,21 +94,26 @@ function changeBusiness(businessId: number): void {
                                 <div class="text-xs text-muted-foreground">{{ appointment.service_name }} — {{ appointment.staff_name ?? '' }}</div>
                             </div>
                             <div class="flex items-center gap-3">
-                                <StatusBadge :status="appointment.status" :label="appointment.status_label" />
+                                <StatusBadge
+                                    :status="appointment.status"
+                                    :label="statusLabel(appointment.status, appointment.status_label)"
+                                />
                                 <span class="text-xs text-muted-foreground" dir="ltr">
-                                    {{ faDateTime(appointment.starts_at).split(' - ')[1] }}
+                                    {{ dateTime(appointment.starts_at).split(' - ')[1] }}
                                 </span>
                             </div>
                         </Link>
 
-                        <p v-if="today_appointments.length === 0" class="py-6 text-center text-sm text-muted-foreground">امروز نوبتی ثبت نشده است.</p>
+                        <p v-if="today_appointments.length === 0" class="py-6 text-center text-sm text-muted-foreground">
+                            {{ t('panel.dashboard.emptyToday') }}
+                        </p>
                     </CardContent>
                 </Card>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle class="text-base">نوبت‌های بعدی</CardTitle>
-                        <CardDescription>نزدیک‌ترین ۵ نوبت آینده</CardDescription>
+                        <CardTitle class="text-base">{{ t('panel.dashboard.upcomingTitle') }}</CardTitle>
+                        <CardDescription>{{ t('panel.dashboard.upcomingDesc') }}</CardDescription>
                     </CardHeader>
                     <CardContent class="space-y-2">
                         <div
@@ -118,11 +126,13 @@ function changeBusiness(businessId: number): void {
                                 <div class="text-xs text-muted-foreground">{{ appointment.business_name }} — {{ appointment.service_name }}</div>
                             </div>
                             <div class="flex items-center gap-3">
-                                <Badge variant="outline">{{ faDateTime(appointment.starts_at) }}</Badge>
+                                <Badge variant="outline" dir="ltr">{{ dateTime(appointment.starts_at) }}</Badge>
                             </div>
                         </div>
 
-                        <p v-if="upcoming.length === 0" class="py-6 text-center text-sm text-muted-foreground">نوبت آینده‌ای وجود ندارد.</p>
+                        <p v-if="upcoming.length === 0" class="py-6 text-center text-sm text-muted-foreground">
+                            {{ t('panel.dashboard.emptyUpcoming') }}
+                        </p>
                     </CardContent>
                 </Card>
             </div>
