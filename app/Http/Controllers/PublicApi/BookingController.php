@@ -147,7 +147,7 @@ class BookingController extends Controller
             'DTEND:'.$appointment->ends_at->utc()->format('Ymd\THis\Z'),
             'SUMMARY:'.$escape($appointment->service->name.' | '.$appointment->business->name),
             'LOCATION:'.$escape($appointment->business->address),
-            'DESCRIPTION:'.$escape('کد پیگیری نوبت: '.$appointment->code),
+            'DESCRIPTION:'.$escape(__('calendar.ics_description', ['code' => $appointment->code])),
             'STATUS:'.$status,
             'END:VEVENT',
             'END:VCALENDAR',

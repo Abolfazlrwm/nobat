@@ -28,7 +28,7 @@ class SaveWorkingHoursRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'windows.required' => 'حداقل یک بازه کاری باید ثبت شود.',
+            'windows.required' => __('validation.windows_required'),
             'windows.*.weekday.between' => 'روز هفته معتبر نیست.',
             'windows.*.starts_at.date_format' => 'فرمت ساعت شروع صحیح نیست (مثال: 09:00).',
             'windows.*.ends_at.date_format' => 'فرمت ساعت پایان صحیح نیست (مثال: 18:00).',

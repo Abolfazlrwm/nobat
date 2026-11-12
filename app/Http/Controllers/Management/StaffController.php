@@ -45,7 +45,7 @@ class StaffController extends Controller
 
         $business->staff()->create($request->validated());
 
-        return back()->with('success', 'همکار جدید اضافه شد.');
+        return back()->with('success', __('staff.created'));
     }
 
     public function update(SaveStaffRequest $request, Staff $staff)
@@ -54,7 +54,7 @@ class StaffController extends Controller
 
         $staff->update($request->validated());
 
-        return back()->with('success', 'اطلاعات همکار به‌روزرسانی شد.');
+        return back()->with('success', __('staff.updated'));
     }
 
     public function destroy(Staff $staff)
@@ -65,10 +65,10 @@ class StaffController extends Controller
             $staff->delete();
         } catch (QueryException) {
             return back()->withErrors([
-                'staff' => 'این همکار نوبت‌های ثبت‌شده دارد؛ ابتدا آن را غیرفعال کنید یا نوبت‌ها را منتقل کنید.',
+                'staff' => __('staff.has_appointments'),
             ]);
         }
 
-        return back()->with('success', 'همکار حذف شد.');
+        return back()->with('success', __('staff.deleted'));
     }
 }

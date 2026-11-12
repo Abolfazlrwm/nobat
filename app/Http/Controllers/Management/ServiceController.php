@@ -44,7 +44,7 @@ class ServiceController extends Controller
 
         $business->services()->create($request->validated());
 
-        return back()->with('success', 'خدمت جدید ثبت شد.');
+        return back()->with('success', __('service.created'));
     }
 
     public function update(SaveServiceRequest $request, Service $service)
@@ -53,7 +53,7 @@ class ServiceController extends Controller
 
         $service->update($request->validated());
 
-        return back()->with('success', 'خدمت به‌روزرسانی شد.');
+        return back()->with('success', __('service.updated'));
     }
 
     public function destroy(Service $service)
@@ -62,12 +62,12 @@ class ServiceController extends Controller
 
         if ($service->appointments()->exists()) {
             return back()->withErrors([
-                'service' => 'به دلیل وجود نوبت‌های ثبت‌شده، امکان حذف این خدمت نیست؛ آن را غیرفعال کنید.',
+                'service' => __('service.has_appointments'),
             ]);
         }
 
         $service->delete();
 
-        return back()->with('success', 'خدمت حذف شد.');
+        return back()->with('success', __('service.deleted'));
     }
 }

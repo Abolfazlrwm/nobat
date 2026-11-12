@@ -22,7 +22,7 @@ trait ResolvesManagedBusiness
 
         $business = $user->ownedBusinesses()->orderBy('id')->first();
 
-        abort_if($business === null, 404, 'هیچ کسب‌وکاری به حساب شما متصل نیست.');
+        abort_if($business === null, 404, __('panel.no_business'));
 
         return $business;
     }

@@ -57,7 +57,7 @@ class WaitlistController extends Controller
 
         if ($waitlistEntry->status !== WaitlistEntry::STATUS_WAITING) {
             return back()->withErrors([
-                'waitlist' => 'فقط مشتری‌های «در انتظار» قابل مطلع‌سازی هستند.',
+                'waitlist' => __('waitlist.only_waiting'),
             ]);
         }
 
@@ -66,7 +66,7 @@ class WaitlistController extends Controller
             'notified_at' => now(),
         ]);
 
-        return back()->with('success', 'وضعیت مشتری به «مطلع شده» تغییر کرد.');
+        return back()->with('success', __('waitlist.notified'));
     }
 
     public function cancel(Request $request, WaitlistEntry $waitlistEntry)
@@ -75,7 +75,7 @@ class WaitlistController extends Controller
 
         $waitlistEntry->update(['status' => WaitlistEntry::STATUS_CANCELLED]);
 
-        return back()->with('success', 'ثبت‌نام لیست انتظار لغو شد.');
+        return back()->with('success', __('waitlist.cancelled'));
     }
 
     public function destroy(WaitlistEntry $waitlistEntry)
@@ -84,6 +84,6 @@ class WaitlistController extends Controller
 
         $waitlistEntry->delete();
 
-        return back()->with('success', 'ثبت‌نام لیست انتظار حذف شد.');
+        return back()->with('success', __('waitlist.deleted'));
     }
 }

@@ -24,15 +24,15 @@ class AppointmentStatusController extends Controller
         $validated = $request->validate([
             'status' => ['required', Rule::in(Appointment::STATUSES)],
         ], [
-            'status.required' => 'وضعیت جدید الزامی است.',
-            'status.in' => 'وضعیت انتخابی معتبر نیست.',
+            'status.required' => __('appointment.status_required'),
+            'status.in' => __('appointment.status_in'),
         ]);
 
         $status = $validated['status'];
 
         if (! $appointment->canTransitionTo($status)) {
             return back()->withErrors([
-                'status' => 'تغییر وضعیت از «'.(Appointment::STATUS_LABELS[$appointment->status] ?? $appointment->status).'» به وضعیت درخواستی امکان‌پذیر نیست.',
+                'status' => __('appointment.status_invalid', ['from' => $appointment->localizedStatusLabel()]),
             ]);
         }
 
@@ -42,12 +42,12 @@ class AppointmentStatusController extends Controller
 
         // Cancelling a paid booking automatically reverses its payment.
         if ($status === Appointment::STATUS_CANCELLED && $wasPaid) {
-            $this->payments->cancelPaidAppointment($appointment, 'لغو نوبت توسط کسب‌وکار');
+            $this->payments->cancelPaidAppointment($appointment, __('appointment.cancel_note'));
         }
 
         $appointment->customer?->notify(new AppointmentStatusChanged($appointment));
 
-        $response = back()->with('success', 'وضعیت نوبت با موفقیت تغییر کرد.');
+        $response = back()->with('success', __('appointment.status_changed'));
 
         // A freed slot may be exactly what waitlisted customers hoped for.
         if ($status === Appointment::STATUS_CANCELLED) {
@@ -59,7 +59,7 @@ class AppointmentStatusController extends Controller
                 ->count();
 
             if ($waiting > 0) {
-                $response = back()->with('success', 'وضعیت نوبت با موفقیت تغییر کرد.')
+                $response = back()->with('success', __('appointment.status_changed'))
                     ->with('info', __('waitlist.slot_freed', ['n' => $waiting]));
             }
         }
