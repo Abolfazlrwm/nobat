@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-11-12
+
+### Added
+
+- **Branded error pages (FA: صفحات خطای برندشده)**: RTL Persian pages for
+  403/404/419/500/503 in the Nobat dark style — self-contained blade
+  with inline styles and no vite dependency, so they render even when
+  the app or its assets are down; bilingual messages with a back-to-home
+  action.
+- **Security header set**: `nosniff`, `SAMEORIGIN` framing, strict
+  referrer policy and a camera/microphone/geolocation permissions
+  policy now ship on every web and API response; HSTS
+  (`max-age=31536000; includeSubDomains`) joins only in production.
+  Headers are stamped by a small shared helper called both from
+  middleware (normal responses) and the exception responder hook
+  (rendered error pages and aborted JSON), so even a 401 carries them.
+- **SEO / social sharing**: the blade shell gains a meta description,
+  OpenGraph and Twitter card tags with a 1280x640 preview image served
+  from `public/social-preview.png`; the landing and every public
+  business page inject per-page description and OG tags through Inertia
+  Head.
+- **Hardened demo**: the Render blueprint sets
+  `SESSION_SECURE_COOKIE=true` and `LOG_LEVEL=warning`, the demo image
+  precompiles config/routes/views at boot for a faster cold start, and
+  the lockfile was refreshed by `npm audit fix` (23 vulnerabilities
+  down to 5 moderate dev-tooling advisories, 0 critical/high).
+- Covered by 3 new Pest tests (137 total): the header set on web
+  responses with HSTS correctly absent in testing, headers surviving on
+  the branded 404 page and the API 401 JSON.
+
+### Changed
+
+- **CI consolidated**: the three overlapping workflows (`ci.yml`,
+  `tests.yml`, `lint.yml`) ran the same Pint + Pest + build suite with
+  slight variations — everything now lives in the single canonical
+  `ci.yml` pipeline, halving the per-commit CI footprint.
+- **Branded composer metadata**: the package name/description moved
+  from the `laravel/vue-starter-kit` skeleton placeholder to the Nobat
+  identity with keywords and support links.
+
 ## [1.11.0] - 2026-11-12
 
 ### Added

@@ -1,13 +1,24 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "abolfazlrwm/nobat",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Nobat — multi-business online booking platform (Laravel 12 + Inertia 2 + Vue 3, fa/en, RTL-first).",
     "keywords": [
+        "nobat",
+        "booking",
+        "appointments",
+        "scheduler",
         "laravel",
-        "framework"
+        "inertia",
+        "vue",
+        "rtl",
+        "persian"
     ],
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/Abolfazlrwm/nobat/issues",
+        "source": "https://github.com/Abolfazlrwm/nobat"
+    },
     "require": {
         "php": "^8.2",
         "inertiajs/inertia-laravel": "^2.0",

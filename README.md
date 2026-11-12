@@ -9,7 +9,7 @@
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-134%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-137%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -94,7 +94,8 @@
 - 🌐 **چندزبانه‌ی واقعی (سرور + کلاینت)**: middleware `SetLocale` و `POST /locale` مترجم لاراول را رانند (پیام‌های flash و خطاهای اسلات از `lang/{fa,en}.json`) و vue-i18n 11 با کاتالوگ‌های تایپ‌شده در فرانت؛ تست‌های sync از واگرایی دو کاتالوگ جلوگیری می‌کنند
 - 📨 نوتیفیکیشن صف‌بندی‌شده (Database + SMS با معماری درایور — درایور لاگ و درگاه کاوه‌نگار آماده‌اند)
 - ⏰ **یادآوری پیامکی (نسخه ۱.۹.۰)**: کامند ساعتی `nobat:send-reminders` برای همه‌ی نوبت‌های تأییدشده‌ی ۲۴ ساعت آینده؛ «اول ارسال، بعد مهر» — خطای درگاه پیامک دوباره تلاش می‌شود و موفق هرگز تکرار نمی‌شود؛ با `NOBAT_SMS_REMINDERS=false` خاموش می‌شود
-- 🧪 **۱۳۱ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، چندزبانه، تخفیف، لیست انتظار و API عمومی
+- 🛡️ **مجموعه‌ی تقویت حرفه‌ای (نسخه ۱.۱۲.۰)**: هدرهای امنیتی روی هر پاسخ وب و API (nosniff، محافظت از فریم، Referrer-Policy، Permissions-Policy و HSTS در production)، صفحات خطای برندشده‌ی RTL فارسی برای ۴۰۳/۴۰۴/۴۱۹/۵۰۰/۵۰۳ بدون وابستگی به بیلد، متای SEO و OpenGraph با تصویر پیش‌نمایش ۱۲۸۰×۶۴۰، کوکی امن روی دمو، کش config/route/view در بوت دمو و پاکسازی آسیب‌پذیری‌های npm با `npm audit fix`
+- 🧪 **۱۳۷ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، چندزبانه، تخفیف، لیست انتظار و API عمومی
 - 🐳 Docker (nginx + php-fpm + worker + MySQL + Redis) و GitHub Actions CI
 
 ## 🧱 استک فناوری

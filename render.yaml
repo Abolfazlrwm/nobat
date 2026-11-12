@@ -31,6 +31,12 @@ services:
         value: sync
       - key: SESSION_LIFETIME
         value: "240"
+      # The demo is served over https — keep session cookies off plain http.
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      # Render free logs cost nothing but noise — keep them warning-level.
+      - key: LOG_LEVEL
+        value: warning
       - key: NOBAT_PAYMENT_DRIVER
         value: zarinpal
       - key: ZARINPAL_SANDBOX
