@@ -172,6 +172,21 @@ it('exposes the gallery on the public business page', function () {
             ->has('business.photos', 2)
             ->where('business.photos.0.id', $cover->id)
             ->where('business.photos.0.is_cover', true)
-            ->where('business.photos.0.url', Storage::disk('public')->url($cover->path))
+            ->where('business.photos.0.url', route('media.photo', ['photo' => $cover->id]))
         );
+});
+
+it('streams the photo bytes through the media route', function () {
+    Storage::fake('public');
+
+    $business = $this->makeBusiness();
+    $photo = $business->photos()->create(['path' => "gallery/{$business->slug}/a.jpg", 'is_cover' => true, 'sort_order' => 1]);
+    Storage::disk('public')->put($photo->path, file_get_contents(database_path('seeders/photos/pars-clinic/reception.jpg')));
+
+    $this->get(route('media.photo', ['photo' => $photo]))
+        ->assertOk()
+        ->assertHeader('content-type', 'image/jpeg')
+        ->assertHeader('cache-control', 'immutable, max-age=604800, public');
+
+    $this->get(route('media.photo', ['photo' => 424242]))->assertNotFound();
 });

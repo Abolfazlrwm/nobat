@@ -16,6 +16,7 @@ use App\Http\Controllers\Management\GalleryController;
 use App\Http\Controllers\Management\ServiceController;
 use App\Http\Controllers\Management\StaffController;
 use App\Http\Controllers\Management\WorkingHourController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PublicApi\BookingController;
 use App\Http\Controllers\PublicApi\BusinessController;
 use App\Http\Controllers\PublicApi\DiscountController;
@@ -39,6 +40,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('locale', [LocaleController::class, 'switch'])->name('locale.switch');
 
 Route::get('b/{business:slug}', [BusinessController::class, 'show'])->name('businesses.show');
+
+Route::get('media/gallery/{photo}', [MediaController::class, 'show'])
+    ->name('media.photo')
+    ->middleware('throttle:120,1');
 
 Route::get('b/{business:slug}/slots', [SlotController::class, 'index'])
     ->name('businesses.slots')
