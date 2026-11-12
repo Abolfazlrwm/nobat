@@ -34,7 +34,7 @@ const props = defineProps<{
 const { t, isFa, num } = useLocale();
 
 const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
-const APP_VERSION = '1.11.0';
+const APP_VERSION = '1.12.0';
 
 const totalServices = computed(() => props.businesses.reduce((sum, b) => sum + (b.services_count ?? 0), 0));
 const totalStaff = computed(() => props.businesses.reduce((sum, b) => sum + (b.staff_count ?? 0), 0));
@@ -80,7 +80,12 @@ const heroGradient = isFa.value
 </script>
 
 <template>
-    <Head :title="t('landing.pageTitle')" />
+    <Head :title="t('landing.pageTitle')">
+        <meta name="description" :content="t('landing.heroSubtitle')">
+        <meta property="og:title" :content="t('landing.pageTitle')">
+        <meta property="og:description" :content="t('landing.heroSubtitle')">
+        <meta property="og:type" content="website">
+    </Head>
 
     <PublicLayout>
         <section class="relative overflow-hidden">
