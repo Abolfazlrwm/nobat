@@ -190,3 +190,56 @@ it('streams the photo bytes through the media route', function () {
 
     $this->get(route('media.photo', ['photo' => 424242]))->assertNotFound();
 });
+
+it('reorders the gallery with the panel controls', function () {
+    $business = $this->makeBusiness();
+    $manager = User::find($business->owner_id);
+
+    $a = $business->photos()->create(['path' => "gallery/{$business->slug}/a.jpg", 'is_cover' => true, 'sort_order' => 1]);
+    $b = $business->photos()->create(['path' => "gallery/{$business->slug}/b.jpg", 'sort_order' => 2]);
+    $c = $business->photos()->create(['path' => "gallery/{$business->slug}/c.jpg", 'sort_order' => 3]);
+
+    $this->actingAs($manager)->patch(route('gallery.reorder'), ['ids' => [$c->id, $a->id, $b->id]])
+        ->assertRedirect()->assertSessionHas('success');
+
+    expect($business->photos()->orderBy('sort_order')->pluck('id')->all())
+        ->toBe([$c->id, $a->id, $b->id]);
+});
+
+it('refuses an order list that does not cover exactly this gallery', function () {
+    $business = $this->makeBusiness();
+    $manager = User::find($business->owner_id);
+    $other = $this->makeBusiness();
+
+    $a = $business->photos()->create(['path' => "gallery/{$business->slug}/a.jpg", 'sort_order' => 1]);
+    $foreign = $other->photos()->create(['path' => "gallery/{$other->slug}/x.jpg", 'sort_order' => 1]);
+
+    // a partial list
+    $this->actingAs($manager)->patch(route('gallery.reorder'), ['ids' => [$a->id]])
+        ->assertSessionHasErrors('ids');
+
+    // a forged foreign id
+    $this->actingAs($manager)->patch(route('gallery.reorder'), ['ids' => [$a->id, $foreign->id]])
+        ->assertSessionHasErrors('ids');
+
+    // duplicates
+    $this->actingAs($manager)->patch(route('gallery.reorder'), ['ids' => [$a->id, $a->id]])
+        ->assertSessionHasErrors('ids');
+
+    expect($a->refresh()->sort_order)->toBe(1)
+        ->and($foreign->refresh()->sort_order)->toBe(1);
+});
+
+it('puts the cover photo first on the public business page', function () {
+    $business = $this->makeBusiness();
+
+    $first = $business->photos()->create(['path' => "gallery/{$business->slug}/a.jpg", 'sort_order' => 1]);
+    $cover = $business->photos()->create(['path' => "gallery/{$business->slug}/b.jpg", 'is_cover' => true, 'sort_order' => 2]);
+
+    $this->get(route('businesses.show', $business->slug))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('business.photos.0.id', $cover->id)
+            ->where('business.photos.1.id', $first->id)
+        );
+});

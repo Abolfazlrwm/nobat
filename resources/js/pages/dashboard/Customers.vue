@@ -5,14 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, CustomerSummary } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { BreadcrumbItem, CustomerSummary, Paginated } from '@/types';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { Search, UserCheck, UsersRound, Wallet } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
     business: { id: number; name: string };
-    customers: CustomerSummary[];
+    customers: Paginated<CustomerSummary>;
+    search?: string;
     stats: { total: number; active: number; revenue: number };
 }>();
 
@@ -23,14 +24,12 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => [
     { title: t('panel.customers.title'), href: '/customers' },
 ]);
 
-const query = ref('');
+// Search runs server-side (q param) so it covers every page of the book.
+const query = ref(props.search ?? '');
 
-const filtered = computed(() => {
-    const q = query.value.trim();
-    if (!q) return props.customers;
-
-    return props.customers.filter((c) => c.name.includes(q) || c.phone.includes(q));
-});
+function search(): void {
+    router.get(route('customers.index'), { q: query.value.trim() }, { preserveState: true });
+}
 
 const statCards = computed(() => [
     { key: 'total', label: t('panel.customers.statTotal'), icon: UsersRound, value: () => num(props.stats.total) },
@@ -69,14 +68,14 @@ const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
                 </Card>
             </div>
 
-            <div class="relative max-w-sm">
+            <form class="relative max-w-sm" @submit.prevent="search">
                 <Search class="absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input v-model="query" :placeholder="t('panel.customers.search')" class="pr-9" />
-            </div>
+                <Input v-model="query" :placeholder="t('panel.customers.search')" class="pr-9" @keydown.enter.prevent="search" />
+            </form>
 
             <div class="space-y-3">
                 <div
-                    v-for="customer in filtered"
+                    v-for="customer in customers.data"
                     :key="customer.phone"
                     class="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-background p-4"
                 >
@@ -101,10 +100,23 @@ const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
                 </div>
 
                 <div
-                    v-if="filtered.length === 0"
+                    v-if="customers.data.length === 0"
                     class="rounded-xl border border-dashed px-4 py-10 text-center text-muted-foreground"
                 >
-                    {{ query ? t('panel.customers.emptySearch') : t('panel.customers.empty') }}
+                    {{ search ? t('panel.customers.emptySearch') : t('panel.customers.empty') }}
+                </div>
+
+                <div v-if="customers.last_page > 1" class="flex items-center justify-center gap-1">
+                    <Button
+                        v-for="(link, index) in customers.links"
+                        :key="index"
+                        :variant="link.active ? 'default' : 'outline'"
+                        size="sm"
+                        :disabled="!link.url"
+                        @click="router.get(link.url ?? '', {}, { preserveState: true })"
+                    >
+                        <span v-html="link.label" />
+                    </Button>
                 </div>
             </div>
         </div>

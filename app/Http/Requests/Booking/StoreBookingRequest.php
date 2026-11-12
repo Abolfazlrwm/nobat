@@ -28,7 +28,7 @@ class StoreBookingRequest extends FormRequest
     {
         return [
             'service_id.required' => __('validation.booking_service_required'),
-            'service_id.exists' => 'خدمت انتخاب‌شده معتبر نیست.',
+            'service_id.exists' => __('validation.booking_service_exists'),
             'starts_at.required' => __('validation.booking_slot_required'),
             'starts_at.date' => __('validation.booking_slot_date'),
             'starts_at.after' => __('validation.booking_slot_future'),

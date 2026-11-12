@@ -1,7 +1,12 @@
 {{-- Shared shell for the branded error pages: self-contained, no vite,
      so it renders even when the app or the assets are down. --}}
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" class="scroll-smooth">
+{{-- The branded error pages bypass route middleware (no web group, no
+     SetLocale) — resolve the visitor language straight from the cookie so
+     even a 404/500 respects fa/ar RTL vs en LTR. --}}
+@php($cookie = request()->cookie(\App\Http\Middleware\SetLocale::COOKIE))
+@php($locale = in_array($cookie, ['fa', 'en', 'ar'], true) ? $cookie : 'fa')
+<html lang="{{ $locale }}" dir="{{ $locale === 'en' ? 'ltr' : 'rtl' }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -76,8 +81,8 @@
         <div class="brand"><span>Nobat</span> | نوبت</div>
         <div class="code">{{ $code }}<small>{{ $titleEn }}</small></div>
         <div class="line"></div>
-        <p class="message">{{ $message }}
-            <small>{{ $messageEn }}</small>
+        <p class="message">{{ $locale === 'en' ? $messageEn : ($locale === 'ar' ? $messageAr : $message) }}
+            <small>{{ $locale === 'en' ? $message : ($locale === 'ar' ? $messageEn : $messageAr) }}</small>
         </p>
         <a class="action" href="/">{{ $action }}</a>
     </main>

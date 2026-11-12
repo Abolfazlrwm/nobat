@@ -24,8 +24,9 @@ export interface FlashData {
 
 export interface SharedData {
     name: string;
+    version: string;
     demo: boolean;
-    locale: 'fa' | 'en';
+    locale: 'fa' | 'en' | 'ar';
     auth: Auth;
     flash: FlashData;
     ziggy: {
@@ -246,6 +247,8 @@ export interface ReviewItem {
     rating: number;
     comment?: string | null;
     is_approved: boolean;
+    reply?: string | null;
+    replied_at?: string | null;
     created_at?: string | null;
 }
 

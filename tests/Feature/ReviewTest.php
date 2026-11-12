@@ -153,7 +153,7 @@ it('lists reviews for the manager and hides other businesses', function () {
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('dashboard/Reviews')
-            ->where('reviews.0.rating', 4)
+            ->where('reviews.data.0.rating', 4)
             ->where('stats.pending', 1)
         );
 

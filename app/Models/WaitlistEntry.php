@@ -71,6 +71,21 @@ class WaitlistEntry extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Status label translated through the "status.waitlist_*" lang keys,
+     * falling back to the built-in Persian constant.
+     */
+    public function localizedStatusLabel(): string
+    {
+        $key = "status.waitlist_{$this->status}";
+
+        if (trans()->has($key)) {
+            return __($key);
+        }
+
+        return self::STATUS_LABELS[$this->status] ?? $this->status;
+    }
+
     public function scopeWaiting(Builder $query): void
     {
         $query->where('status', self::STATUS_WAITING);

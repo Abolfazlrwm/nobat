@@ -87,7 +87,7 @@ it('shows the waitlist board to the owning manager', function () {
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('dashboard/Waitlist')
-            ->has('entries', 1)
+            ->has('entries.data', 1)
             ->where('counts.waiting', 1));
 });
 
@@ -187,4 +187,36 @@ it('keeps other managers out of the waitlist actions', function () {
     $this->actingAs($stranger)->patchJson(route('waitlist.notify', $entry))->assertForbidden();
 
     expect($entry->fresh()->status)->toBe(WaitlistEntry::STATUS_WAITING);
+});
+
+it('filters the waitlist server-side by tab', function () {
+    $business = $this->makeBusiness();
+    $service = $this->serviceOf($business);
+    $manager = User::find($business->owner_id);
+
+    $business->waitlistEntries()->create([
+        'service_id' => $service->id,
+        'desired_date' => $this->nextOpenDate()->format('Y-m-d'),
+        'customer_name' => 'در انتظار',
+        'customer_phone' => '09121111111',
+        'status' => WaitlistEntry::STATUS_WAITING,
+    ]);
+    $business->waitlistEntries()->create([
+        'service_id' => $service->id,
+        'desired_date' => $this->nextOpenDate()->format('Y-m-d'),
+        'customer_name' => 'مطلع شده',
+        'customer_phone' => '09122222222',
+        'status' => WaitlistEntry::STATUS_NOTIFIED,
+    ]);
+
+    $this->actingAs($manager)->get(route('waitlist.index', ['filter' => 'waiting']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('dashboard/Waitlist')
+            ->has('entries.data', 1)
+            ->where('entries.data.0.customer_name', 'در انتظار')
+            ->where('filter', 'waiting')
+            ->where('counts.waiting', 1)
+            ->where('counts.total', 2)
+        );
 });

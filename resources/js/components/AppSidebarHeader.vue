@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
@@ -36,7 +37,8 @@ defineProps<{
             </template>
         </div>
 
-        <div class="ml-auto flex items-center">
+        <div class="ml-auto flex items-center gap-1">
+            <ThemeToggle />
             <LanguageSwitcher />
         </div>
     </header>

@@ -19,27 +19,32 @@ class ReviewController extends Controller
     {
         $business = $this->managedBusiness($request);
 
-        $reviews = Review::query()
-            ->where('business_id', $business->id)
+        $base = Review::query()->where('business_id', $business->id);
+
+        // Stats are global to the business, independent of the page window.
+        $stats = [
+            'pending' => (clone $base)->where('is_approved', false)->count(),
+            'approved' => (clone $base)->where('is_approved', true)->count(),
+            'average' => (clone $base)->where('is_approved', true)->avg('rating'),
+        ];
+
+        $reviews = (clone $base)
             ->with('appointment.service:id,name')
             ->orderByDesc('is_approved')
             ->orderByDesc('created_at')
-            ->get()
-            ->map(fn (Review $review) => [
+            ->paginate(20)
+            ->withQueryString()
+            ->through(fn (Review $review) => [
                 'id' => $review->id,
                 'customer_name' => $review->customer_name,
                 'rating' => $review->rating,
                 'comment' => $review->comment,
                 'is_approved' => $review->is_approved,
+                'reply' => $review->reply,
+                'replied_at' => $review->replied_at?->format('Y-m-d'),
                 'service' => $review->appointment?->service?->name,
                 'created_at' => $review->created_at?->format('Y-m-d'),
             ]);
-
-        $stats = [
-            'pending' => Review::query()->where('business_id', $business->id)->where('is_approved', false)->count(),
-            'approved' => Review::query()->where('business_id', $business->id)->where('is_approved', true)->count(),
-            'average' => $reviews->where('is_approved', true)->avg('rating'),
-        ];
 
         return Inertia::render('dashboard/Reviews', [
             'reviews' => $reviews,
@@ -59,6 +64,25 @@ class ReviewController extends Controller
         Cache::forget('nobat.directory');
 
         return back()->with('success', __('review.approved'));
+    }
+
+    public function reply(Request $request, Review $review): RedirectResponse
+    {
+        $this->authorizeAccess($request, $review);
+
+        $validated = $request->validate([
+            'reply' => ['required', 'string', 'max:1000'],
+        ], [
+            'reply.required' => __('review.reply_required'),
+            'reply.max' => __('review.reply_max'),
+        ]);
+
+        $review->update([
+            'reply' => $validated['reply'],
+            'replied_at' => now(),
+        ]);
+
+        return back()->with('success', __('review.replied'));
     }
 
     public function destroy(Request $request, Review $review): RedirectResponse

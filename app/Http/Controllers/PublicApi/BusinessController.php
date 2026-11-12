@@ -34,7 +34,7 @@ class BusinessController extends Controller
                 'description' => $business->description,
                 'phone' => $business->phone,
                 'address' => $business->address,
-                'photos' => $business->photos->map(fn (BusinessPhoto $photo) => [
+                'photos' => $business->photos->sortByDesc('is_cover')->values()->map(fn (BusinessPhoto $photo) => [
                     'id' => $photo->id,
                     'url' => $photo->url,
                     'caption' => $photo->caption,
@@ -60,6 +60,7 @@ class BusinessController extends Controller
                     'customer_name' => $review->customer_name,
                     'rating' => (int) $review->rating,
                     'comment' => $review->comment,
+                    'reply' => $review->reply,
                     'created_at' => $review->created_at?->format('Y-m-d'),
                 ]),
             ],

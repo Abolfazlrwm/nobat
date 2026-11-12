@@ -1,17 +1,28 @@
 <script setup lang="ts">
 import AppLogo from '@/components/AppLogo.vue';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
+import ThemeToggle from '@/components/ThemeToggle.vue';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useLocale } from '@/composables/useLocale';
 import { SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { Github } from 'lucide-vue-next';
+import { ref } from 'vue';
 
 const page = usePage<SharedData>();
 const { t } = useLocale();
 
 const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
+
+const trackCode = ref('');
+
+function track(): void {
+    const code = trackCode.value.trim();
+
+    if (code) router.get(`/bookings/${encodeURIComponent(code)}`);
+}
 </script>
 
 <template>
@@ -23,6 +34,7 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                 </Link>
 
                 <nav class="flex items-center gap-2">
+                    <ThemeToggle />
                     <LanguageSwitcher />
                     <template v-if="page.props.auth.user">
                         <Button variant="ghost" as-child>
@@ -74,6 +86,10 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                                     <a class="hover:text-foreground" href="#businesses">{{ t('footer.activeBusinesses') }}</a>
                                 </li>
                             </ul>
+                            <form class="mt-4 flex gap-2" @submit.prevent="track">
+                                <Input v-model="trackCode" :placeholder="t('footer.trackPlaceholder')" class="h-9 max-w-40 font-mono" dir="ltr" />
+                                <Button type="submit" variant="outline" class="h-9 shrink-0">{{ t('footer.trackButton') }}</Button>
+                            </form>
                         </div>
                         <div>
                             <h3 class="text-sm font-semibold">{{ t('footer.project') }}</h3>

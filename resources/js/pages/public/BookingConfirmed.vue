@@ -3,12 +3,13 @@ import FlashMessages from '@/components/FlashMessages.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BookingConfirmation } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { BadgeCheck, CalendarPlus, CheckCircle2, Clock3, CreditCard, ExternalLink, Star } from 'lucide-vue-next';
+import { BadgeCheck, CalendarPlus, CheckCircle2, Clock3, CreditCard, ExternalLink, Star, XCircle } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -28,6 +29,13 @@ const deadline = computed(() =>
 );
 
 const displayStatusLabel = computed(() => statusLabel(props.appointment.status, props.appointment.status_label));
+
+const cancellable = computed(() =>
+    ['pending', 'pending_payment', 'confirmed'].includes(props.appointment.status));
+
+const cancelForm = useForm({
+    customer_phone: '',
+});
 </script>
 
 <template>
@@ -174,6 +182,36 @@ const displayStatusLabel = computed(() => statusLabel(props.appointment.status, 
                                 :class="i <= (appointment.review?.rating ?? 0) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'"
                             />
                         </span>
+                    </div>
+
+                    <!-- upcoming booking: self-service cancellation -->
+                    <div
+                        v-if="cancellable"
+                        class="rounded-xl border border-rose-200 bg-rose-50 p-4 dark:border-rose-500/30 dark:bg-rose-500/10"
+                    >
+                        <p class="text-sm font-semibold text-rose-800 dark:text-rose-300">{{ t('booking.cancelTitle') }}</p>
+                        <p class="mt-1 text-xs text-muted-foreground">{{ t('booking.cancelDesc') }}</p>
+                        <div class="mt-3 grid gap-2">
+                            <Input
+                                id="cancel-phone"
+                                v-model="cancelForm.customer_phone"
+                                type="tel"
+                                inputmode="tel"
+                                dir="ltr"
+                                :placeholder="t('booking.cancelPhonePlaceholder')"
+                                autocomplete="off"
+                            />
+                            <InputError :message="cancelForm.errors.customer_phone" />
+                            <Button
+                                variant="destructive"
+                                class="w-full gap-2"
+                                :disabled="cancelForm.processing"
+                                @click="cancelForm.post(route('bookings.guest_cancel', appointment.code))"
+                            >
+                                <XCircle class="size-4" />
+                                {{ t('booking.cancelButton') }}
+                            </Button>
+                        </div>
                     </div>
 
                     <div class="flex gap-2">

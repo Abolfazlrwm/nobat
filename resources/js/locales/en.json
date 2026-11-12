@@ -4,7 +4,8 @@
         "dashboard": "Dashboard",
         "login": "Sign in",
         "register": "Sign up",
-        "logout": "Sign out"
+        "logout": "Sign out",
+        "themeToggle": "Toggle dark mode"
     },
     "footer": {
         "tagline": "The open-source online booking platform for clinics, salons and any appointment-driven business — with the Jalali calendar, SMS reminders and real-time reservations.",
@@ -17,7 +18,10 @@
         "deployGuide": "Deployment guide",
         "changelog": "Release notes",
         "rights": "Nobat — online appointment booking · Released under the MIT license",
-        "builtWith": "Built with Laravel and Vue"
+        "builtWith": "Built with Laravel and Vue",
+        "trackTitle": "Track your booking",
+        "trackPlaceholder": "Tracking code",
+        "trackButton": "Find"
     },
     "landing": {
         "badge": "Open source and free — v{version}",
@@ -106,7 +110,8 @@
         "team": "Our team",
         "noStaff": "No staff members yet.",
         "reviewsTitle": "Customer reviews",
-        "galleryTitle": "Business gallery"
+        "galleryTitle": "Business gallery",
+        "replyLabel": "Reply from the business"
     },
     "booking": {
         "title": "Your booking",
@@ -134,7 +139,11 @@
         "addToCalendar": "Add to calendar",
         "newBooking": "Book again",
         "discount": "Discount",
-        "payableAmount": "Payable amount"
+        "payableAmount": "Payable amount",
+        "cancelTitle": "Cancel this booking",
+        "cancelDesc": "Enter the mobile number you booked with to cancel it.",
+        "cancelPhonePlaceholder": "09xxxxxxxxx",
+        "cancelButton": "Cancel booking"
     },
     "wizard": {
         "steps": {
@@ -199,7 +208,26 @@
         "demoSalonManager": "Manager — Aftab Salon",
         "emailUnverified": "Your email address is unverified.",
         "resendVerification": "Click here to re-send the verification email.",
-        "verificationSent": "A new verification link has been sent to your email address."
+        "verificationSent": "A new verification link has been sent to your email address.",
+        "forgotTitle": "Forgot your password?",
+        "forgotDesc": "Enter your email to receive a reset link",
+        "forgotPageTitle": "Forgot password",
+        "forgotSubmit": "Send reset link",
+        "backToLogin": "Back to log in",
+        "resetTitle": "Reset your password",
+        "resetDesc": "Enter your new password below",
+        "resetPageTitle": "Reset password",
+        "resetSubmit": "Reset password",
+        "confirmTitle": "Confirm your password",
+        "confirmDesc": "This is a secure area of the application. Please confirm your password before continuing.",
+        "confirmPageTitle": "Confirm password",
+        "confirmPassword": "Password",
+        "confirmSubmit": "Confirm password",
+        "verifyTitle": "Verify email",
+        "verifyDesc": "Please verify your email address by clicking on the link we just emailed to you.",
+        "verifyPageTitle": "Email verification",
+        "verifyResend": "Resend verification email",
+        "logout": "Log out"
     },
     "status": {
         "pending": "Pending approval",
@@ -388,7 +416,9 @@
             "emptyHint": "Upload the first photo of your business with “Add photos”; the first one becomes the cover automatically.",
             "prev": "Previous photo",
             "next": "Next photo",
-            "close": "Close"
+            "close": "Close",
+            "moveUp": "Move up",
+            "moveDown": "Move down"
         },
         "waitlist": {
             "title": "Waitlist",
@@ -441,7 +471,13 @@
             "pendingBadge": "Awaiting approval",
             "service": "Service:",
             "approve": "Approve",
-            "empty": "No reviews yet."
+            "empty": "No reviews yet.",
+            "replyButton": "Reply",
+            "replyLabel": "Reply from the business",
+            "replyPlaceholder": "Write your reply…",
+            "replySave": "Save reply",
+            "replyCancel": "Cancel",
+            "replyEdit": "Edit reply"
         },
         "customers": {
             "title": "Customers",

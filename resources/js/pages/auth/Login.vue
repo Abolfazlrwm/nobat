@@ -85,7 +85,7 @@ const signInAsDemo = (email: string) => {
                         tabindex="2"
                         autocomplete="current-password"
                         v-model="form.password"
-                        placeholder="Password"
+                        :placeholder="t('auth.password')"
                     />
                     <InputError :message="form.errors.password" />
                 </div>

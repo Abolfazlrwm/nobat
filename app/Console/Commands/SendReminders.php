@@ -31,7 +31,7 @@ class SendReminders extends Command
             ->get();
 
         foreach ($appointments as $appointment) {
-            SendReminderSms::dispatch($appointment);
+            SendReminderSms::dispatch($appointment, app()->getLocale());
         }
 
         $this->info("Queued {$appointments->count()} reminder(s) for the next {$within}h.");

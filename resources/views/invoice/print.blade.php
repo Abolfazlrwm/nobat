@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'en' ? 'ltr' : 'rtl' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>فاکتور {{ $invoice->number }}</title>
+    <title>{{ __('invoice.brand') }} {{ $invoice->number }}</title>
     <style>
         @font-face {
             font-family: 'Vazirmatn';
@@ -65,33 +65,33 @@
     <div class="sheet">
         <div class="head">
             <div class="brand">
-                فاکتور نوبت
+                {{ __('invoice.brand') }}
                 <small>{{ $invoice->snapshot['business']['name'] ?? $invoice->business->name }}</small>
             </div>
             <span class="badge {{ $invoice->status }}">
-                {{ \App\Models\Invoice::STATUS_LABELS[$invoice->status] ?? $invoice->status }}
+                {{ $invoice->localizedStatusLabel() }}
             </span>
         </div>
 
         <div class="meta">
-            <div><b>شماره فاکتور</b><span dir="ltr">{{ $invoice->number }}</span></div>
-            <div><b>کد پیگیری نوبت</b><span dir="ltr">{{ $invoice->snapshot['appointment_code'] ?? '' }}</span></div>
-            <div><b>تاریخ صدور</b>{{ $invoice->issued_at?->format('Y-m-d H:i') }}</div>
-            <div><b>مهلت پرداخت</b>{{ $invoice->due_at?->format('Y-m-d H:i') ?? '—' }}</div>
-            <div><b>مشتری</b>{{ $invoice->snapshot['customer_name'] ?? '' }}</div>
-            <div><b>تلفن</b><span dir="ltr">{{ $invoice->snapshot['customer_phone'] ?? '' }}</span></div>
+            <div><b>{{ __('invoice.number') }}</b><span dir="ltr">{{ $invoice->number }}</span></div>
+            <div><b>{{ __('invoice.tracking_code') }}</b><span dir="ltr">{{ $invoice->snapshot['appointment_code'] ?? '' }}</span></div>
+            <div><b>{{ __('invoice.issued_at') }}</b>{{ $invoice->issued_at?->format('Y-m-d H:i') }}</div>
+            <div><b>{{ __('invoice.due_at') }}</b>{{ $invoice->due_at?->format('Y-m-d H:i') ?? '—' }}</div>
+            <div><b>{{ __('invoice.customer') }}</b>{{ $invoice->snapshot['customer_name'] ?? '' }}</div>
+            <div><b>{{ __('invoice.phone') }}</b><span dir="ltr">{{ $invoice->snapshot['customer_phone'] ?? '' }}</span></div>
             @if ($payment = $invoice->appointment->latestPayment)
-                <div><b>شماره تراکنش</b><span dir="ltr">{{ $payment->ref_id ?? '—' }}</span></div>
-                <div><b>درگاه</b>{{ $payment->gateway }}</div>
+                <div><b>{{ __('invoice.transaction_no') }}</b><span dir="ltr">{{ $payment->ref_id ?? '—' }}</span></div>
+                <div><b>{{ __('invoice.gateway') }}</b>{{ $payment->gateway }}</div>
             @endif
         </div>
 
         <table>
             <thead>
                 <tr>
-                    <th>شرح</th>
-                    <th>مدت (دقیقه)</th>
-                    <th>مبلغ (تومان)</th>
+                    <th>{{ __('invoice.description') }}</th>
+                    <th>{{ __('invoice.duration_minutes') }}</th>
+                    <th>{{ __('invoice.amount_toman') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -103,20 +103,19 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="2">جمع کل</td>
-                    <td>{{ number_format($invoice->amount) }} تومان</td>
+                    <td colspan="2">{{ __('invoice.total') }}</td>
+                    <td>{{ number_format($invoice->amount) }} {{ __('invoice.currency') }}</td>
                 </tr>
             </tfoot>
         </table>
 
         <p class="note">
-            این فاکتور در لحظه‌ی صدور اسنپ‌شات شده است؛ تغییرهای بعدی کسب‌وکار روی آن اثری ندارد.
-            برای دریافت PDF از دکمه‌ی «چاپ / ذخیره PDF» مرورگر استفاده کنید.
+            {{ __('invoice.note') }}
         </p>
     </div>
 
     <div class="actions">
-        <button onclick="window.print()">چاپ / ذخیره PDF</button>
+        <button onclick="window.print()">{{ __('invoice.print_button') }}</button>
     </div>
 </body>
 </html>

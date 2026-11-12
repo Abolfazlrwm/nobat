@@ -5,6 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.0] - 2026-11-13
+
+### Added
+
+- **سِرِمونی ممیزی — کمبودهای پیدا شده با ممیزی کامل، تکمیل شدند:**
+  - **پنل‌های چندزبانه واقعاً سه‌زبانه شدند**: کاتالوگ‌های `lang/en/{auth,validation}.php`
+    اضافه شدند (پیش‌تر انگلیسی‌زبان‌ها پیام‌های ورود را فارسی می‌خواندند) و
+    کلیدهای `confirmed`، `image`، `mimes` و `max.file` به fa/ar اضافه شدند
+    (ثبت‌نام و آپلود گالری برای کاربر فارسی/عربی پیام انگلیسی می‌گرفتند).
+  - چهار صفحه‌ی auth (فراموشی/بازیابی/تأیید رمز/تأیید ایمیل) ترجمه شدند — تا
+    حالا فارسی یا انگلیسی هاردکد بودند.
+  - صفحات خطای برندشده (۴۰۳/۴۰۴/۴۱۹/۵۰۰/۵۰۳) عربی گرفتند و `lang`/`dir` را
+    مستقیم از کوکی می‌خوانند (صفحات خطا از گروه middleware عبور نمی‌کنند)؛
+    فاکتور چاپی هم کلیدهای `invoice.*` و وضعیت ترجمه‌شده گرفت.
+  - **پیامک‌ها، ایمیل پرداخت و نوتیفیکیشن دیتابیس چندزبانه شدند**: زبان هنگام
+    dispatch ثبت و روی worker بازگردانی می‌شود؛ متن‌ها از کلیدهای `sms.*` و
+    `mails.*` می‌آیند.
+  - هفت پیام اعتبارسنجی هاردکد، توضیح درگاه پرداخت، علت رفاند خودکار و فلش
+    «لینک بازیابی» به کاتالوگ‌ها رفتند.
+- **SEO**: `sitemap.xml` (لندینگ + هر کسب‌وکار فعال، کش ۳۰ دقیقه)، `robots.txt`
+  داینامیک با اشاره‌گر Sitemap و بستن پنل‌ها، و **JSON-LD** — `LocalBusiness`
+  روی پروفایل کسب‌وکار (عکس جلد، خدمات، امتیاز تجمیعی) و `WebSite` روی لندینگ.
+- **لغو خودخدمتی مهمان**: از صفحه‌ی نوبت، مهمان با شماره‌ای که رزرو با آن
+  انجام شده نوبت آینده‌ی پرداخت‌نشده را لغو می‌کند (`throttle:5,1`، نرمال‌سازی
+  ارقام فارسی/عربی، نوبت‌های پرداخت‌شده مستثنی).
+- **ارتقای خودکار لیست انتظار**: لغو نوبت (مدیر یا مهمان) به همه‌ی منتظرهای
+  همان کسب‌وکار/خدمت/روز پیامک با لینک رزرو می‌زند و وضعیت را «مطلع شده»
+  می‌کند — سرویس `WaitlistPromotion` + جاب `SendWaitlistPromoSms`.
+- **پاسخ مدیر به نظرات**: ستون‌های `reply`/`replied_at`، ویرایشگر پاسخ در پنل،
+  و حباب «پاسخ کسب‌وکار» زیر نظر مشتری در صفحه‌ی عمومی.
+- **مرتب‌سازی گالری**: endpoint و دکمه‌های بالا/پایین در پنل؛ نمای عمومی
+  عکس جلد را اول نمایش می‌دهد.
+- **پیگیری نوبت از فوتر**: فرم کد پیگیری مستقیم به صفحه‌ی نوبت می‌رود.
+- **تاگل سریع دارک‌مود** در هدر پنل و منوی عمومی (قبل از این فقط در تنظیمات).
+- نسخه‌ی اپ از `config('app.version')` به فرنت share می‌شود (بج لندینگ دیگر
+  هرگز کهنه نمی‌شود).
+
+### Changed
+
+- مشتری‌ها، لیست انتظار و نظرات پیجینیت شدند (۱۵/۲۰/۲۰): کتاب مشتری‌ها با یک
+  کوئری SQL گروه‌بندی‌شده (زیرکوئری‌های correlated نام و آخرین مراجعه را حفظ
+  می‌کنند) و جستجوی مشتری سمت سرور با پارامتر `q`؛ فیلتر تب‌های لیست انتظار
+  هم سمت سرور شد.
+- محور نمودار تحلیل برای عربی «م»/«ألف» می‌گیرد؛ PRODID خروجی iCal با زبان
+  فعال امضا می‌شود.
+
+### Removed
+
+- `AuthSplitLayout.vue` — لایه‌ت بی‌استفاده با متن هاردکد فارسی.
+- `public/robots.txt` استاتیک — نسخه‌ی داینامیک جایگزین شد.
+
+### Tests
+
+- **۱۵۳ → ۱۸۶ تست Pest**: پارتی کاتالوگ‌های auth/validation در سه زبان، خطای
+  ورود انگلیسی، صفحات خطای سه‌زبانه، فاکتور دو‌زبانه، پیامک/ایمیل چندزبانه با
+  ثبت زبان هنگام dispatch، sitemap/robots، لغو مهمان (۶ سناریو)، ارتقای لیست
+  انتظار (۳ سناریو)، پاسخ به نظر (۵ سناریو)، مرتب‌سازی گالری (۳ سناریو) و
+  پنجره‌ی پیجینیشن مشتری‌ها.
+
 ## [1.15.0] - 2026-11-13
 
 ### Added
@@ -519,5 +578,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 46 passing Pest tests covering slot engine, booking flow, authorization
   and status transitions
 
+[1.16.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.16.0
+[1.15.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.15.0
+[1.14.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.14.0
+[1.13.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.13.0
+[1.12.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.12.0
+[1.11.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.11.0
+[1.10.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.10.0
+[1.9.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.9.0
+[1.8.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.8.0
+[1.7.1]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.7.1
+[1.7.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.7.0
+[1.6.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.6.0
+[1.5.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.5.0
+[1.4.1]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.4.1
+[1.4.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.4.0
+[1.3.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.3.0
 [1.2.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.2.0
 [1.0.0]: https://github.com/Abolfazlrwm/nobat/releases/tag/v1.0.0

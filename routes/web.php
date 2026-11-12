@@ -24,6 +24,7 @@ use App\Http\Controllers\PublicApi\HomeController;
 use App\Http\Controllers\PublicApi\InvoiceController;
 use App\Http\Controllers\PublicApi\PaymentController;
 use App\Http\Controllers\PublicApi\ReviewController;
+use App\Http\Controllers\PublicApi\SeoController;
 use App\Http\Controllers\PublicApi\SlotController;
 use App\Http\Controllers\PublicApi\WaitlistController;
 use App\Models\Business;
@@ -36,6 +37,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Crawler entry points — the static public/robots.txt was retired so the
+// sitemap pointer always carries the live APP_URL.
+Route::get('robots.txt', [SeoController::class, 'robots'])->name('robots');
+Route::get('sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 
 Route::post('locale', [LocaleController::class, 'switch'])->name('locale.switch');
 
@@ -56,6 +62,10 @@ Route::post('b/{business:slug}/bookings', [BookingController::class, 'store'])
 Route::get('bookings/{code}', [BookingController::class, 'show'])->name('bookings.show');
 
 Route::get('bookings/{code}/ics', [BookingController::class, 'ics'])->name('bookings.ics');
+
+Route::post('bookings/{code}/cancel', [BookingController::class, 'guestCancel'])
+    ->name('bookings.guest_cancel')
+    ->middleware('throttle:5,1');
 
 Route::post('b/{business:slug}/reviews', [ReviewController::class, 'store'])
     ->name('reviews.store')
@@ -109,6 +119,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('reviews', [DashboardReviewController::class, 'index'])->name('reviews.index');
     Route::patch('reviews/{review}/approve', [DashboardReviewController::class, 'approve'])->name('reviews.approve');
+    Route::patch('reviews/{review}/reply', [DashboardReviewController::class, 'reply'])->name('reviews.reply');
     Route::delete('reviews/{review}', [DashboardReviewController::class, 'destroy'])->name('reviews.destroy');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
@@ -137,6 +148,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
     Route::post('gallery', [GalleryController::class, 'store'])->name('gallery.store');
+    Route::patch('gallery/reorder', [GalleryController::class, 'reorder'])->name('gallery.reorder');
     Route::put('gallery/{photo}', [GalleryController::class, 'update'])->name('gallery.update');
     Route::patch('gallery/{photo}/cover', [GalleryController::class, 'cover'])->name('gallery.cover');
     Route::delete('gallery/{photo}', [GalleryController::class, 'destroy'])->name('gallery.destroy');

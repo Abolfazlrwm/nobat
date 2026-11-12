@@ -3,19 +3,23 @@ import FlashMessages from '@/components/FlashMessages.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, ReviewItem } from '@/types';
+import { BreadcrumbItem, Paginated, ReviewItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
-import { Check, MessageSquareText, Star, Trash2 } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { Check, MessageSquareReply, MessageSquareText, Pencil, Star, Trash2 } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
 defineProps<{
-    reviews: (ReviewItem & { service?: string | null })[];
+    reviews: Paginated<ReviewItem & { service?: string | null }>;
     stats: { pending: number; approved: number; average: number | null };
 }>();
 
 const { t, num, dateShort } = useLocale();
+
+const replyingId = ref<number | null>(null);
+const replyText = ref('');
 
 const breadcrumbs = computed<BreadcrumbItem[]>(() => [
     { title: t('panel.dashboard.title'), href: '/dashboard' },
@@ -28,6 +32,27 @@ function approve(id: number): void {
 
 function remove(id: number): void {
     router.delete(route('reviews.destroy', id), { preserveScroll: true });
+}
+
+function startReply(id: number, current: string | null): void {
+    replyingId.value = replyingId.value === id ? null : id;
+    replyText.value = current ?? '';
+}
+
+function saveReply(id: number): void {
+    if (!replyText.value.trim()) return;
+
+    router.patch(
+        route('reviews.reply', id),
+        { reply: replyText.value },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                replyingId.value = null;
+                replyText.value = '';
+            },
+        },
+    );
 }
 </script>
 
@@ -77,7 +102,7 @@ function remove(id: number): void {
             </div>
 
             <div class="space-y-3">
-                <Card v-for="review in reviews" :key="review.id">
+                <Card v-for="review in reviews.data" :key="review.id">
                     <CardContent class="flex flex-wrap items-start justify-between gap-4 pt-4">
                         <div class="min-w-0 flex-1 space-y-2">
                             <div class="flex flex-wrap items-center gap-2">
@@ -94,6 +119,37 @@ function remove(id: number): void {
                                 <Badge v-else variant="outline" class="text-amber-600">{{ t('panel.reviews.pendingBadge') }}</Badge>
                             </div>
                             <p v-if="review.comment" class="text-sm text-muted-foreground">{{ review.comment }}</p>
+
+                            <!-- manager's public answer -->
+                            <div
+                                v-if="review.reply"
+                                class="rounded-xl border bg-muted/60 px-3 py-2"
+                            >
+                                <div class="flex items-center gap-1.5 text-xs font-semibold text-primary">
+                                    <MessageSquareReply class="size-3.5" />
+                                    {{ t('panel.reviews.replyLabel') }}
+                                </div>
+                                <p class="mt-1 text-sm">{{ review.reply }}</p>
+                            </div>
+
+                            <div v-if="replyingId === review.id" class="space-y-2">
+                                <Textarea
+                                    v-model="replyText"
+                                    :rows="3"
+                                    :placeholder="t('panel.reviews.replyPlaceholder')"
+                                    :aria-label="t('panel.reviews.replyPlaceholder')"
+                                />
+                                <div class="flex gap-2">
+                                    <Button size="sm" class="gap-1" :disabled="!replyText.trim()" @click="saveReply(review.id)">
+                                        <Check class="size-4" />
+                                        {{ t('panel.reviews.replySave') }}
+                                    </Button>
+                                    <Button size="sm" variant="ghost" @click="replyingId = null">
+                                        {{ t('panel.reviews.replyCancel') }}
+                                    </Button>
+                                </div>
+                            </div>
+
                             <p class="text-xs text-muted-foreground">
                                 {{ t('panel.reviews.service') }} {{ review.service ?? '—' }}
                                 <span v-if="review.created_at"> • {{ dateShort(review.created_at ?? '') }}</span>
@@ -101,6 +157,17 @@ function remove(id: number): void {
                         </div>
 
                         <div class="flex gap-2">
+                            <Button
+                                v-if="review.is_approved"
+                                size="sm"
+                                variant="outline"
+                                class="gap-1"
+                                @click="startReply(review.id, review.reply)"
+                            >
+                                <Pencil v-if="review.reply" class="size-4" />
+                                <MessageSquareReply v-else class="size-4" />
+                                {{ review.reply ? t('panel.reviews.replyEdit') : t('panel.reviews.replyButton') }}
+                            </Button>
                             <Button v-if="!review.is_approved" size="sm" class="gap-1" @click="approve(review.id)">
                                 <Check class="size-4" />
                                 {{ t('panel.reviews.approve') }}
@@ -113,7 +180,20 @@ function remove(id: number): void {
                     </CardContent>
                 </Card>
 
-                <p v-if="reviews.length === 0" class="py-10 text-center text-muted-foreground">{{ t('panel.reviews.empty') }}</p>
+                <p v-if="reviews.data.length === 0" class="py-10 text-center text-muted-foreground">{{ t('panel.reviews.empty') }}</p>
+
+                <div v-if="reviews.last_page > 1" class="flex items-center justify-center gap-1">
+                    <Button
+                        v-for="(link, index) in reviews.links"
+                        :key="index"
+                        :variant="link.active ? 'default' : 'outline'"
+                        size="sm"
+                        :disabled="!link.url"
+                        @click="router.get(link.url ?? '', {}, { preserveState: true })"
+                    >
+                        <span v-html="link.label" />
+                    </Button>
+                </div>
             </div>
         </div>
     </AppLayout>

@@ -4,7 +4,8 @@
         "dashboard": "داشبورد",
         "login": "ورود",
         "register": "ثبت‌نام",
-        "logout": "خروج"
+        "logout": "خروج",
+        "themeToggle": "تغییر روشن/تاریک"
     },
     "footer": {
         "tagline": "سامانه‌ی متن‌باز نوبت‌دهی آنلاین برای کلینیک‌ها، سالن‌ها و هر کسب‌وکار نوبت‌محور؛ با تقویم جلالی، پیامک یادآوری و رزرو لحظه‌ای.",
@@ -17,7 +18,10 @@
         "deployGuide": "راهنمای استقرار",
         "changelog": "تغییرات نسخه‌ها",
         "rights": "نوبت — سامانه نوبت‌دهی آنلاین · منتشرشده تحت مجوز MIT",
-        "builtWith": "ساخته‌شده با Laravel و Vue"
+        "builtWith": "ساخته‌شده با Laravel و Vue",
+        "trackTitle": "پیگیری نوبت",
+        "trackPlaceholder": "کد پیگیری",
+        "trackButton": "جستجو"
     },
     "landing": {
         "badge": "متن‌باز و رایگان — نسخه {version}",
@@ -106,7 +110,8 @@
         "team": "تیم ما",
         "noStaff": "هنوز همکاری ثبت نشده است.",
         "reviewsTitle": "نظرات مشتریان",
-        "galleryTitle": "تصاویر کسب‌وکار"
+        "galleryTitle": "تصاویر کسب‌وکار",
+        "replyLabel": "پاسخ کسب‌وکار"
     },
     "booking": {
         "title": "نوبت شما",
@@ -134,7 +139,11 @@
         "addToCalendar": "افزودن به تقویم",
         "newBooking": "رزرو نوبت جدید",
         "discount": "تخفیف",
-        "payableAmount": "مبلغ قابل پرداخت"
+        "payableAmount": "مبلغ قابل پرداخت",
+        "cancelTitle": "لغو این نوبت",
+        "cancelDesc": "برای لغو، شماره موبایلی که هنگام رزرو وارد کردید را بنویسید.",
+        "cancelPhonePlaceholder": "09xxxxxxxxx",
+        "cancelButton": "لغو نوبت"
     },
     "wizard": {
         "steps": {
@@ -199,7 +208,26 @@
         "demoSalonManager": "مدیر — سالن آفتاب",
         "emailUnverified": "آدرس ایمیل شما تأیید نشده است.",
         "resendVerification": "برای ارسال دوباره‌ی ایمیل تأیید اینجا کلیک کنید.",
-        "verificationSent": "یک لینک تأیید جدید به آدرس ایمیل شما ارسال شد."
+        "verificationSent": "یک لینک تأیید جدید به آدرس ایمیل شما ارسال شد.",
+        "forgotTitle": "فراموشی رمز عبور",
+        "forgotDesc": "ایمیل خود را برای دریافت لینک بازیابی وارد کنید",
+        "forgotPageTitle": "فراموشی رمز عبور",
+        "forgotSubmit": "ارسال لینک بازیابی",
+        "backToLogin": "بازگشت به صفحه‌ی ورود",
+        "resetTitle": "بازیابی رمز عبور",
+        "resetDesc": "رمز عبور جدید خود را وارد کنید",
+        "resetPageTitle": "بازیابی رمز عبور",
+        "resetSubmit": "بازیابی رمز عبور",
+        "confirmTitle": "تأیید رمز عبور",
+        "confirmDesc": "این بخش امن است؛ برای ادامه رمز عبور خود را تأیید کنید",
+        "confirmPageTitle": "تأیید رمز عبور",
+        "confirmPassword": "رمز عبور",
+        "confirmSubmit": "تأیید رمز عبور",
+        "verifyTitle": "تأیید ایمیل",
+        "verifyDesc": "برای تأیید آدرس ایمیل، روی لینکی که برای شما ارسال شده کلیک کنید",
+        "verifyPageTitle": "تأیید ایمیل",
+        "verifyResend": "ارسال دوباره‌ی ایمیل تأیید",
+        "logout": "خروج از حساب"
     },
     "status": {
         "pending": "در انتظار تأیید",
@@ -388,7 +416,9 @@
             "emptyHint": "با «افزودن عکس» اولین تصویر کسب‌وکار را بارگذاری کنید؛ اولین عکس به‌صورت خودکار جلد می‌شود.",
             "prev": "عکس قبلی",
             "next": "عکس بعدی",
-            "close": "بستن"
+            "close": "بستن",
+            "moveUp": "بالا بردن",
+            "moveDown": "پایین بردن"
         },
         "waitlist": {
             "title": "لیست انتظار",
@@ -441,7 +471,13 @@
             "pendingBadge": "در انتظار تأیید",
             "service": "خدمت:",
             "approve": "تأیید",
-            "empty": "هنوز نظری ثبت نشده است."
+            "empty": "هنوز نظری ثبت نشده است.",
+            "replyButton": "پاسخ",
+            "replyLabel": "پاسخ کسب‌وکار",
+            "replyPlaceholder": "پاسخ خود را بنویسید…",
+            "replySave": "ثبت پاسخ",
+            "replyCancel": "انصراف",
+            "replyEdit": "ویرایش پاسخ"
         },
         "customers": {
             "title": "مشتری‌ها",

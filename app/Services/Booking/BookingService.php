@@ -86,7 +86,7 @@ class BookingService
                 $this->discounts->apply($appointment, $discount);
             }
 
-            SendBookingSms::dispatch($appointment)->afterCommit();
+            SendBookingSms::dispatch($appointment, app()->getLocale())->afterCommit();
 
             return $appointment;
         });
