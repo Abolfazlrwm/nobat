@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Appointment;
+use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Support\Str;
 
@@ -268,13 +269,13 @@ it('renders the printed invoice in the visitor language', function () {
         Appointment::STATUS_CONFIRMED,
     );
 
-    $invoice = \App\Models\Invoice::query()->create([
+    $invoice = Invoice::query()->create([
         'number' => 'INV-TEST-1',
         'business_id' => $business->id,
         'appointment_id' => $appointment->id,
         'amount' => 500_000,
         'currency' => 'IRT',
-        'status' => \App\Models\Invoice::STATUS_PAID,
+        'status' => Invoice::STATUS_PAID,
         'snapshot' => ['customer_name' => 'مشتری آزمون', 'customer_phone' => '09120000000'],
         'issued_at' => now(),
         'paid_at' => now(),

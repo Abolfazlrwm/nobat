@@ -4,7 +4,6 @@ namespace App\Http\Controllers\PublicApi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
