@@ -15,7 +15,7 @@ class SetLocale
 {
     public const COOKIE = 'nobat_locale';
 
-    public const SUPPORTED = ['fa', 'en'];
+    public const SUPPORTED = ['fa', 'en', 'ar'];
 
     public function handle(Request $request, Closure $next): mixed
     {

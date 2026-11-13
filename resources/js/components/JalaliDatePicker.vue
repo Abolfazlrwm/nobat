@@ -23,7 +23,7 @@ const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void;
 }>();
 
-const { t, isFa, num } = useLocale();
+const { t, isEn, num } = useLocale();
 
 const today = new Date();
 const todayJ = toJalaali(today);
@@ -57,8 +57,8 @@ const firstWeekdayIndex = computed(() => {
 const monthLabel = computed(() => `${t(`calendar.months.${viewMonth.value - 1}`)} ${num(viewYear.value)}`);
 
 /** Start-of-month chevron: points "back" in each reading direction. */
-const prevIcon = computed(() => (isFa.value ? ChevronRight : ChevronLeft));
-const nextIcon = computed(() => (isFa.value ? ChevronLeft : ChevronRight));
+const prevIcon = computed(() => (isEn.value ? ChevronLeft : ChevronRight));
+const nextIcon = computed(() => (isEn.value ? ChevronRight : ChevronLeft));
 
 interface DayCell {
     day: number;
@@ -125,7 +125,7 @@ function select(cell: DayCell): void {
 </script>
 
 <template>
-    <div :dir="isFa ? 'rtl' : 'ltr'" class="w-72 rounded-xl border bg-card p-3 text-card-foreground shadow-sm">
+    <div :dir="isEn ? 'ltr' : 'rtl'" class="w-72 rounded-xl border bg-card p-3 text-card-foreground shadow-sm">
         <div class="mb-2 flex items-center justify-between">
             <Button variant="ghost" size="icon" type="button" :aria-label="t('calendar.prevMonth')" @click="go(-1)">
                 <component :is="prevIcon" class="size-4" />

@@ -20,12 +20,21 @@ it('shares the resolved locale with the inertia payload', function () {
         ->get(route('home'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page->where('locale', 'en'));
+
+    $this->withCookie('nobat_locale', 'ar')
+        ->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->where('locale', 'ar'));
 });
 
 it('persists a locale choice and rejects unsupported locales', function () {
     $this->post(route('locale.switch'), ['locale' => 'en'])
         ->assertRedirect()
         ->assertCookie('nobat_locale', 'en');
+
+    $this->post(route('locale.switch'), ['locale' => 'ar'])
+        ->assertRedirect()
+        ->assertCookie('nobat_locale', 'ar');
 
     $this->post(route('locale.switch'), ['locale' => 'de'])
         ->assertSessionHasErrors('locale');
@@ -37,6 +46,14 @@ it('serves the english LTR shell when the cookie is set', function () {
         ->assertOk()
         ->assertSee('lang="en"', false)
         ->assertSee('dir="ltr"', false);
+});
+
+it('serves the arabic RTL shell when the cookie is set', function () {
+    $this->withCookie('nobat_locale', 'ar')
+        ->get(route('home'))
+        ->assertOk()
+        ->assertSee('lang="ar"', false)
+        ->assertSee('dir="rtl"', false);
 });
 
 it('translates server-generated flash messages to english', function () {
@@ -60,6 +77,28 @@ it('translates server-generated flash messages to english', function () {
         ->get(route('bookings.show', $appointment->code))
         ->assertOk()
         ->assertInertia(fn ($page) => $page->where('flash.success', 'Thanks for your review! It goes live once the business manager approves it.'));
+});
+
+it('translates server-generated flash messages to arabic', function () {
+    $business = $this->makeBusiness();
+    $appointment = $this->createAppointment(
+        $this->addStaff($business),
+        $this->serviceOf($business),
+        $this->nextOpenDate()->setTimeFromTimeString('10:00'),
+        Appointment::STATUS_COMPLETED,
+    );
+
+    $this->from(route('businesses.show', $business->slug))
+        ->post(route('reviews.store', $business->slug), [
+            'code' => $appointment->code,
+            'rating' => 5,
+            'comment' => 'تجربة رائعة',
+        ]);
+
+    $this->withCookie('nobat_locale', 'ar')
+        ->get(route('bookings.show', $appointment->code))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->where('flash.success', 'شكراً على تقييمك! سيظهر علناً بعد موافقة مدير النشاط التجاري.'));
 });
 
 it('keeps persian flash messages for default visitors', function () {
@@ -99,16 +138,19 @@ it('translates the management dashboard flash messages to english', function () 
         ->assertSessionHas('success', 'New service saved.');
 });
 
-it('keeps fa and en server translation files in sync', function () {
+it('keeps all three server translation files in sync', function () {
     $fa = json_decode((string) file_get_contents(lang_path('fa.json')), true, flags: JSON_THROW_ON_ERROR);
     $en = json_decode((string) file_get_contents(lang_path('en.json')), true, flags: JSON_THROW_ON_ERROR);
+    $ar = json_decode((string) file_get_contents(lang_path('ar.json')), true, flags: JSON_THROW_ON_ERROR);
 
-    expect(array_keys($fa))->toEqual(array_keys($en));
+    expect(array_keys($fa))->toEqual(array_keys($en))
+        ->and(array_keys($fa))->toEqual(array_keys($ar));
 });
 
-it('keeps fa and en frontend translation files in sync', function () {
+it('keeps all three frontend translation files in sync', function () {
     $fa = json_decode((string) file_get_contents(resource_path('js/locales/fa.json')), true, flags: JSON_THROW_ON_ERROR);
     $en = json_decode((string) file_get_contents(resource_path('js/locales/en.json')), true, flags: JSON_THROW_ON_ERROR);
+    $ar = json_decode((string) file_get_contents(resource_path('js/locales/ar.json')), true, flags: JSON_THROW_ON_ERROR);
 
     $flatten = function (array $items, string $prefix = '') use (&$flatten): array {
         $keys = [];
@@ -127,6 +169,8 @@ it('keeps fa and en frontend translation files in sync', function () {
     };
 
     expect($flatten($fa))->toEqual($flatten($en))
+        ->and($flatten($fa))->toEqual($flatten($ar))
         ->and(count($flatten($fa)))->toBeGreaterThan(100)
-        ->and(Str::length((string) json_encode($en)))->toBeGreaterThan(4000);
+        ->and(Str::length((string) json_encode($en)))->toBeGreaterThan(4000)
+        ->and(Str::length((string) json_encode($ar)))->toBeGreaterThan(4000);
 });

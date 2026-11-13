@@ -15,7 +15,7 @@ class LocaleController extends Controller
     public function switch(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'locale' => 'required|in:fa,en',
+            'locale' => 'required|in:fa,en,ar',
         ]);
 
         return back()->withCookie(cookie(SetLocale::COOKIE, $data['locale'], 60 * 24 * 365));

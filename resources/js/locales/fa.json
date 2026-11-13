@@ -240,7 +240,8 @@
     "langSwitch": {
         "label": "تغییر زبان",
         "fa": "فارسی",
-        "en": "English"
+        "en": "English",
+        "ar": "العربية"
     },
     "panel": {
         "common": {
