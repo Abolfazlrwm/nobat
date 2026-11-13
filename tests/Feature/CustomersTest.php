@@ -41,21 +41,21 @@ it('aggregates per-customer spend and no-show stats for the manager', function (
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('dashboard/Customers')
-            ->has('customers', 2)
+            ->has('customers.data', 2)
             ->where('stats.total', 2)
             ->where('stats.active', 2)
             ->where('stats.revenue', 1_500_000)
             // Sorted by lifetime spend: مریم first.
-            ->where('customers.0.name', 'مریم مصرفی')
-            ->where('customers.0.phone', '09121112233')
-            ->where('customers.0.appointments_count', 2)
-            ->where('customers.0.completed_count', 2)
-            ->where('customers.0.total_spent', 1_000_000)
-            ->where('customers.0.no_show_rate', 0)
-            ->where('customers.1.phone', '09124445566')
-            ->where('customers.1.total_spent', 500_000)
-            ->where('customers.1.no_show_count', 1)
-            ->where('customers.1.no_show_rate', 50)
+            ->where('customers.data.0.name', 'مریم مصرفی')
+            ->where('customers.data.0.phone', '09121112233')
+            ->where('customers.data.0.appointments_count', 2)
+            ->where('customers.data.0.completed_count', 2)
+            ->where('customers.data.0.total_spent', 1_000_000)
+            ->where('customers.data.0.no_show_rate', 0)
+            ->where('customers.data.1.phone', '09124445566')
+            ->where('customers.data.1.total_spent', 500_000)
+            ->where('customers.data.1.no_show_count', 1)
+            ->where('customers.data.1.no_show_rate', 50)
         );
 });
 
@@ -77,8 +77,8 @@ it('keeps each manager\'s customer list scoped to their own business', function 
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('dashboard/Customers')
-            ->has('customers', 1)
-            ->where('customers.0.phone', '09121112233')
+            ->has('customers.data', 1)
+            ->where('customers.data.0.phone', '09121112233')
         );
 });
 
@@ -130,4 +130,50 @@ it('keeps staff users out of the customer panel', function () {
     $this->addStaff($business, 'همکار تست', $staffUser);
 
     $this->actingAs($staffUser)->get(route('customers.index'))->assertNotFound();
+});
+
+it('paginates the customer book at fifteen per page', function () {
+    $business = $this->makeBusiness();
+    $service = $this->serviceOf($business);
+    $staff = $this->addStaff($business);
+
+    // Sixteen distinct customers, one completed booking each.
+    $day = $this->nextOpenDate();
+    foreach (range(1, 16) as $i) {
+        customerBooking($staff, $service, $this->slotAt($day->addDays($i), '09:00'), Appointment::STATUS_COMPLETED, "مشتری {$i}", '0912'.str_pad((string) $i, 7, '0', STR_PAD_LEFT));
+    }
+
+    $manager = User::find($business->owner_id);
+
+    $this->actingAs($manager)->get(route('customers.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('dashboard/Customers')
+            ->has('customers.data', 15)
+            ->where('customers.total', 16)
+            ->where('customers.last_page', 2)
+            ->where('stats.total', 16)
+            ->where('stats.revenue', 16 * 500_000)
+        );
+});
+
+it('filters the customer book with a server-side search', function () {
+    $business = $this->makeBusiness();
+    $service = $this->serviceOf($business);
+    $staff = $this->addStaff($business);
+    $day = $this->nextOpenDate();
+
+    customerBooking($staff, $service, $this->slotAt($day, '09:00'), Appointment::STATUS_COMPLETED, 'مریم مصرفی', '09121112233');
+    customerBooking($staff, $service, $this->slotAt($day, '10:00'), Appointment::STATUS_COMPLETED, 'رضا رضایی', '09124445566');
+
+    $manager = User::find($business->owner_id);
+
+    $this->actingAs($manager)->get(route('customers.index', ['q' => 'مریم']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('customers.data', 1)
+            ->where('customers.data.0.phone', '09121112233')
+            ->where('search', 'مریم')
+            ->where('stats.total', 2)
+        );
 });

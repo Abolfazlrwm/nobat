@@ -166,5 +166,9 @@
     "review.reply_required": "متن پاسخ الزامی است.",
     "review.reply_max": "پاسخ حداکثر می‌تواند ۱۰۰۰ کاراکتر باشد.",
     "gallery.reordered": "ترتیب گالری ذخیره شد.",
-    "gallery.invalid_order": "فهرست ترتیب با عکس‌های گالری مطابقت ندارد."
+    "gallery.invalid_order": "فهرست ترتیب با عکس‌های گالری مطابقت ندارد.",
+    "status.waitlist_waiting": "در انتظار",
+    "status.waitlist_notified": "مطلع شده",
+    "status.waitlist_booked": "نوبت گرفت",
+    "status.waitlist_cancelled": "لغو شده"
 }

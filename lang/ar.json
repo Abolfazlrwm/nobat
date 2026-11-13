@@ -166,5 +166,9 @@
     "review.reply_required": "نص الردّ مطلوب.",
     "review.reply_max": "لا يمكن أن يتجاوز الردّ 1000 حرف.",
     "gallery.reordered": "تم حفظ ترتيب المعرض.",
-    "gallery.invalid_order": "قائمة الترتيب لا تطابق صور المعرض."
+    "gallery.invalid_order": "قائمة الترتيب لا تطابق صور المعرض.",
+    "status.waitlist_waiting": "في الانتظار",
+    "status.waitlist_notified": "تم الإبلاغ",
+    "status.waitlist_booked": "حجز",
+    "status.waitlist_cancelled": "ملغى"
 }

@@ -17,19 +17,32 @@ class WaitlistController extends Controller
             ? Business::findOrFail($request->integer('business_id'))
             : $request->user()->ownedBusinesses()->orderBy('id')->firstOrFail();
 
-        $entries = $business->waitlistEntries()
-            ->with(['service:id,name', 'staff:id,name'])
+        // The tab filter runs server-side so pagination stays honest.
+        $filter = (string) $request->string('filter');
+
+        $query = $business->waitlistEntries()
+            ->with(['service:id,name', 'staff:id,name']);
+
+        match ($filter) {
+            'waiting' => $query->where('status', WaitlistEntry::STATUS_WAITING),
+            'notified' => $query->where('status', WaitlistEntry::STATUS_NOTIFIED),
+            'closed' => $query->whereIn('status', [WaitlistEntry::STATUS_BOOKED, WaitlistEntry::STATUS_CANCELLED]),
+            default => null,
+        };
+
+        $entries = $query
             ->orderByRaw("CASE status WHEN 'waiting' THEN 0 WHEN 'notified' THEN 1 WHEN 'booked' THEN 2 ELSE 3 END")
             ->orderBy('desired_date')
             ->orderBy('id')
-            ->get()
-            ->map(fn (WaitlistEntry $entry) => [
+            ->paginate(20)
+            ->withQueryString()
+            ->through(fn (WaitlistEntry $entry) => [
                 'id' => $entry->id,
                 'desired_date' => $entry->desired_date->format('Y-m-d'),
                 'customer_name' => $entry->customer_name,
                 'customer_phone' => $entry->customer_phone,
                 'status' => $entry->status,
-                'status_label' => WaitlistEntry::STATUS_LABELS[$entry->status] ?? $entry->status,
+                'status_label' => $entry->localizedStatusLabel(),
                 'notified_at' => $entry->notified_at?->format('Y-m-d\TH:i:s'),
                 'note' => $entry->note,
                 'service' => $entry->service?->only('name'),
@@ -39,10 +52,11 @@ class WaitlistController extends Controller
         return Inertia::render('dashboard/Waitlist', [
             'business' => ['id' => $business->id, 'name' => $business->name],
             'entries' => $entries,
+            'filter' => in_array($filter, ['all', 'waiting', 'notified', 'closed'], true) ? $filter : 'all',
             'counts' => [
-                'waiting' => $entries->where('status', 'waiting')->count(),
-                'notified' => $entries->where('status', 'notified')->count(),
-                'total' => $entries->count(),
+                'waiting' => $business->waitlistEntries()->waiting()->count(),
+                'notified' => $business->waitlistEntries()->where('status', WaitlistEntry::STATUS_NOTIFIED)->count(),
+                'total' => $business->waitlistEntries()->count(),
             ],
         ]);
     }

@@ -6,13 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, ReviewItem } from '@/types';
+import { BreadcrumbItem, Paginated, ReviewItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Check, MessageSquareReply, MessageSquareText, Pencil, Star, Trash2 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 defineProps<{
-    reviews: (ReviewItem & { service?: string | null })[];
+    reviews: Paginated<ReviewItem & { service?: string | null }>;
     stats: { pending: number; approved: number; average: number | null };
 }>();
 
@@ -102,7 +102,7 @@ function saveReply(id: number): void {
             </div>
 
             <div class="space-y-3">
-                <Card v-for="review in reviews" :key="review.id">
+                <Card v-for="review in reviews.data" :key="review.id">
                     <CardContent class="flex flex-wrap items-start justify-between gap-4 pt-4">
                         <div class="min-w-0 flex-1 space-y-2">
                             <div class="flex flex-wrap items-center gap-2">
@@ -180,7 +180,20 @@ function saveReply(id: number): void {
                     </CardContent>
                 </Card>
 
-                <p v-if="reviews.length === 0" class="py-10 text-center text-muted-foreground">{{ t('panel.reviews.empty') }}</p>
+                <p v-if="reviews.data.length === 0" class="py-10 text-center text-muted-foreground">{{ t('panel.reviews.empty') }}</p>
+
+                <div v-if="reviews.last_page > 1" class="flex items-center justify-center gap-1">
+                    <Button
+                        v-for="(link, index) in reviews.links"
+                        :key="index"
+                        :variant="link.active ? 'default' : 'outline'"
+                        size="sm"
+                        :disabled="!link.url"
+                        @click="router.get(link.url ?? '', {}, { preserveState: true })"
+                    >
+                        <span v-html="link.label" />
+                    </Button>
+                </div>
             </div>
         </div>
     </AppLayout>

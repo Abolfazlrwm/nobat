@@ -4,14 +4,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, WaitlistItem } from '@/types';
-import { Head, router } from '@inertiajs/vue3';
+import { BreadcrumbItem, Paginated, WaitlistItem } from '@/types';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { BellRing, Ban, Trash2, Hourglass } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
     business: { id: number; name: string };
-    entries: WaitlistItem[];
+    entries: Paginated<WaitlistItem>;
+    filter: 'all' | 'waiting' | 'notified' | 'closed';
     counts: { waiting: number; notified: number; total: number };
 }>();
 
@@ -22,15 +23,12 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => [
     { title: t('panel.waitlist.title'), href: '/waitlist' },
 ]);
 
-const filter = ref<'all' | 'waiting' | 'notified' | 'closed'>('all');
+// The tab filter runs server-side so pagination stays honest.
+const filter = computed(() => props.filter);
 
-const filtered = computed(() => {
-    if (filter.value === 'all') return props.entries;
-    if (filter.value === 'waiting') return props.entries.filter((e) => e.status === 'waiting');
-    if (filter.value === 'notified') return props.entries.filter((e) => e.status === 'notified');
-
-    return props.entries.filter((e) => e.status === 'booked' || e.status === 'cancelled');
-});
+function setFilter(key: 'all' | 'waiting' | 'notified' | 'closed'): void {
+    router.get(route('waitlist.index'), { filter: key }, { preserveState: true });
+}
 
 const tabs = computed<{ key: 'all' | 'waiting' | 'notified' | 'closed'; label: string }[]>(() => [
     { key: 'waiting', label: t('panel.waitlist.tabWaiting', { n: num(props.counts.waiting) }) },
@@ -89,7 +87,7 @@ const waitlistLabel = (entry: WaitlistItem): string =>
                             ? 'border-primary bg-primary text-primary-foreground'
                             : 'text-muted-foreground hover:bg-accent',
                     ]"
-                    @click="filter = tab.key"
+                    @click="setFilter(tab.key)"
                 >
                     {{ tab.label }}
                 </button>
@@ -97,7 +95,7 @@ const waitlistLabel = (entry: WaitlistItem): string =>
 
             <div class="space-y-3">
                 <div
-                    v-for="entry in filtered"
+                    v-for="entry in entries.data"
                     :key="entry.id"
                     class="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-background p-4"
                 >
@@ -136,8 +134,21 @@ const waitlistLabel = (entry: WaitlistItem): string =>
                     </div>
                 </div>
 
-                <div v-if="filtered.length === 0" class="rounded-xl border border-dashed px-4 py-10 text-center text-muted-foreground">
+                <div v-if="entries.data.length === 0" class="rounded-xl border border-dashed px-4 py-10 text-center text-muted-foreground">
                     {{ t('panel.waitlist.empty') }}
+                </div>
+
+                <div v-if="entries.last_page > 1" class="flex items-center justify-center gap-1">
+                    <Button
+                        v-for="(link, index) in entries.links"
+                        :key="index"
+                        :variant="link.active ? 'default' : 'outline'"
+                        size="sm"
+                        :disabled="!link.url"
+                        @click="router.get(link.url ?? '', {}, { preserveState: true })"
+                    >
+                        <span v-html="link.label" />
+                    </Button>
                 </div>
             </div>
         </div>

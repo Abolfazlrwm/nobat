@@ -166,5 +166,9 @@
     "review.reply_required": "The reply text is required.",
     "review.reply_max": "The reply may not exceed 1000 characters.",
     "gallery.reordered": "Gallery order saved.",
-    "gallery.invalid_order": "The order list does not match the gallery photos."
+    "gallery.invalid_order": "The order list does not match the gallery photos.",
+    "status.waitlist_waiting": "Waiting",
+    "status.waitlist_notified": "Notified",
+    "status.waitlist_booked": "Booked",
+    "status.waitlist_cancelled": "Cancelled"
 }
