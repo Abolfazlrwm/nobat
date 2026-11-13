@@ -18,7 +18,10 @@
         "deployGuide": "Deployment guide",
         "changelog": "Release notes",
         "rights": "Nobat — online appointment booking · Released under the MIT license",
-        "builtWith": "Built with Laravel and Vue"
+        "builtWith": "Built with Laravel and Vue",
+        "trackTitle": "Track your booking",
+        "trackPlaceholder": "Tracking code",
+        "trackButton": "Find"
     },
     "landing": {
         "badge": "Open source and free — v{version}",

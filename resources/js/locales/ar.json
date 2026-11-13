@@ -18,7 +18,10 @@
         "deployGuide": "دليل النشر",
         "changelog": "سجل الإصدارات",
         "rights": "نوبت — منصة حجز المواعيد الإلكترونية · منشورة تحت رخصة MIT",
-        "builtWith": "مبني بـ Laravel و Vue"
+        "builtWith": "مبني بـ Laravel و Vue",
+        "trackTitle": "تتبع الموعد",
+        "trackPlaceholder": "رمز التتبع",
+        "trackButton": "بحث"
     },
     "landing": {
         "badge": "مفتوح المصدر ومجاني — الإصدار {version}",

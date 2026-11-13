@@ -18,7 +18,10 @@
         "deployGuide": "راهنمای استقرار",
         "changelog": "تغییرات نسخه‌ها",
         "rights": "نوبت — سامانه نوبت‌دهی آنلاین · منتشرشده تحت مجوز MIT",
-        "builtWith": "ساخته‌شده با Laravel و Vue"
+        "builtWith": "ساخته‌شده با Laravel و Vue",
+        "trackTitle": "پیگیری نوبت",
+        "trackPlaceholder": "کد پیگیری",
+        "trackButton": "جستجو"
     },
     "landing": {
         "badge": "متن‌باز و رایگان — نسخه {version}",
