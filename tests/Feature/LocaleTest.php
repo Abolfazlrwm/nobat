@@ -177,3 +177,57 @@ it('keeps all three frontend translation files in sync', function () {
         ->and(Str::length((string) json_encode($en)))->toBeGreaterThan(4000)
         ->and(Str::length((string) json_encode($ar)))->toBeGreaterThan(4000);
 });
+
+it('ships the english auth and validation catalogs in the same shape as fa and ar', function () {
+    $flatten = function (array $items, string $prefix = '') use (&$flatten): array {
+        $keys = [];
+
+        foreach ($items as $key => $value) {
+            $path = $prefix === '' ? (string) $key : "$prefix.$key";
+
+            if (is_array($value)) {
+                $keys = [...$keys, ...$flatten($value, $path)];
+            } else {
+                $keys[] = $path;
+            }
+        }
+
+        return $keys;
+    };
+
+    foreach (['auth', 'validation'] as $group) {
+        $fa = $flatten(require lang_path("fa/$group.php"));
+        $en = $flatten(require lang_path("en/$group.php"));
+        $ar = $flatten(require lang_path("ar/$group.php"));
+
+        expect($fa)->toEqual($en)
+            ->and($fa)->toEqual($ar);
+    }
+});
+
+it('answers english visitors with english auth failures, not persian ones', function () {
+    $response = $this->withCookie('nobat_locale', 'en')
+        ->from(route('login'))
+        ->post(route('login'), ['email' => 'ghost@example.com', 'password' => 'not-the-password']);
+
+    $response->assertSessionHasErrors('email');
+
+    expect((string) session('errors')->first('email'))->toContain('do not match our records');
+});
+
+it('translates the confirmed, image and mimes rules for all three locales', function () {
+    $expectations = [
+        'fa' => ['confirmed' => 'مطابقت ندارد', 'mimes' => 'فرمت'],
+        'ar' => ['confirmed' => 'غير متطابق', 'mimes' => 'من النوع'],
+        'en' => ['confirmed' => 'confirmation does not match', 'mimes' => 'file of type'],
+    ];
+
+    foreach ($expectations as $locale => $needles) {
+        app()->setLocale($locale);
+
+        expect(__('validation.confirmed', ['attribute' => 'password']))->toContain($needles['confirmed'])
+            ->and(__('validation.mimes', ['attribute' => 'photo', 'values' => 'jpg, png, webp']))->toContain($needles['mimes']);
+    }
+
+    app()->setLocale('fa');
+});
