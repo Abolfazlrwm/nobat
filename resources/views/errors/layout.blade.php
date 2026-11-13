@@ -83,7 +83,7 @@
         <p class="message">{{ $locale === 'en' ? $messageEn : ($locale === 'ar' ? $messageAr : $message) }}
             <small>{{ $locale === 'en' ? $message : ($locale === 'ar' ? $messageEn : $messageAr) }}</small>
         </p>
-        <a class="action" href="/">{{ $action }}</a>
+        <a class="action" href="/">{{ __('errors.back_home', [], $locale) }}</a>
     </main>
 </body>
 </html>
