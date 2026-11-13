@@ -24,6 +24,7 @@ use App\Http\Controllers\PublicApi\HomeController;
 use App\Http\Controllers\PublicApi\InvoiceController;
 use App\Http\Controllers\PublicApi\PaymentController;
 use App\Http\Controllers\PublicApi\ReviewController;
+use App\Http\Controllers\PublicApi\SeoController;
 use App\Http\Controllers\PublicApi\SlotController;
 use App\Http\Controllers\PublicApi\WaitlistController;
 use App\Models\Business;
@@ -36,6 +37,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Crawler entry points — the static public/robots.txt was retired so the
+// sitemap pointer always carries the live APP_URL.
+Route::get('robots.txt', [SeoController::class, 'robots'])->name('robots');
+Route::get('sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 
 Route::post('locale', [LocaleController::class, 'switch'])->name('locale.switch');
 

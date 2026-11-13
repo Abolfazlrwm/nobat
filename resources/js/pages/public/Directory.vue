@@ -25,13 +25,27 @@ import {
     Users,
     Zap,
 } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const props = defineProps<{
     businesses: BusinessSummary[];
 }>();
 
 const { t, isEn, num } = useLocale();
+
+// WebSite structured data for crawlers — Inertia renders client-side,
+// so the ld+json node is appended to the head after mount.
+onMounted(() => {
+    const node = document.createElement('script');
+    node.type = 'application/ld+json';
+    node.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Nobat | نوبت',
+        url: route('home'),
+    });
+    document.head.appendChild(node);
+});
 
 const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
 const APP_VERSION = '1.15.0';

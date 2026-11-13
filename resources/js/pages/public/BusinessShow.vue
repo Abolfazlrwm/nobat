@@ -9,13 +9,53 @@ import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BusinessWithServices } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { ChevronLeft, ChevronRight, Clock, MapPin, Phone, Star, X } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     business: BusinessWithServices;
 }>();
 
 const { t, num, dateShort } = useLocale();
+
+// LocalBusiness structured data for crawlers — Inertia renders client-side,
+// so the ld+json node is appended to the head after mount.
+onMounted(() => {
+    const business = props.business;
+
+    const data: Record<string, unknown> = {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: business.name,
+        url: route('businesses.show', business.slug),
+    };
+
+    if (business.description) data.description = business.description;
+    if (business.phone) data.telephone = business.phone;
+    if (business.address) data.address = business.address;
+
+    const cover = business.photos?.find((photo) => photo.is_cover) ?? business.photos?.[0];
+    if (cover) data.image = cover.url;
+
+    if (business.services?.length) {
+        data.makesOffer = business.services.map((service) => ({
+            '@type': 'Offer',
+            itemOffered: { '@type': 'Service', name: service.name },
+        }));
+    }
+
+    if (business.reviews_summary?.count) {
+        data.aggregateRating = {
+            '@type': 'AggregateRating',
+            ratingValue: business.reviews_summary.average,
+            reviewCount: business.reviews_summary.count,
+        };
+    }
+
+    const node = document.createElement('script');
+    node.type = 'application/ld+json';
+    node.textContent = JSON.stringify(data);
+    document.head.appendChild(node);
+});
 
 const lightbox = ref<number | null>(null);
 
