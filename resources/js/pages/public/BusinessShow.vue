@@ -8,7 +8,7 @@ import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BusinessWithServices } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import { ChevronLeft, ChevronRight, Clock, MapPin, Phone, Star, X } from 'lucide-vue-next';
+import { ChevronLeft, ChevronRight, Clock, MapPin, MessageSquareReply, Phone, Star, X } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
@@ -207,6 +207,16 @@ function stepLightbox(business: BusinessWithServices, step: number): void {
                             </span>
                         </div>
                         <p v-if="review.comment" class="mt-2 text-sm text-muted-foreground">{{ review.comment }}</p>
+                        <div
+                            v-if="review.reply"
+                            class="mt-2 rounded-xl border bg-background px-3 py-2"
+                        >
+                            <div class="flex items-center gap-1.5 text-xs font-semibold text-primary">
+                                <MessageSquareReply class="size-3.5" />
+                                {{ t('business.replyLabel') }}
+                            </div>
+                            <p class="mt-1 text-sm">{{ review.reply }}</p>
+                        </div>
                         <p v-if="review.created_at" class="mt-2 text-xs text-muted-foreground">
                             {{ dateShort(review.created_at ?? '') }}
                         </p>

@@ -119,6 +119,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('reviews', [DashboardReviewController::class, 'index'])->name('reviews.index');
     Route::patch('reviews/{review}/approve', [DashboardReviewController::class, 'approve'])->name('reviews.approve');
+    Route::patch('reviews/{review}/reply', [DashboardReviewController::class, 'reply'])->name('reviews.reply');
     Route::delete('reviews/{review}', [DashboardReviewController::class, 'destroy'])->name('reviews.destroy');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');

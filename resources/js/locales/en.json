@@ -106,7 +106,8 @@
         "team": "Our team",
         "noStaff": "No staff members yet.",
         "reviewsTitle": "Customer reviews",
-        "galleryTitle": "Business gallery"
+        "galleryTitle": "Business gallery",
+        "replyLabel": "Reply from the business"
     },
     "booking": {
         "title": "Your booking",
@@ -464,7 +465,13 @@
             "pendingBadge": "Awaiting approval",
             "service": "Service:",
             "approve": "Approve",
-            "empty": "No reviews yet."
+            "empty": "No reviews yet.",
+            "replyButton": "Reply",
+            "replyLabel": "Reply from the business",
+            "replyPlaceholder": "Write your reply…",
+            "replySave": "Save reply",
+            "replyCancel": "Cancel",
+            "replyEdit": "Edit reply"
         },
         "customers": {
             "title": "Customers",

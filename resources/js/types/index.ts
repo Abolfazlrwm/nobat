@@ -246,6 +246,8 @@ export interface ReviewItem {
     rating: number;
     comment?: string | null;
     is_approved: boolean;
+    reply?: string | null;
+    replied_at?: string | null;
     created_at?: string | null;
 }
 

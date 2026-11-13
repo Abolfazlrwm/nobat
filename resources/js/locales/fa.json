@@ -106,7 +106,8 @@
         "team": "تیم ما",
         "noStaff": "هنوز همکاری ثبت نشده است.",
         "reviewsTitle": "نظرات مشتریان",
-        "galleryTitle": "تصاویر کسب‌وکار"
+        "galleryTitle": "تصاویر کسب‌وکار",
+        "replyLabel": "پاسخ کسب‌وکار"
     },
     "booking": {
         "title": "نوبت شما",
@@ -464,7 +465,13 @@
             "pendingBadge": "در انتظار تأیید",
             "service": "خدمت:",
             "approve": "تأیید",
-            "empty": "هنوز نظری ثبت نشده است."
+            "empty": "هنوز نظری ثبت نشده است.",
+            "replyButton": "پاسخ",
+            "replyLabel": "پاسخ کسب‌وکار",
+            "replyPlaceholder": "پاسخ خود را بنویسید…",
+            "replySave": "ثبت پاسخ",
+            "replyCancel": "انصراف",
+            "replyEdit": "ویرایش پاسخ"
         },
         "customers": {
             "title": "مشتری‌ها",

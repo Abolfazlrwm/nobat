@@ -31,6 +31,8 @@ class ReviewController extends Controller
                 'rating' => $review->rating,
                 'comment' => $review->comment,
                 'is_approved' => $review->is_approved,
+                'reply' => $review->reply,
+                'replied_at' => $review->replied_at?->format('Y-m-d'),
                 'service' => $review->appointment?->service?->name,
                 'created_at' => $review->created_at?->format('Y-m-d'),
             ]);
@@ -59,6 +61,25 @@ class ReviewController extends Controller
         Cache::forget('nobat.directory');
 
         return back()->with('success', __('review.approved'));
+    }
+
+    public function reply(Request $request, Review $review): RedirectResponse
+    {
+        $this->authorizeAccess($request, $review);
+
+        $validated = $request->validate([
+            'reply' => ['required', 'string', 'max:1000'],
+        ], [
+            'reply.required' => __('review.reply_required'),
+            'reply.max' => __('review.reply_max'),
+        ]);
+
+        $review->update([
+            'reply' => $validated['reply'],
+            'replied_at' => now(),
+        ]);
+
+        return back()->with('success', __('review.replied'));
     }
 
     public function destroy(Request $request, Review $review): RedirectResponse

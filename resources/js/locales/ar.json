@@ -106,7 +106,8 @@
         "team": "فريقنا",
         "noStaff": "لم يُسجل أي عضو فريق بعد.",
         "reviewsTitle": "تقييمات العملاء",
-        "galleryTitle": "صور النشاط التجاري"
+        "galleryTitle": "صور النشاط التجاري",
+        "replyLabel": "ردّ النشاط التجاري"
     },
     "booking": {
         "title": "موعدك",
@@ -464,7 +465,13 @@
             "pendingBadge": "بانتظار الموافقة",
             "service": "الخدمة:",
             "approve": "موافقة",
-            "empty": "لم يُسجل أي تقييم بعد."
+            "empty": "لم يُسجل أي تقييم بعد.",
+            "replyButton": "ردّ",
+            "replyLabel": "ردّ النشاط التجاري",
+            "replyPlaceholder": "اكتب ردّك…",
+            "replySave": "حفظ الردّ",
+            "replyCancel": "إلغاء",
+            "replyEdit": "تعديل الردّ"
         },
         "customers": {
             "title": "العملاء",

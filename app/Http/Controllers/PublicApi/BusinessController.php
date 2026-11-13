@@ -60,6 +60,7 @@ class BusinessController extends Controller
                     'customer_name' => $review->customer_name,
                     'rating' => (int) $review->rating,
                     'comment' => $review->comment,
+                    'reply' => $review->reply,
                     'created_at' => $review->created_at?->format('Y-m-d'),
                 ]),
             ],
