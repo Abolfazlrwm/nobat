@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLogo from '@/components/AppLogo.vue';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useLocale } from '@/composables/useLocale';
@@ -23,6 +24,7 @@ const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
                 </Link>
 
                 <nav class="flex items-center gap-2">
+                    <ThemeToggle />
                     <LanguageSwitcher />
                     <template v-if="page.props.auth.user">
                         <Button variant="ghost" as-child>

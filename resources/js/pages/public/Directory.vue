@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
-import { BusinessSummary } from '@/types';
+import { BusinessSummary, SharedData } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import {
     ArrowLeft,
@@ -31,6 +31,7 @@ const props = defineProps<{
     businesses: BusinessSummary[];
 }>();
 
+const page = usePage<SharedData>();
 const { t, isEn, num } = useLocale();
 
 // WebSite structured data for crawlers — Inertia renders client-side,
@@ -48,7 +49,7 @@ onMounted(() => {
 });
 
 const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
-const APP_VERSION = '1.15.0';
+const APP_VERSION = computed(() => page.props.version ?? '');
 
 const totalServices = computed(() => props.businesses.reduce((sum, b) => sum + (b.services_count ?? 0), 0));
 const totalStaff = computed(() => props.businesses.reduce((sum, b) => sum + (b.staff_count ?? 0), 0));
@@ -76,7 +77,7 @@ const steps = computed(() =>
     })),
 );
 
-const techStack = ['Laravel 13', 'Inertia 2', 'Vue 3 + TypeScript', 'Tailwind CSS', 'Pest', 'Docker', 'Render'];
+const techStack = ['Laravel 12', 'Inertia 2', 'Vue 3 + TypeScript', 'Tailwind CSS', 'Pest', 'Docker', 'Render'];
 
 const demoAccounts = computed(() => [
     { label: t('landing.demoSuperAdmin'), email: 'admin@nobat.ir' },

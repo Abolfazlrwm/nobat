@@ -35,7 +35,7 @@ const props = defineProps<{
     heatmap: AnalyticsHeatCell[];
 }>();
 
-const { t, num, price, weekdayShort, isFa } = useLocale();
+const { t, num, price, weekdayShort, isFa, isAr } = useLocale();
 
 const breadcrumbs = computed<BreadcrumbItem[]>(() => [
     { title: t('panel.dashboard.title'), href: '/dashboard' },
@@ -108,6 +108,14 @@ const revenueFormatter = (value: number): string => {
         if (value >= 1_000_000) return `${num((value / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 1 }))} م`;
 
         if (value >= 1_000) return `${num(Math.round(value / 1_000).toLocaleString('en-US'))} هـ`;
+
+        return price(value);
+    }
+
+    if (isAr.value) {
+        if (value >= 1_000_000) return `${num((value / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 1 }))} م`;
+
+        if (value >= 1_000) return `${num(Math.round(value / 1_000).toLocaleString('en-US'))} ألف`;
 
         return price(value);
     }

@@ -4,7 +4,8 @@
         "dashboard": "Dashboard",
         "login": "Sign in",
         "register": "Sign up",
-        "logout": "Sign out"
+        "logout": "Sign out",
+        "themeToggle": "Toggle dark mode"
     },
     "footer": {
         "tagline": "The open-source online booking platform for clinics, salons and any appointment-driven business — with the Jalali calendar, SMS reminders and real-time reservations.",

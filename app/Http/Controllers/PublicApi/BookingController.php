@@ -196,7 +196,7 @@ class BookingController extends Controller
         $ics = implode("\r\n", [
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
-            'PRODID:-//Nobat//Booking//FA',
+            'PRODID:-//Nobat//Booking//'.strtoupper(app()->getLocale()),
             'CALSCALE:GREGORIAN',
             'METHOD:PUBLISH',
             'BEGIN:VEVENT',

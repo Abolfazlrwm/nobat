@@ -321,3 +321,9 @@ it('translates the password-reset status flash', function () {
         ->post(route('forgot-password'), ['email' => 'ghost@example.com'])
         ->assertSessionHas('status', 'We will email a reset link if the account exists.');
 });
+
+it('shares the app version with the frontend', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->where('version', config('app.version')));
+});
