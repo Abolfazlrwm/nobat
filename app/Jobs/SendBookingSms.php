@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class SendBookingSms implements ShouldQueue
 {
@@ -21,36 +22,42 @@ class SendBookingSms implements ShouldQueue
 
     public bool $deleteWhenMissingModels = true;
 
+    /**
+     * The locale is captured when the booking request happens and restored
+     * on the queue worker, so the customer reads the message in the
+     * language the site was set to at booking time (fa/en/ar).
+     */
     public function __construct(
         public readonly Appointment $appointment,
+        public readonly string $locale = 'fa',
     ) {}
 
     public function handle(SmsManager $sms): void
     {
+        App::setLocale($this->locale);
+
         $business = $this->appointment->business;
         $startsAt = $this->appointment->starts_at;
 
         if ($this->appointment->status === Appointment::STATUS_PENDING_PAYMENT) {
             $expiresAt = $this->appointment->payment_expires_at;
 
-            $message = sprintf(
-                '%s عزیز، نوبت شما در «%s» برای %s ساعت %s به‌صورت پیش‌نویس ثبت شد. برای قطعی‌شدن نوبت تا ساعت %s پرداخت آنلاین انجام دهید. کد پیگیری: %s',
-                $this->appointment->customer_name,
-                $business->name,
-                $this->appointment->service->name,
-                $startsAt->format('H:i'),
-                $expiresAt?->format('H:i') ?? '۱۵ دقیقه',
-                $this->appointment->code,
-            );
+            $message = __('sms.booking_draft', [
+                'name' => $this->appointment->customer_name,
+                'business' => $business->name,
+                'service' => $this->appointment->service->name,
+                'time' => $startsAt->format('H:i'),
+                'deadline' => $expiresAt?->format('H:i') ?? __('sms.payment_deadline_default'),
+                'code' => $this->appointment->code,
+            ]);
         } else {
-            $message = sprintf(
-                '%s عزیز، نوبت شما در «%s» برای %s ساعت %s ثبت شد. کد پیگیری: %s',
-                $this->appointment->customer_name,
-                $business->name,
-                $this->appointment->service->name,
-                $startsAt->format('H:i'),
-                $this->appointment->code,
-            );
+            $message = __('sms.booking_confirmed', [
+                'name' => $this->appointment->customer_name,
+                'business' => $business->name,
+                'service' => $this->appointment->service->name,
+                'time' => $startsAt->format('H:i'),
+                'code' => $this->appointment->code,
+            ]);
         }
 
         $sms->send($this->appointment->customer_phone, $message);

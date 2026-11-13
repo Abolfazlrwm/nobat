@@ -131,5 +131,20 @@
     "invoice.total": "جمع کل",
     "invoice.currency": "تومان",
     "invoice.note": "این فاکتور در لحظه‌ی صدور اسنپ‌شات شده است؛ تغییرهای بعدی کسب‌وکار روی آن اثری ندارد. برای دریافت PDF از دکمه‌ی «چاپ / ذخیره PDF» مرورگر استفاده کنید.",
-    "invoice.print_button": "چاپ / ذخیره PDF"
+    "invoice.print_button": "چاپ / ذخیره PDF",
+    "sms.booking_draft": ":name عزیز، نوبت شما در «:business» برای :service ساعت :time به‌صورت پیش‌نویس ثبت شد. برای قطعی‌شدن نوبت تا ساعت :deadline پرداخت آنلاین انجام دهید. کد پیگیری: :code",
+    "sms.booking_confirmed": ":name عزیز، نوبت شما در «:business» برای :service ساعت :time ثبت شد. کد پیگیری: :code",
+    "sms.reminder": ":name عزیز، یادآوری: نوبت شما در «:business» برای :service در تاریخ :date ساعت :time نزدیک است. کد پیگیری: :code",
+    "sms.payment_deadline_default": "۱۵ دقیقه",
+    "sms.payment_confirmed": "پرداخت نوبت شما در «:business» با موفقیت انجام شد و نوبت قطعی شد. مبلغ: :amount تومان — کد پیگیری: :code",
+    "mails.payment_subject": "پرداخت نوبت شما انجام شد",
+    "mails.payment_greeting": "سلام :name عزیز،",
+    "mails.payment_business": "پرداخت نوبت شما در «:business» با موفقیت انجام شد و نوبت شما قطعی شد.",
+    "mails.payment_service": "خدمت: :service",
+    "mails.payment_time": "زمان: :time",
+    "mails.payment_amount": "مبلغ: :amount تومان",
+    "mails.payment_code": "کد پیگیری نوبت: :code",
+    "mails.payment_ref": "شماره تراکنش: :ref",
+    "mails.payment_action": "مشاهده‌ی فاکتور",
+    "notifications.appointment_status": "وضعیت نوبت شما تغییر کرد"
 }

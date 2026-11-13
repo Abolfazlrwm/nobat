@@ -218,7 +218,7 @@ class PaymentService
                     'paid_at' => now(),
                 ])->save();
 
-                SendPaymentSms::dispatch($appointment->refresh())->afterCommit();
+                SendPaymentSms::dispatch($appointment->refresh(), app()->getLocale())->afterCommit();
 
                 $appointment->customer?->notify(new PaymentConfirmed($appointment->refresh()));
 

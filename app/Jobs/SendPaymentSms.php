@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class SendPaymentSms implements ShouldQueue
 {
@@ -21,20 +22,26 @@ class SendPaymentSms implements ShouldQueue
 
     public bool $deleteWhenMissingModels = true;
 
+    /**
+     * The locale is captured when the payment callback resolves and
+     * restored on the queue worker.
+     */
     public function __construct(
         public readonly Appointment $appointment,
+        public readonly string $locale = 'fa',
     ) {}
 
     public function handle(SmsManager $sms): void
     {
+        App::setLocale($this->locale);
+
         $business = $this->appointment->business;
 
-        $message = sprintf(
-            'پرداخت نوبت شما در «%s» با موفقیت انجام شد و نوبت قطعی شد. مبلغ: %s تومان — کد پیگیری: %s',
-            $business->name,
-            number_format($this->appointment->latestPayment?->amount ?? $this->appointment->service->price),
-            $this->appointment->code,
-        );
+        $message = __('sms.payment_confirmed', [
+            'business' => $business->name,
+            'amount' => number_format($this->appointment->latestPayment?->amount ?? $this->appointment->service->price),
+            'code' => $this->appointment->code,
+        ]);
 
         $sms->send($this->appointment->customer_phone, $message);
     }

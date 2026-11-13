@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class SendReminderSms implements ShouldQueue
 {
@@ -21,12 +22,19 @@ class SendReminderSms implements ShouldQueue
 
     public bool $deleteWhenMissingModels = true;
 
+    /**
+     * The reminder command runs on the server, so the locale is pinned at
+     * dispatch time (fa by default) and restored inside handle().
+     */
     public function __construct(
         public readonly Appointment $appointment,
+        public readonly string $locale = 'fa',
     ) {}
 
     public function handle(SmsManager $sms): void
     {
+        App::setLocale($this->locale);
+
         // Re-check on retries: a cancelled or already-reminded appointment
         // must never receive a second message.
         if ($this->appointment->reminder_sent_at !== null) {
@@ -40,15 +48,14 @@ class SendReminderSms implements ShouldQueue
         $business = $this->appointment->business;
         $startsAt = $this->appointment->starts_at;
 
-        $message = sprintf(
-            '%s عزیز، یادآوری: نوبت شما در «%s» برای %s در تاریخ %s ساعت %s نزدیک است. کد پیگیری: %s',
-            $this->appointment->customer_name,
-            $business->name,
-            $this->appointment->service->name,
-            $startsAt->format('Y-m-d'),
-            $startsAt->format('H:i'),
-            $this->appointment->code,
-        );
+        $message = __('sms.reminder', [
+            'name' => $this->appointment->customer_name,
+            'business' => $business->name,
+            'service' => $this->appointment->service->name,
+            'date' => $startsAt->format('Y-m-d'),
+            'time' => $startsAt->format('H:i'),
+            'code' => $this->appointment->code,
+        ]);
 
         // Send first, stamp after: a gateway failure leaves the appointment
         // unreminded so a later retry can pick it up.

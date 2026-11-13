@@ -131,5 +131,20 @@
     "invoice.total": "Grand total",
     "invoice.currency": "Toman",
     "invoice.note": "This invoice is a snapshot taken at issue time — later business changes do not affect it. Use your browser's \"Print / Save as PDF\" button to get a PDF copy.",
-    "invoice.print_button": "Print / Save as PDF"
+    "invoice.print_button": "Print / Save as PDF",
+    "sms.booking_draft": "Dear :name, your appointment at \":business\" for :service at :time was saved as a draft. Pay online by :deadline to confirm it. Tracking code: :code",
+    "sms.booking_confirmed": "Dear :name, your appointment at \":business\" for :service at :time is booked. Tracking code: :code",
+    "sms.reminder": "Dear :name, a reminder: your appointment at \":business\" for :service on :date at :time is coming up. Tracking code: :code",
+    "sms.payment_deadline_default": "15 minutes",
+    "sms.payment_confirmed": "Your appointment payment at \":business\" succeeded and the booking is confirmed. Amount: :amount Toman — tracking code: :code",
+    "mails.payment_subject": "Your appointment payment went through",
+    "mails.payment_greeting": "Hello :name,",
+    "mails.payment_business": "Your appointment payment at \":business\" succeeded and your booking is confirmed.",
+    "mails.payment_service": "Service: :service",
+    "mails.payment_time": "Time: :time",
+    "mails.payment_amount": "Amount: :amount Toman",
+    "mails.payment_code": "Booking tracking code: :code",
+    "mails.payment_ref": "Transaction ID: :ref",
+    "mails.payment_action": "View invoice",
+    "notifications.appointment_status": "Your appointment status changed"
 }

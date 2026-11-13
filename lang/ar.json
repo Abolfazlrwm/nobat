@@ -131,5 +131,20 @@
     "invoice.total": "الإجمالي الكلي",
     "invoice.currency": "تومان",
     "invoice.note": "هذه الفاتورة لقطة محفوظة عند الإصدار؛ أي تغييرات لاحقة في النشاط التجاري لا تؤثر عليها. للحصول على نسخة PDF استخدم زر «طباعة / حفظ PDF» في المتصفح.",
-    "invoice.print_button": "طباعة / حفظ PDF"
+    "invoice.print_button": "طباعة / حفظ PDF",
+    "sms.booking_draft": "عزيزي :name، تم حفظ موعدك في «:business» لـ :service الساعة :time كمسودة. لإتمام الدفع الإلكتروني قبل الساعة :deadline لتأكيد الموعد. رمز التتبع: :code",
+    "sms.booking_confirmed": "عزيزي :name، تم حجز موعدك في «:business» لـ :service الساعة :time. رمز التتبع: :code",
+    "sms.reminder": "عزيزي :name، تذكير: موعدك في «:business» لـ :service بتاريخ :date الساعة :time يقترب. رمز التتبع: :code",
+    "sms.payment_deadline_default": "15 دقيقة",
+    "sms.payment_confirmed": "تم دفع موعدك في «:business» بنجاح وتم تأكيد الحجز. المبلغ: :amount تومان — رمز التتبع: :code",
+    "mails.payment_subject": "تم دفع موعدك بنجاح",
+    "mails.payment_greeting": "مرحباً :name،",
+    "mails.payment_business": "تم دفع موعدك في «:business» بنجاح وتأكيد حجزك.",
+    "mails.payment_service": "الخدمة: :service",
+    "mails.payment_time": "الوقت: :time",
+    "mails.payment_amount": "المبلغ: :amount تومان",
+    "mails.payment_code": "رمز تتبع الحجز: :code",
+    "mails.payment_ref": "رقم العملية: :ref",
+    "mails.payment_action": "عرض الفاتورة",
+    "notifications.appointment_status": "تم تغيير حالة موعدك"
 }
