@@ -146,5 +146,16 @@
     "mails.payment_code": "رمز تتبع الحجز: :code",
     "mails.payment_ref": "رقم العملية: :ref",
     "mails.payment_action": "عرض الفاتورة",
-    "notifications.appointment_status": "تم تغيير حالة موعدك"
+    "notifications.appointment_status": "تم تغيير حالة موعدك",
+    "validation.booking_service_exists": "الخدمة المحددة غير صالحة.",
+    "validation.weekday_invalid": "يوم الأسبوع غير صالح.",
+    "validation.working_hour_starts_format": "صيغة وقت البدء غير صحيحة (مثال: 09:00).",
+    "validation.working_hour_ends_format": "صيغة وقت الانتهاء غير صحيحة (مثال: 18:00).",
+    "validation.working_hour_ends_different": "يجب أن يختلف وقت الانتهاء عن وقت البدء.",
+    "validation.discount_expires_after": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء أو مساوياً له.",
+    "validation.review_rating_range": "يجب أن يكون التقييم بين 1 و 5 نجوم.",
+    "payments.gateway_description": "دفع حجز نوبت :code — :business",
+    "payments.abandoned_by_user": "ترك المستخدم الدفع أو أبلغت البوابة عن فشله.",
+    "payments.refund_expired_reason": "انتهى مهلة دفع الحجز",
+    "auth.reset_link_sent": "سنرسل رابط إعادة التعيين إذا كان الحساب موجوداً."
 }

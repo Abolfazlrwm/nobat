@@ -29,10 +29,10 @@ class SaveWorkingHoursRequest extends FormRequest
     {
         return [
             'windows.required' => __('validation.windows_required'),
-            'windows.*.weekday.between' => 'روز هفته معتبر نیست.',
-            'windows.*.starts_at.date_format' => 'فرمت ساعت شروع صحیح نیست (مثال: 09:00).',
-            'windows.*.ends_at.date_format' => 'فرمت ساعت پایان صحیح نیست (مثال: 18:00).',
-            'windows.*.ends_at.different' => 'ساعت پایان باید متفاوت از ساعت شروع باشد.',
+            'windows.*.weekday.between' => __('validation.weekday_invalid'),
+            'windows.*.starts_at.date_format' => __('validation.working_hour_starts_format'),
+            'windows.*.ends_at.date_format' => __('validation.working_hour_ends_format'),
+            'windows.*.ends_at.different' => __('validation.working_hour_ends_different'),
         ];
     }
 }

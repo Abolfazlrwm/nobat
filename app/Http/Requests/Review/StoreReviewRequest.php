@@ -32,7 +32,7 @@ class StoreReviewRequest extends FormRequest
             'code.required' => __('validation.review_code_required'),
             'rating.required' => __('validation.review_rating_required'),
             'rating.integer' => __('validation.review_rating_integer'),
-            'rating.between' => 'امتیاز باید بین ۱ تا ۵ ستاره باشد.',
+            'rating.between' => __('validation.review_rating_range'),
             'comment.max' => __('validation.review_comment_max'),
         ];
     }

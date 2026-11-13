@@ -47,7 +47,7 @@ class SaveDiscountCodeRequest extends FormRequest
             'value.integer' => __('validation.discount_value_integer'),
             'value.min' => __('validation.discount_value_min'),
             'value.max' => __('validation.discount_value_max'),
-            'expires_at.after_or_equal' => 'تاریخ پایان باید بعد یا هم‌زمان با تاریخ شروع باشد.',
+            'expires_at.after_or_equal' => __('validation.discount_expires_after'),
         ];
     }
 

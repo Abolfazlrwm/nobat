@@ -146,5 +146,16 @@
     "mails.payment_code": "کد پیگیری نوبت: :code",
     "mails.payment_ref": "شماره تراکنش: :ref",
     "mails.payment_action": "مشاهده‌ی فاکتور",
-    "notifications.appointment_status": "وضعیت نوبت شما تغییر کرد"
+    "notifications.appointment_status": "وضعیت نوبت شما تغییر کرد",
+    "validation.booking_service_exists": "خدمت انتخاب‌شده معتبر نیست.",
+    "validation.weekday_invalid": "روز هفته معتبر نیست.",
+    "validation.working_hour_starts_format": "فرمت ساعت شروع صحیح نیست (مثال: 09:00).",
+    "validation.working_hour_ends_format": "فرمت ساعت پایان صحیح نیست (مثال: 18:00).",
+    "validation.working_hour_ends_different": "ساعت پایان باید متفاوت از ساعت شروع باشد.",
+    "validation.discount_expires_after": "تاریخ پایان باید بعد یا هم‌زمان با تاریخ شروع باشد.",
+    "validation.review_rating_range": "امتیاز باید بین ۱ تا ۵ ستاره باشد.",
+    "payments.gateway_description": "پرداخت نوبت :code — :business",
+    "payments.abandoned_by_user": "کاربر پرداخت را رها کرد یا درگاه آن را ناموفق اعلام کرد.",
+    "payments.refund_expired_reason": "مهلت پرداخت نوبت به پایان رسیده بود",
+    "auth.reset_link_sent": "اگر حساب وجود داشته باشد، لینک بازیابی برایتان ارسال می‌شود."
 }

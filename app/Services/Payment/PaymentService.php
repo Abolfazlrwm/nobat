@@ -111,7 +111,7 @@ class PaymentService
     {
         $appointment = $payment->appointment()->with(['business', 'service'])->firstOrFail();
 
-        $description = sprintf('پرداخت نوبت %s — %s', $appointment->code, $appointment->business->name);
+        $description = __('payments.gateway_description', ['code' => $appointment->code, 'business' => $appointment->business->name]);
 
         $result = $this->gateways->driver()->request(
             $payment,
@@ -153,7 +153,7 @@ class PaymentService
             if (in_array($payment->status, [Payment::STATUS_INITIATED, Payment::STATUS_AUTHORIZED], true)) {
                 $payment->forceFill([
                     'status' => Payment::STATUS_FAILED,
-                    'error_message' => 'کاربر پرداخت را رها کرد یا درگاه آن را ناموفق اعلام کرد.',
+                    'error_message' => __('payments.abandoned_by_user'),
                 ])->save();
             }
 
@@ -206,7 +206,7 @@ class PaymentService
                 // Money arrived, but the slot hold expired in the meantime:
                 // the appointment is gone, so the payment is auto-reversed.
                 if ($appointment->status !== Appointment::STATUS_PENDING_PAYMENT || $appointment->paymentExpired()) {
-                    $this->refundPayment($payment, 'مهلت پرداخت نوبت به پایان رسیده بود');
+                    $this->refundPayment($payment, __('payments.refund_expired_reason'));
 
                     return ['outcome' => 'expired_refunded', 'appointment' => $appointment->refresh()];
                 }

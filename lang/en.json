@@ -146,5 +146,16 @@
     "mails.payment_code": "Booking tracking code: :code",
     "mails.payment_ref": "Transaction ID: :ref",
     "mails.payment_action": "View invoice",
-    "notifications.appointment_status": "Your appointment status changed"
+    "notifications.appointment_status": "Your appointment status changed",
+    "validation.booking_service_exists": "The selected service is not valid.",
+    "validation.weekday_invalid": "The weekday is not valid.",
+    "validation.working_hour_starts_format": "The start time format is not valid (example: 09:00).",
+    "validation.working_hour_ends_format": "The end time format is not valid (example: 18:00).",
+    "validation.working_hour_ends_different": "The end time must differ from the start time.",
+    "validation.discount_expires_after": "The expiry date must be on or after the start date.",
+    "validation.review_rating_range": "The rating must be between 1 and 5 stars.",
+    "payments.gateway_description": "Nobat booking :code — :business",
+    "payments.abandoned_by_user": "The user abandoned the payment or the gateway reported a failure.",
+    "payments.refund_expired_reason": "The booking payment deadline had expired",
+    "auth.reset_link_sent": "We will email a reset link if the account exists."
 }

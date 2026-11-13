@@ -294,3 +294,30 @@ it('renders the printed invoice in the visitor language', function () {
         ->assertSee('Nobat invoice', false)
         ->assertSee('Paid', false);
 });
+
+it('translates form validation messages for english visitors', function () {
+    $business = $this->makeBusiness();
+    $appointment = $this->createAppointment(
+        $this->addStaff($business),
+        $this->serviceOf($business),
+        $this->nextOpenDate()->setTimeFromTimeString('10:00'),
+        Appointment::STATUS_COMPLETED,
+    );
+
+    $this->withCookie('nobat_locale', 'en')
+        ->from(route('businesses.show', $business->slug))
+        ->post(route('reviews.store', $business->slug), [
+            'code' => $appointment->code,
+            'rating' => 9,
+            'comment' => 'okay',
+        ]);
+
+    expect((string) session('errors')->first('rating'))->toContain('between 1 and 5 stars');
+});
+
+it('translates the password-reset status flash', function () {
+    $this->withCookie('nobat_locale', 'en')
+        ->from(route('forgot-password'))
+        ->post(route('forgot-password'), ['email' => 'ghost@example.com'])
+        ->assertSessionHas('status', 'We will email a reset link if the account exists.');
+});
