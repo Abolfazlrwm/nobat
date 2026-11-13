@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - 2026-11-13
+
+### Added
+
+- **Trilingual experience — Arabic joins as the third language (FA: عربی به‌عنوان زبان سوم)**:
+  - A complete Arabic catalog: ~500 frontend keys (`resources/js/locales/ar.json`),
+    111 server keys (`lang/ar.json`) plus native Laravel `lang/ar/{auth,validation}.php`.
+  - Arabic reads **right-to-left** like Persian — the sidebar side, the
+    date-picker chevrons and the hero gradient now flip on "is English"
+    instead of "is Persian", so fa and ar share the RTL layout.
+  - Arabic formatting: Gregorian dates with Arabic month names and Latin
+    digits (`ar-u-nu-latn`, deliberately avoiding the Hijri calendar that
+    `ar-SA` would pick), prices as "X تومان", Latin digits everywhere.
+  - The language switcher (navbar + panel header) offers **العربية** with a
+    compact "ع" badge; `POST /locale` and `SetLocale::SUPPORTED` accept `ar`.
+  - The Jalali calendar stays for fa; ar keeps it too with Arabic-script
+    month names (فروردين…إسفند) so booking slots read naturally.
+- `LocaleTest` grows from 9 to 11 cases: the Arabic RTL shell (`lang="ar"`
+  `dir="rtl"`), Arabic flash messages end-to-end, `ar` cookie persistence and
+  **three-way catalog parity** (501 keys in each frontend catalog, 111 in
+  each server catalog).
+- The landing badge now shows the real version (1.15.0 — it was stale at
+  1.13.0).
+
 ## [1.14.0] - 2026-11-13
 
 ### Added

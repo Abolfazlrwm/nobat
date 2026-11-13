@@ -74,7 +74,7 @@ Demo accounts (password for all: `password`):
 - 🎟️ **Discount codes**: customers enter a code in the last wizard step and it is validated live; the invoice and payment are charged with the discount applied
 - ⏳ **Waitlist**: a fully booked day opens an inline waitlist form right where the empty slot grid is, so customers queue for the first freed slot
 - 📱 **Installable PWA**: the web app installs on phones with a Persian/RTL manifest and custom icons
-- 🌍 **Bilingual (FA/EN)**: a navbar language switcher flips the whole public experience — landing, booking wizard, confirmation and auth pages — into polished English with the Inter typeface, Latin digits and transliterated Jalali months; the choice persists in a one-year cookie
+- 🌍 **Trilingual (FA/EN/AR)**: the switcher in the navbar and panel header flips the whole experience — landing, booking wizard, confirmation, auth pages and the full dashboard — into polished English (Inter, Latin digits) and right-to-left Arabic (Gregorian dates with Arabic month names, Latin digits, "Toman" prices); the choice persists in a one-year cookie
 - 🛡️ Rate limiting on booking submission (10/min) and slot queries (60/min)
 
 ### Business & admin side
@@ -96,7 +96,7 @@ Demo accounts (password for all: `password`):
 - 🔐 **Double-booking prevention** with a transaction + `lockForUpdate` on the staff row
 - 📨 Queued notifications (database + SMS behind a driver architecture — log driver and a real **Kavenegar** gateway driver included)
 - ⏰ **SMS reminders (v1.9.0)**: the hourly `nobat:send-reminders` command covers every confirmed appointment in the next 24 hours; "send first, stamp after" — a gateway failure is retried, a success is never repeated; switch off with `NOBAT_SMS_REMINDERS=false`
-- 🧪 **150 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, reminders, the full payment cycle, reviews, reports, analytics, the bilingual experience (public pages and panels), discount codes, the waitlist, the public API, the customers panel and the photo gallery
+- 🧪 **152 green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, reminders, the full payment cycle, reviews, reports, analytics, the trilingual experience (public pages and panels), discount codes, the waitlist, the public API, the customers panel and the photo gallery
 - 🛡️ **Professional hardening (v1.12.0)**: a security header set on every web and API response (nosniff, frame protection, referrer policy, permissions policy, HSTS in production), branded RTL Persian error pages for 403/404/419/500/503 with no build dependency, SEO + OpenGraph meta with a 1280x640 preview image, secure demo cookies, config/route/view boot caching on the demo and an `npm audit fix` sweep
 - 🐳 Docker (nginx + php-fpm + queue worker + MySQL + Redis) and GitHub Actions CI
 
@@ -173,7 +173,7 @@ Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE
 - [x] **v1.11** — Excel (xlsx) export for reports: a pure-PHP OOXML writer with zero new dependencies (stored ZIP with crc32, RTL sheet, bold header) — covered by archive-integrity tests that verify every part's crc and offsets
 - [x] **v1.13** — customers panel: the per-phone customer book with lifetime spend, the status split, the no-show rate and a full profile with the appointment history
 - [x] **v1.14** — bilingual management panels (the full dashboard in fa/en) and the business photo gallery with multi-file upload, a cover photo and a lightbox
-- [ ] Translated dashboard panels (the public experience is already bilingual)
+- [x] **v1.15** — a third language: Arabic (ar) with a full 501-key frontend catalog and 111 server keys, RTL layout shared with Persian, Gregorian dates with Arabic month names and Latin digits (ar-u-nu-latn)
 
 Have an idea? Open a [feature request](../../issues/new?template=feature_request.yml).
 
