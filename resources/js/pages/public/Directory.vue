@@ -31,10 +31,10 @@ const props = defineProps<{
     businesses: BusinessSummary[];
 }>();
 
-const { t, isFa, num } = useLocale();
+const { t, isEn, num } = useLocale();
 
 const GITHUB_URL = 'https://github.com/Abolfazlrwm/nobat';
-const APP_VERSION = '1.13.0';
+const APP_VERSION = '1.15.0';
 
 const totalServices = computed(() => props.businesses.reduce((sum, b) => sum + (b.services_count ?? 0), 0));
 const totalStaff = computed(() => props.businesses.reduce((sum, b) => sum + (b.staff_count ?? 0), 0));
@@ -73,10 +73,11 @@ const demoAccounts = computed(() => [
 
 const bookingPreviewRows = computed(() => [0, 1, 2].map((i) => t(`landing.previewRows.${i}`)));
 
-const forwardIcon = isFa.value ? ArrowLeft : ArrowRight;
-const heroGradient = isFa.value
-    ? 'bg-gradient-to-l from-primary via-primary/80 to-primary/40'
-    : 'bg-gradient-to-r from-primary via-primary/80 to-primary/40';
+// English reads left-to-right; Persian and Arabic both point "forward" left.
+const forwardIcon = isEn.value ? ArrowRight : ArrowLeft;
+const heroGradient = isEn.value
+    ? 'bg-gradient-to-r from-primary via-primary/80 to-primary/40'
+    : 'bg-gradient-to-l from-primary via-primary/80 to-primary/40';
 </script>
 
 <template>

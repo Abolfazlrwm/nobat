@@ -10,9 +10,10 @@ const { t, locale, setLocale } = useLocale();
 const options = computed(() => [
     { value: 'fa' as AppLocale, label: t('langSwitch.fa') },
     { value: 'en' as AppLocale, label: t('langSwitch.en') },
+    { value: 'ar' as AppLocale, label: t('langSwitch.ar') },
 ]);
 
-const current = computed(() => (locale.value === 'en' ? 'EN' : 'فا'));
+const current = computed(() => (locale.value === 'en' ? 'EN' : locale.value === 'ar' ? 'ع' : 'فا'));
 </script>
 
 <template>

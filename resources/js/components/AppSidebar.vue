@@ -26,7 +26,7 @@ import AppLogo from './AppLogo.vue';
 
 const page = usePage<SharedData>();
 const user = computed(() => page.props.auth.user);
-const { t, isFa } = useLocale();
+const { t, isEn } = useLocale();
 
 const canManage = computed(() => {
     if (!user.value) return false;
@@ -65,7 +65,7 @@ const mainNavItems = computed<NavItem[]>(() => {
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset" :side="isFa ? 'right' : 'left'">
+    <Sidebar collapsible="icon" variant="inset" :side="isEn ? 'left' : 'right'">
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>

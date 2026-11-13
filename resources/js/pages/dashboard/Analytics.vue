@@ -125,7 +125,7 @@ const heatmapHours = computed(() => [...new Set(props.heatmap.map((cell) => cell
 const heatMax = computed(() => Math.max(1, ...props.heatmap.map((cell) => cell.count)));
 
 const heatWeekdays = computed(() =>
-    Array.from({ length: 7 }, (_, weekday) => ({ weekday, label: isFa.value ? t(`panel.weekdays.${weekday}`) : EN_WEEKDAYS[weekday] })),
+    Array.from({ length: 7 }, (_, weekday) => ({ weekday, label: isEn.value ? EN_WEEKDAYS[weekday] : t(`panel.weekdays.${weekday}`) })),
 );
 
 function heatCount(weekday: number, hour: number): number {
