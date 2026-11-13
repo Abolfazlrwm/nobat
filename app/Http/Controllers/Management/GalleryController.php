@@ -96,7 +96,11 @@ class GalleryController extends Controller
         $photos = $business->photos()->get()->keyBy('id');
         $ids = array_values($validated['ids']);
 
-        if (count($ids) !== $photos->count() || count(array_unique($ids)) !== count($ids)) {
+        if (
+            count($ids) !== $photos->count()
+            || count(array_unique($ids)) !== count($ids)
+            || array_diff($ids, $photos->keys()->all()) !== []
+        ) {
             return back()->withErrors(['ids' => __('gallery.invalid_order')]);
         }
 

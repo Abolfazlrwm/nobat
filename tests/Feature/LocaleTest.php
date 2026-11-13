@@ -318,8 +318,8 @@ it('translates form validation messages for english visitors', function () {
 
 it('translates the password-reset status flash', function () {
     $this->withCookie('nobat_locale', 'en')
-        ->from(route('forgot-password'))
-        ->post(route('forgot-password'), ['email' => 'ghost@example.com'])
+        ->from(route('password.request'))
+        ->post(route('password.email'), ['email' => 'ghost@example.com'])
         ->assertSessionHas('status', 'We will email a reset link if the account exists.');
 });
 

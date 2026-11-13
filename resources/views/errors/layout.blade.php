@@ -4,8 +4,7 @@
 {{-- The branded error pages bypass route middleware (no web group, no
      SetLocale) — resolve the visitor language straight from the cookie so
      even a 404/500 respects fa/ar RTL vs en LTR. --}}
-@php($cookie = request()->cookie(\App\Http\Middleware\SetLocale::COOKIE))
-@php($locale = in_array($cookie, ['fa', 'en', 'ar'], true) ? $cookie : 'fa')
+@php($locale = \App\Support\LocaleCookie::resolve(request()))
 <html lang="{{ $locale }}" dir="{{ $locale === 'en' ? 'ltr' : 'rtl' }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
