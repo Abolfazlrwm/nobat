@@ -160,5 +160,6 @@
     "auth.reset_link_sent": "We will email a reset link if the account exists.",
     "bookings.guest_cancelled": "Your booking has been cancelled.",
     "bookings.guest_phone_mismatch": "This mobile number does not match the booking.",
-    "bookings.guest_not_cancellable": "This booking can no longer be cancelled — paid bookings go through the business."
+    "bookings.guest_not_cancellable": "This booking can no longer be cancelled — paid bookings go through the business.",
+    "waitlist.promo_sms": "Dear :name, a slot for :service at \":business\" just freed on :date. If you are still waiting, book now: :url"
 }

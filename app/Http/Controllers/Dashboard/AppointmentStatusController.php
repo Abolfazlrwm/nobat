@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Payment;
-use App\Models\WaitlistEntry;
 use App\Notifications\AppointmentStatusChanged;
+use App\Services\Booking\WaitlistPromotion;
 use App\Services\Payment\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -15,6 +15,7 @@ class AppointmentStatusController extends Controller
 {
     public function __construct(
         private readonly PaymentService $payments,
+        private readonly WaitlistPromotion $waitlist,
     ) {}
 
     public function update(Request $request, Appointment $appointment)
@@ -47,21 +48,19 @@ class AppointmentStatusController extends Controller
 
         $appointment->customer?->notify(new AppointmentStatusChanged($appointment));
 
+        // A freed slot may be exactly what waitlisted customers hoped for —
+        // announce it automatically (sms + notified stamp) instead of leaving
+        // the manager to phone them one by one.
+        $promoted = 0;
+
+        if ($status === Appointment::STATUS_CANCELLED) {
+            $promoted = $this->waitlist->announceFreedSlot($appointment);
+        }
+
         $response = back()->with('success', __('appointment.status_changed'));
 
-        // A freed slot may be exactly what waitlisted customers hoped for.
-        if ($status === Appointment::STATUS_CANCELLED) {
-            $waiting = WaitlistEntry::query()
-                ->where('business_id', $appointment->business_id)
-                ->where('service_id', $appointment->service_id)
-                ->whereDate('desired_date', $appointment->starts_at->toDateString())
-                ->waiting()
-                ->count();
-
-            if ($waiting > 0) {
-                $response = back()->with('success', __('appointment.status_changed'))
-                    ->with('info', __('waitlist.slot_freed', ['n' => $waiting]));
-            }
+        if ($promoted > 0) {
+            $response = $response->with('info', __('waitlist.slot_freed', ['n' => $promoted]));
         }
 
         return $response;

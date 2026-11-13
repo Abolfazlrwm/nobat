@@ -160,5 +160,6 @@
     "auth.reset_link_sent": "سنرسل رابط إعادة التعيين إذا كان الحساب موجوداً.",
     "bookings.guest_cancelled": "تم إلغاء موعدك.",
     "bookings.guest_phone_mismatch": "رقم الهاتف لا يطابق هذا الموعد.",
-    "bookings.guest_not_cancellable": "لم يعد يمكن إلغاء هذا الموعد — الحجوزات المدفوعة تُنسّق مع النشاط التجاري."
+    "bookings.guest_not_cancellable": "لم يعد يمكن إلغاء هذا الموعد — الحجوزات المدفوعة تُنسّق مع النشاط التجاري.",
+    "waitlist.promo_sms": "عزيزي :name، تم تحرير فترة لـ :service في «:business» بتاريخ :date. إذا كنت لا تزال بانتظار، احجز الآن: :url"
 }

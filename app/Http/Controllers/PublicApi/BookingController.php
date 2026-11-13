@@ -9,6 +9,7 @@ use App\Models\Business;
 use App\Models\Payment;
 use App\Models\WaitlistEntry;
 use App\Services\Booking\BookingService;
+use App\Services\Booking\WaitlistPromotion;
 use App\Services\Booking\Exceptions\DiscountCodeException;
 use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
@@ -25,6 +26,7 @@ class BookingController extends Controller
     public function __construct(
         private readonly BookingService $bookings,
         private readonly DiscountService $discounts,
+        private readonly WaitlistPromotion $waitlist,
     ) {}
 
     public function store(StoreBookingRequest $request, Business $business): RedirectResponse
@@ -148,6 +150,9 @@ class BookingController extends Controller
         }
 
         $appointment->update(['status' => Appointment::STATUS_CANCELLED]);
+
+        // The freed slot goes straight to the waiting list — automatic sms.
+        $this->waitlist->announceFreedSlot($appointment);
 
         return back()->with('success', __('bookings.guest_cancelled'));
     }
