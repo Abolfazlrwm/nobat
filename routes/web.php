@@ -148,6 +148,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
     Route::post('gallery', [GalleryController::class, 'store'])->name('gallery.store');
+    Route::patch('gallery/reorder', [GalleryController::class, 'reorder'])->name('gallery.reorder');
     Route::put('gallery/{photo}', [GalleryController::class, 'update'])->name('gallery.update');
     Route::patch('gallery/{photo}/cover', [GalleryController::class, 'cover'])->name('gallery.cover');
     Route::delete('gallery/{photo}', [GalleryController::class, 'destroy'])->name('gallery.destroy');

@@ -78,6 +78,35 @@ class GalleryController extends Controller
         return back()->with('success', __('gallery.uploaded', ['count' => $incoming]));
     }
 
+    /**
+     * Persist a new visual order from the panel's up/down controls. The
+     * submitted list must cover exactly the business's own photos, so a
+     * forged id can never touch another business's gallery.
+     */
+    public function reorder(Request $request)
+    {
+        $business = $this->managedBusiness($request, $request->integer('business_id') ?: null);
+        $this->authorize('manage', $business);
+
+        $validated = $request->validate([
+            'ids' => ['required', 'array'],
+            'ids.*' => ['integer'],
+        ]);
+
+        $photos = $business->photos()->get()->keyBy('id');
+        $ids = array_values($validated['ids']);
+
+        if (count($ids) !== $photos->count() || count(array_unique($ids)) !== count($ids)) {
+            return back()->withErrors(['ids' => __('gallery.invalid_order')]);
+        }
+
+        foreach ($ids as $index => $id) {
+            optional($photos->get($id))->update(['sort_order' => $index + 1]);
+        }
+
+        return back()->with('success', __('gallery.reordered'));
+    }
+
     public function update(Request $request, BusinessPhoto $photo)
     {
         $this->authorize('manage', $photo->business);

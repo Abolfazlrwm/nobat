@@ -412,7 +412,9 @@
             "emptyHint": "Upload the first photo of your business with “Add photos”; the first one becomes the cover automatically.",
             "prev": "Previous photo",
             "next": "Next photo",
-            "close": "Close"
+            "close": "Close",
+            "moveUp": "Move up",
+            "moveDown": "Move down"
         },
         "waitlist": {
             "title": "Waitlist",

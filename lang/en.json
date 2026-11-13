@@ -164,5 +164,7 @@
     "waitlist.promo_sms": "Dear :name, a slot for :service at \":business\" just freed on :date. If you are still waiting, book now: :url",
     "review.replied": "Reply saved.",
     "review.reply_required": "The reply text is required.",
-    "review.reply_max": "The reply may not exceed 1000 characters."
+    "review.reply_max": "The reply may not exceed 1000 characters.",
+    "gallery.reordered": "Gallery order saved.",
+    "gallery.invalid_order": "The order list does not match the gallery photos."
 }

@@ -164,5 +164,7 @@
     "waitlist.promo_sms": "عزيزي :name، تم تحرير فترة لـ :service في «:business» بتاريخ :date. إذا كنت لا تزال بانتظار، احجز الآن: :url",
     "review.replied": "تم حفظ الردّ.",
     "review.reply_required": "نص الردّ مطلوب.",
-    "review.reply_max": "لا يمكن أن يتجاوز الردّ 1000 حرف."
+    "review.reply_max": "لا يمكن أن يتجاوز الردّ 1000 حرف.",
+    "gallery.reordered": "تم حفظ ترتيب المعرض.",
+    "gallery.invalid_order": "قائمة الترتيب لا تطابق صور المعرض."
 }

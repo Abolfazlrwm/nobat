@@ -8,7 +8,7 @@ import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, GalleryPhoto } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ImageIcon, Images, LoaderCircle, Save, Star, Trash2, ZoomIn } from 'lucide-vue-next';
+import { ArrowDown, ArrowUp, ImageIcon, Images, LoaderCircle, Save, Star, Trash2, ZoomIn } from 'lucide-vue-next';
 import { computed, reactive, ref } from 'vue';
 
 const props = defineProps<{
@@ -72,6 +72,19 @@ function saveCaption(photo: GalleryPhoto): void {
 
 function makeCover(photo: GalleryPhoto): void {
     router.patch(route('gallery.cover', photo.id), {}, { preserveScroll: true });
+}
+
+function move(photo: GalleryPhoto, step: number): void {
+    const index = props.photos.findIndex((item) => item.id === photo.id);
+    const target = index + step;
+
+    if (index === -1 || target < 0 || target >= props.photos.length) return;
+
+    const ids = props.photos.map((item) => item.id);
+    const [moved] = ids.splice(index, 1);
+    ids.splice(target, 0, moved);
+
+    router.patch(route('gallery.reorder'), { ids }, { preserveScroll: true });
 }
 
 function destroy(photo: GalleryPhoto): void {
@@ -162,6 +175,12 @@ function stepLightbox(step: number): void {
                             <Button v-if="!photo.is_cover" size="sm" variant="ghost" class="h-7 gap-1 text-xs" @click="makeCover(photo)">
                                 <Star class="size-3" />
                                 {{ t('panel.gallery.makeCover') }}
+                            </Button>
+                            <Button size="sm" variant="ghost" class="h-7" :disabled="index === 0" :aria-label="t('panel.gallery.moveUp')" @click="move(photo, -1)">
+                                <ArrowUp class="size-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" class="h-7" :disabled="index === photos.length - 1" :aria-label="t('panel.gallery.moveDown')" @click="move(photo, 1)">
+                                <ArrowDown class="size-4" />
                             </Button>
                             <Button size="sm" variant="ghost" class="ms-auto h-7 text-destructive" @click="destroy(photo)">
                                 <Trash2 class="size-4" />

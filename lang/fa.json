@@ -164,5 +164,7 @@
     "waitlist.promo_sms": ":name عزیز، یک بازه‌ی خالی برای :service در «:business» در تاریخ :date آزاد شد. اگر هنوز منتظرید، همین حالا رزرو کنید: :url",
     "review.replied": "پاسخ به نظر ثبت شد.",
     "review.reply_required": "متن پاسخ الزامی است.",
-    "review.reply_max": "پاسخ حداکثر می‌تواند ۱۰۰۰ کاراکتر باشد."
+    "review.reply_max": "پاسخ حداکثر می‌تواند ۱۰۰۰ کاراکتر باشد.",
+    "gallery.reordered": "ترتیب گالری ذخیره شد.",
+    "gallery.invalid_order": "فهرست ترتیب با عکس‌های گالری مطابقت ندارد."
 }
