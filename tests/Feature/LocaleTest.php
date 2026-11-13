@@ -88,7 +88,10 @@ it('translates server-generated flash messages to arabic', function () {
         Appointment::STATUS_COMPLETED,
     );
 
-    $this->from(route('businesses.show', $business->slug))
+    // The flash message is translated when the POST runs, so the arabic
+    // cookie must ride that request — exactly like the english test above.
+    $this->withCookie('nobat_locale', 'ar')
+        ->from(route('businesses.show', $business->slug))
         ->post(route('reviews.store', $business->slug), [
             'code' => $appointment->code,
             'rating' => 5,
