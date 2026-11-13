@@ -134,7 +134,11 @@
         "addToCalendar": "Add to calendar",
         "newBooking": "Book again",
         "discount": "Discount",
-        "payableAmount": "Payable amount"
+        "payableAmount": "Payable amount",
+        "cancelTitle": "Cancel this booking",
+        "cancelDesc": "Enter the mobile number you booked with to cancel it.",
+        "cancelPhonePlaceholder": "09xxxxxxxxx",
+        "cancelButton": "Cancel booking"
     },
     "wizard": {
         "steps": {

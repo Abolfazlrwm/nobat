@@ -157,5 +157,8 @@
     "payments.gateway_description": "پرداخت نوبت :code — :business",
     "payments.abandoned_by_user": "کاربر پرداخت را رها کرد یا درگاه آن را ناموفق اعلام کرد.",
     "payments.refund_expired_reason": "مهلت پرداخت نوبت به پایان رسیده بود",
-    "auth.reset_link_sent": "اگر حساب وجود داشته باشد، لینک بازیابی برایتان ارسال می‌شود."
+    "auth.reset_link_sent": "اگر حساب وجود داشته باشد، لینک بازیابی برایتان ارسال می‌شود.",
+    "bookings.guest_cancelled": "نوبت شما لغو شد.",
+    "bookings.guest_phone_mismatch": "شماره موبایل با این نوبت مطابقت ندارد.",
+    "bookings.guest_not_cancellable": "این نوبت دیگر قابل لغو نیست — برای نوبت‌های پرداخت‌شده با کسب‌وکار هماهنگ کنید."
 }

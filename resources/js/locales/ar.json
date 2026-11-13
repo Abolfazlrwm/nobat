@@ -134,7 +134,11 @@
         "addToCalendar": "إضافة إلى التقويم",
         "newBooking": "حجز موعد جديد",
         "discount": "خصم",
-        "payableAmount": "المبلغ المستحق الدفع"
+        "payableAmount": "المبلغ المستحق الدفع",
+        "cancelTitle": "إلغاء هذا الموعد",
+        "cancelDesc": "أدخل رقم الهاتف الذي حجزت به لإلغائه.",
+        "cancelPhonePlaceholder": "09xxxxxxxxx",
+        "cancelButton": "إلغاء الموعد"
     },
     "wizard": {
         "steps": {

@@ -15,6 +15,7 @@ use App\Services\Booking\Exceptions\SlotUnavailableException;
 use App\Services\Discount\DiscountService;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -92,7 +93,7 @@ class BookingController extends Controller
             'appointment' => [
                 'code' => $appointment->code,
                 'status' => $appointment->status,
-                'status_label' => Appointment::STATUS_LABELS[$appointment->status] ?? $appointment->status,
+                'status_label' => $appointment->localizedStatusLabel(),
                 'customer_name' => $appointment->customer_name,
                 'starts_at' => $appointment->starts_at->format('Y-m-d\TH:i:s'),
                 'payment_expires_at' => $appointment->payment_expires_at?->format('Y-m-d\TH:i:s'),
@@ -112,6 +113,59 @@ class BookingController extends Controller
                 'review' => $appointment->review?->only('rating', 'comment'),
             ],
         ]);
+    }
+
+    /**
+     * Guest self-service cancellation: the tracking code alone must not
+     * cancel a booking, so the visitor has to prove ownership with the
+     * phone number the booking was made with. Paid bookings are excluded —
+     * refunds go through the business, not a stranger with a URL.
+     */
+    public function guestCancel(Request $request, string $code): RedirectResponse
+    {
+        $validated = $request->validate([
+            'customer_phone' => ['required', 'string'],
+        ]);
+
+        $appointment = Appointment::query()
+            ->where('code', $code)
+            ->firstOrFail();
+
+        if ($this->normalizePhone($validated['customer_phone']) !== $this->normalizePhone($appointment->customer_phone)) {
+            return back()->withErrors(['customer_phone' => __('bookings.guest_phone_mismatch')]);
+        }
+
+        $cancellable = in_array($appointment->status, [
+            Appointment::STATUS_PENDING,
+            Appointment::STATUS_PENDING_PAYMENT,
+            Appointment::STATUS_CONFIRMED,
+        ], true)
+            && $appointment->starts_at->isFuture()
+            && ! $appointment->payments()->where('status', Payment::STATUS_PAID)->exists();
+
+        if (! $cancellable) {
+            return back()->withErrors(['customer_phone' => __('bookings.guest_not_cancellable')]);
+        }
+
+        $appointment->update(['status' => Appointment::STATUS_CANCELLED]);
+
+        return back()->with('success', __('bookings.guest_cancelled'));
+    }
+
+    /**
+     * Persian and arabic digits both appear in typed phone numbers;
+     * compare digits only, never formatting.
+     */
+    private function normalizePhone(string $phone): string
+    {
+        $latin = strtr($phone, [
+            '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4',
+            '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
+            '٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4',
+            '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9',
+        ]);
+
+        return (string) preg_replace('/\D+/', '', $latin);
     }
 
     /**

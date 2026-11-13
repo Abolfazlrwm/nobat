@@ -63,6 +63,10 @@ Route::get('bookings/{code}', [BookingController::class, 'show'])->name('booking
 
 Route::get('bookings/{code}/ics', [BookingController::class, 'ics'])->name('bookings.ics');
 
+Route::post('bookings/{code}/cancel', [BookingController::class, 'guestCancel'])
+    ->name('bookings.guest_cancel')
+    ->middleware('throttle:5,1');
+
 Route::post('b/{business:slug}/reviews', [ReviewController::class, 'store'])
     ->name('reviews.store')
     ->middleware('throttle:10,1');

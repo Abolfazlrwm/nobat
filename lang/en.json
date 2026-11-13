@@ -157,5 +157,8 @@
     "payments.gateway_description": "Nobat booking :code — :business",
     "payments.abandoned_by_user": "The user abandoned the payment or the gateway reported a failure.",
     "payments.refund_expired_reason": "The booking payment deadline had expired",
-    "auth.reset_link_sent": "We will email a reset link if the account exists."
+    "auth.reset_link_sent": "We will email a reset link if the account exists.",
+    "bookings.guest_cancelled": "Your booking has been cancelled.",
+    "bookings.guest_phone_mismatch": "This mobile number does not match the booking.",
+    "bookings.guest_not_cancellable": "This booking can no longer be cancelled — paid bookings go through the business."
 }

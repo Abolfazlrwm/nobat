@@ -157,5 +157,8 @@
     "payments.gateway_description": "دفع حجز نوبت :code — :business",
     "payments.abandoned_by_user": "ترك المستخدم الدفع أو أبلغت البوابة عن فشله.",
     "payments.refund_expired_reason": "انتهى مهلة دفع الحجز",
-    "auth.reset_link_sent": "سنرسل رابط إعادة التعيين إذا كان الحساب موجوداً."
+    "auth.reset_link_sent": "سنرسل رابط إعادة التعيين إذا كان الحساب موجوداً.",
+    "bookings.guest_cancelled": "تم إلغاء موعدك.",
+    "bookings.guest_phone_mismatch": "رقم الهاتف لا يطابق هذا الموعد.",
+    "bookings.guest_not_cancellable": "لم يعد يمكن إلغاء هذا الموعد — الحجوزات المدفوعة تُنسّق مع النشاط التجاري."
 }

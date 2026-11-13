@@ -134,7 +134,11 @@
         "addToCalendar": "افزودن به تقویم",
         "newBooking": "رزرو نوبت جدید",
         "discount": "تخفیف",
-        "payableAmount": "مبلغ قابل پرداخت"
+        "payableAmount": "مبلغ قابل پرداخت",
+        "cancelTitle": "لغو این نوبت",
+        "cancelDesc": "برای لغو، شماره موبایلی که هنگام رزرو وارد کردید را بنویسید.",
+        "cancelPhonePlaceholder": "09xxxxxxxxx",
+        "cancelButton": "لغو نوبت"
     },
     "wizard": {
         "steps": {
