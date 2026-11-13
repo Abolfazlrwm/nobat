@@ -75,15 +75,24 @@ Arabic joined as the third language and shares the RTL layout with Persian:
 5. **Tests** — extend `LocaleTest` with the new cookie value and keep the
    catalog-sync tests green.
 
-## Scope notes (v1.6.0, updated in v1.15.0)
+## Scope notes (v1.6.0, updated in v1.16.0)
 
-- The **public + booking + auth experience** is fully trilingual.
+- The **public + booking + auth experience** is fully trilingual — since
+  v1.16.0 this includes the four auth pages (forgot/reset/confirm/verify),
+  the branded error pages (fa/en/ar message trio, cookie-resolved `lang`/`dir`
+  since error pages bypass route middleware) and the printed invoice.
 - Since v1.14.0 the **dashboard** (manager/staff/admin panels) is fully
   translated as well: all 14 dashboard pages, the 3 settings pages and the
   sidebar navigation read from the `panel.*` namespace of
   `resources/js/locales/{fa,en,ar}.json`, the language switcher sits in the
   panel header, and every server-side flash message, validation error and
-  report-export header comes from `lang/{fa,en,ar}.json`. Formatting helpers
+  report-export header comes from `lang/{fa,en,ar}.json`. Since v1.16.0 the
+  same is true for the **queued messages**: sms bodies, the payment mail and
+  the database-notification title pin the locale at dispatch time and restore
+  it on the queue worker (`sms.*`, `mails.*`, `notifications.*` keys), and the
+  native `lang/{fa,en,ar}/{auth,validation}.php` files complete the framework
+  layer (v1.15.0 lacked `lang/en/`, so english visitors read persian login
+  failures; fa/ar missed the `confirmed`/`image`/`mimes`/`max.file` rules). Formatting helpers
   (`num`, `price`, `dateShort`, `dateTime`, `weekdayShort`, `statusLabel`)
   live in `resources/js/composables/useLocale.ts`; Persian keeps the Jalali
   calendar and Persian digits, English switches to Gregorian dates and Latin

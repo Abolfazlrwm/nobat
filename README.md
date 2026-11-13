@@ -9,7 +9,7 @@
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-150%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-186%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -255,9 +255,11 @@ sequenceDiagram
 - [x] **v1.9** — یادآوری پیامکی خودکار ۲۴ ساعت قبل از نوبت: کامند ساعتی + job صف‌بندی‌شده با تضمین «ارسال یک‌بار» روی درایور SMS موجود
 - [x] **v1.10** — API عمومی توکن‌محور روی `/api/v1`: ساخت/باطل‌کردن توکن (فقط هش ذخیره می‌شود)، `me`، `businesses` و `appointments` پیجینیت‌شده با فیلتر — مستندات در [`docs/API.md`](docs/API.md)
 - [x] **v1.11** — خروجی اکسل (xlsx) برای گزارش‌ها: نویسنده‌ی OOXML خالص PHP بدون هیچ وابستگی جدید (ZIP stored با crc32، شیت RTL، سطر عنوان بولد) — با تست صحت آرشیو که crc و آفست هر بخش را راستی‌آزمایی می‌کند
+- [x] **v1.12** — تقویت حرفه‌ای: صفحات خطای برندشده (۴۰۳/۴۰۴/۴۱۹/۵۰۰/۵۰۳)، هدرهای امنیتی + HSTS، متای OG/Twitter، کش config/route/view و ادغام سه ورک‌فلو CI در یکی
 - [x] **v1.13** — پنل مشتری‌ها: کتاب مشتری‌ها بر پایه‌ی شماره‌ی تلفن با مبلغ مصرف، تفکیک وضعیت‌ها، نرخ عدم حضور و پروفایل کامل با تاریخچه‌ی نوبت‌ها
 - [x] **v1.14** — پنل‌های چندزبانه (داشبورد کامل fa/en) و گالری تصاویر کسب‌وکارها با آپلود چندتایی، جلد و لایت‌باکس
 - [x] **v1.15** — زبان سوم: عربی (ar) با دیکشنری کامل ۵۰۱ کلیدی فرانت و ۱۱۱ کلیدی سرور، RTL هم‌نوا با فارسی، تقویم میلادی با ماه‌های عربی و اعداد لاتین (ar-u-nu-latn)
+- [x] **v1.16** — سِرِمونی ممیزی: تکمیل سه‌زبانه‌سازی واقعی (کاتالوگ انگلیسی، صفحات auth و خطا و فاکتور، پیامک/ایمیل چندزبانه)، SEO (sitemap + JSON-LD)، لغو خودخدمتی مهمان، ارتقای خودکار لیست انتظار، پاسخ مدیر به نظرات، مرتب‌سازی گالری و پیجینیشن پنل‌ها
 
 ایده‌ی جدیدی دارید؟ یک [پیشنهاد فیچر](../../issues/new?template=feature_request.yml) باز کنید.
 
