@@ -22,7 +22,7 @@ class BusinessController extends Controller
 
         $approvedReviews = $business->approvedReviews()
             ->limit(6)
-            ->get(['id', 'customer_name', 'rating', 'comment', 'created_at']);
+            ->get(['id', 'customer_name', 'rating', 'comment', 'reply', 'created_at']);
 
         $average = $business->approvedReviews()->avg('rating');
 

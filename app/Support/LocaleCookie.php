@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Http\Middleware\SetLocale;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Http\Request;
