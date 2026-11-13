@@ -4,5 +4,6 @@
     'titleEn' => 'PAGE NOT FOUND',
     'message' => 'صفحه‌ای که دنبالش بودید پیدا نشد — شاید آدرس تغییر کرده یا حذف شده باشد.',
     'messageEn' => 'The page you were looking for does not exist.',
-    'action' => 'بازگشت به صفحه‌ی اصلی',
+    'messageAr' => 'الصفحة التي كنت تبحث عنها غير موجودة — ربما تغيّر العنوان أو حُذفت.',
+    'action' => __('errors.back_home'),
 ])

@@ -33,6 +33,21 @@ class Invoice extends Model
         self::STATUS_REFUNDED => 'برگشت‌خورده',
     ];
 
+    /**
+     * Status label translated through the "status.invoice_*" lang keys, falling
+     * back to the built-in Persian constant for statuses that lack a translation.
+     */
+    public function localizedStatusLabel(): string
+    {
+        $key = "status.invoice_{$this->status}";
+
+        if (trans()->has($key)) {
+            return __($key);
+        }
+
+        return self::STATUS_LABELS[$this->status] ?? $this->status;
+    }
+
     protected $fillable = [
         'number',
         'business_id',

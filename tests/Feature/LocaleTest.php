@@ -231,3 +231,66 @@ it('translates the confirmed, image and mimes rules for all three locales', func
 
     app()->setLocale('fa');
 });
+
+it('renders the branded error pages in the visitor language', function () {
+    config(['app.debug' => false]);
+
+    $this->get('/no-such-page')
+        ->assertStatus(404)
+        ->assertSee('lang="fa"', false)
+        ->assertSee('dir="rtl"', false)
+        ->assertSee('صفحه‌ای که دنبالش بودید پیدا نشد', false);
+
+    $this->withCookie('nobat_locale', 'en')
+        ->get('/no-such-page')
+        ->assertStatus(404)
+        ->assertSee('lang="en"', false)
+        ->assertSee('dir="ltr"', false)
+        ->assertSee('The page you were looking for does not exist.', false)
+        ->assertSee('Back to the homepage', false);
+
+    $this->withCookie('nobat_locale', 'ar')
+        ->get('/no-such-page')
+        ->assertStatus(404)
+        ->assertSee('lang="ar"', false)
+        ->assertSee('dir="rtl"', false)
+        ->assertSee('الصفحة التي كنت تبحث عنها غير موجودة', false)
+        ->assertSee('العودة إلى الصفحة الرئيسية', false);
+});
+
+it('renders the printed invoice in the visitor language', function () {
+    $business = $this->makeBusiness();
+    $staff = $this->addStaff($business);
+    $appointment = $this->createAppointment(
+        $staff,
+        $this->serviceOf($business),
+        $this->nextOpenDate()->setTimeFromTimeString('10:00'),
+        Appointment::STATUS_CONFIRMED,
+    );
+
+    $invoice = \App\Models\Invoice::query()->create([
+        'number' => 'INV-TEST-1',
+        'business_id' => $business->id,
+        'appointment_id' => $appointment->id,
+        'amount' => 500_000,
+        'currency' => 'IRT',
+        'status' => \App\Models\Invoice::STATUS_PAID,
+        'snapshot' => ['customer_name' => 'مشتری آزمون', 'customer_phone' => '09120000000'],
+        'issued_at' => now(),
+        'paid_at' => now(),
+    ]);
+
+    $this->get(route('invoices.show', $invoice->number))
+        ->assertOk()
+        ->assertSee('lang="fa"', false)
+        ->assertSee('فاکتور نوبت', false)
+        ->assertSee('پرداخت‌شده', false);
+
+    $this->withCookie('nobat_locale', 'en')
+        ->get(route('invoices.show', $invoice->number))
+        ->assertOk()
+        ->assertSee('lang="en"', false)
+        ->assertSee('dir="ltr"', false)
+        ->assertSee('Nobat invoice', false)
+        ->assertSee('Paid', false);
+});
