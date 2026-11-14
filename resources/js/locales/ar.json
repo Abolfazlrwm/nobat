@@ -21,7 +21,10 @@
         "builtWith": "مبني بـ Laravel و Vue",
         "trackTitle": "تتبع الموعد",
         "trackPlaceholder": "رمز التتبع",
-        "trackButton": "بحث"
+        "trackButton": "بحث",
+        "privacy": "الخصوصية",
+        "terms": "شروط الاستخدام",
+        "legalColumn": "المستندات"
     },
     "landing": {
         "badge": "مفتوح المصدر ومجاني — الإصدار {version}",
@@ -634,5 +637,10 @@
             "deleteConfirmTitle": "هل أنت متأكد من حذف الحساب؟",
             "deleteConfirmDesc": "بعد حذف الحساب تُحذف جميع موارده وبياناته للأبد. للتأكيد أدخل كلمة المرور."
         }
+    },
+    "legal": {
+        "footerNote": "هذا المستند جزء من المنتج؛ النسخة المعتمدة دائمًا هي هذه الصفحة.",
+        "termsLink": "اقرأ شروط الاستخدام",
+        "privacyLink": "اقرأ سياسة الخصوصية"
     }
 }

@@ -21,7 +21,10 @@
         "builtWith": "Built with Laravel and Vue",
         "trackTitle": "Track your booking",
         "trackPlaceholder": "Tracking code",
-        "trackButton": "Find"
+        "trackButton": "Find",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "legalColumn": "Legal"
     },
     "landing": {
         "badge": "Open source and free — v{version}",
@@ -634,5 +637,10 @@
             "deleteConfirmTitle": "Are you sure you want to delete your account?",
             "deleteConfirmDesc": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account."
         }
+    },
+    "legal": {
+        "footerNote": "This document is part of the product; the authoritative copy is always this page.",
+        "termsLink": "Read the Terms of Service",
+        "privacyLink": "Read the Privacy Policy"
     }
 }

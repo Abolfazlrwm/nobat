@@ -72,7 +72,18 @@ function track(): void {
                         </p>
                     </div>
 
-                    <div class="flex gap-14">
+                    <div class="flex flex-wrap gap-14">
+                        <div>
+                            <h3 class="text-sm font-semibold">{{ t('footer.legalColumn') }}</h3>
+                            <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
+                                <li>
+                                    <Link class="hover:text-foreground" :href="route('legal.privacy')">{{ t('footer.privacy') }}</Link>
+                                </li>
+                                <li>
+                                    <Link class="hover:text-foreground" :href="route('legal.terms')">{{ t('footer.terms') }}</Link>
+                                </li>
+                            </ul>
+                        </div>
                         <div>
                             <h3 class="text-sm font-semibold">{{ t('footer.system') }}</h3>
                             <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
