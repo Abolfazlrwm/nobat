@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Appointment;
 use App\Models\Payment;
 use App\Services\Payment\PaymentService;
 use Illuminate\Support\Facades\Cache;
