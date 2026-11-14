@@ -10,13 +10,17 @@ it('logs the structured payment-confirmation trace on a successful callback', fu
 
     [$business, $service, $staff, $appointment, $payment] = $this->paidBookingWorld();
 
+    // The helper leaves authority null until the gateway session opens;
+    // this test drives the callback directly, so set one now.
+    $payment->forceFill(['authority' => 'AUTH-OBSERVE-1'])->save();
+
     Http::fake([
         'api.zarinpal.com/*' => Http::sequence()
             ->push(['data' => ['code' => 100, 'ref_id' => 'REF123', 'card_pan' => '1234****5678'], 'errors' => null]),
     ]);
 
     $payments = app(PaymentService::class);
-    $payments->handleCallback($payment->authority, true);
+    $payments->handleCallback('AUTH-OBSERVE-1', true);
 
     // The callback arrival, the verify call and the confirmation must each
     // land a structured log line — without these, a failed webhook on a
@@ -51,6 +55,8 @@ it('logs a warning when the verify lock is busy on a concurrent callback', funct
 
     [$business, $service, $staff, $appointment, $payment] = $this->paidBookingWorld();
 
+    $payment->forceFill(['authority' => 'AUTH-OBSERVE-2'])->save();
+
     // Hold the verify lock first so the callback finds it busy.
     Cache::lock("payments:verify:{$payment->id}", 10)->get();
 
@@ -58,7 +64,7 @@ it('logs a warning when the verify lock is busy on a concurrent callback', funct
         'api.zarinpal.com/*' => Http::response(['data' => ['code' => 100, 'ref_id' => 'X'], 'errors' => null]),
     ]);
 
-    app(PaymentService::class)->handleCallback($payment->authority, true);
+    app(PaymentService::class)->handleCallback('AUTH-OBSERVE-2', true);
 
     Log::shouldHaveReceived('info')
         ->withArgs(fn (string $channel, array $context) => $channel === 'Payment callback — verify lock busy'

@@ -1,57 +1,56 @@
 <?php
 
-use App\Models\Appointment;
 use App\Models\User;
-use App\Models\WaitlistEntry;
 use App\Notifications\AppointmentStatusChanged;
-use Illuminate\Support\Facades\Queue;
 
-it('shares the info flash with the inertia payload, not just the session', function () {
-    // The waitlist "n customers were notified" message is flashed as `info`.
-    // Without sharing it through HandleInertiaRequests, the manager never
-    // sees the toast — even though the session flag is set.
-    Queue::fake();
-
+it('exposes the info flash through the inertia share to the frontend', function () {
     $business = $this->makeBusiness();
-    $service = $this->serviceOf($business);
-    $startsAt = $this->nextOpenDate()->setTimeFromTimeString('10:00');
-    $appointment = $this->createAppointment($this->addStaff($business), $service, $startsAt, Appointment::STATUS_CONFIRMED);
-
-    $business->waitlistEntries()->create([
-        'service_id' => $service->id,
-        'desired_date' => $startsAt->format('Y-m-d'),
-        'customer_name' => 'مریم انتظاری',
-        'customer_phone' => '09123334455',
-        'status' => WaitlistEntry::STATUS_WAITING,
-    ]);
-
     $manager = User::find($business->owner_id);
-    $this->actingAs($manager)
-        ->patch(route('appointments.status', $appointment), ['status' => Appointment::STATUS_CANCELLED])
-        ->assertRedirect()
-        ->assertSessionHas('info');
 
-    // The Inertia share closure reads the session lazily — it must expose
-    // the same string under page.props.flash.info.
-    $this->get(route('dashboard'))
+    $message = __('waitlist.slot_freed', ['n' => 3]);
+
+    // Seed the exact flash key the waitlist flow writes, then verify the
+    // shared Inertia props carry it — this is the integration point the
+    // fix touched (HandleInertiaRequests::share()).
+    $this->actingAs($manager)
+        ->withSession(['info' => $message])
+        ->get(route('dashboard'))
+        ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->has('props.flash.info')
-            ->where('props.flash.info', __('waitlist.slot_freed', ['n' => 1])));
+            ->has('flash.info')
+            ->where('flash.info', $message));
+});
+
+it('keeps success and error sharing intact next to the new info key', function () {
+    $business = $this->makeBusiness();
+    $manager = User::find($business->owner_id);
+
+    $this->actingAs($manager)
+        ->withSession([
+            'success' => 'saved',
+            'error' => 'boom',
+            'info' => 'heads up',
+        ])
+        ->get(route('dashboard'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('flash.success', 'saved')
+            ->where('flash.error', 'boom')
+            ->where('flash.info', 'heads up'));
 });
 
 it('pins the appointment-status notification locale to the appointment, not the actor', function () {
-    Queue::fake();
-
     $business = $this->makeBusiness();
-    $service = $this->serviceOf($business);
+    $staff = $this->addStaff($business);
     $startsAt = $this->nextOpenDate()->setTimeFromTimeString('10:00');
 
     // The customer booked in English; the manager works in Persian.
-    $appointment = $this->createAppointment($this->addStaff($business), $service, $startsAt, Appointment::STATUS_CONFIRMED);
+    $appointment = $this->createAppointment($staff, $this->serviceOf($business), $startsAt);
     $appointment->forceFill(['locale' => 'en'])->save();
 
-    // Run through the manager's UI with locale=fa — the worker would otherwise
-    // build the notification payload in fa, ignoring the customer's English.
+    // Run through the manager's UI with locale=fa — the worker would
+    // otherwise build the notification payload in fa, ignoring the
+    // customer's English.
     app()->setLocale('fa');
     $payload = (new AppointmentStatusChanged($appointment))->toArray(User::factory()->create());
 

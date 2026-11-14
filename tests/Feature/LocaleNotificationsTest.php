@@ -85,7 +85,11 @@ it('pins the notification locale at dispatch, not at worker time', function () {
     );
 
     // Capture in english (as the request would), then reset to fa — the
-    // queue worker default — before rendering.
+    // queue worker default — before rendering. PaymentConfirmed still
+    // follows the request locale; AppointmentStatusChanged follows the
+    // customer's booking locale pinned on the appointment row.
+    $appointment->forceFill(['locale' => 'en'])->save();
+
     app()->setLocale('en');
     $mail = (new PaymentConfirmed($appointment))->toMail(User::factory()->create());
     $payload = (new AppointmentStatusChanged($appointment))->toArray(User::factory()->create());
