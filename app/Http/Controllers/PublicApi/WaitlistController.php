@@ -8,6 +8,7 @@ use App\Models\WaitlistEntry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class WaitlistController extends Controller
 {
@@ -34,37 +35,45 @@ class WaitlistController extends Controller
 
         $service = $business->services()->active()->findOrFail($data['service_id']);
 
-        $alreadyWaiting = $business->waitlistEntries()
-            ->where('service_id', $service->id)
-            ->where('customer_phone', $data['customer_phone'])
-            ->whereDate('desired_date', $data['desired_date'])
-            ->waiting()
-            ->exists();
+        // Two requests from the same phone for the same day used to both
+        // pass the exists() check and create duplicate waitlist rows. Hold
+        // a per-phone-per-date lock for ten seconds — long enough to
+        // serialize the check-and-insert, short enough to release on a
+        // crash. Losers of the race get the duplicate response.
+        $lock = Cache::lock("waitlist:join:{$data['customer_phone']}:{$data['desired_date']}", 10);
 
-        if ($alreadyWaiting) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'status' => 'duplicate',
-                    'message' => __('waitlist.duplicate'),
-                ], 409);
-            }
-
-            return back()->with('info', __('waitlist.duplicate'));
+        if (! $lock->get()) {
+            return $this->duplicateResponse($request);
         }
 
-        $business->waitlistEntries()->create([
-            'service_id' => $service->id,
-            'staff_id' => $request->filled('staff_id')
-                ? $business->activeStaff()->findOrFail($request->integer('staff_id'))->id
-                : null,
-            'user_id' => $request->user()?->id,
-            'desired_date' => $data['desired_date'],
-            'customer_name' => $data['customer_name'],
-            'customer_phone' => $data['customer_phone'],
-            'locale' => app()->getLocale(),
-            'status' => WaitlistEntry::STATUS_WAITING,
-            'note' => $data['note'] ?? null,
-        ]);
+        try {
+            $alreadyWaiting = $business->waitlistEntries()
+                ->where('service_id', $service->id)
+                ->where('customer_phone', $data['customer_phone'])
+                ->whereDate('desired_date', $data['desired_date'])
+                ->waiting()
+                ->exists();
+
+            if ($alreadyWaiting) {
+                return $this->duplicateResponse($request);
+            }
+
+            $business->waitlistEntries()->create([
+                'service_id' => $service->id,
+                'staff_id' => $request->filled('staff_id')
+                    ? $business->activeStaff()->findOrFail($request->integer('staff_id'))->id
+                    : null,
+                'user_id' => $request->user()?->id,
+                'desired_date' => $data['desired_date'],
+                'customer_name' => $data['customer_name'],
+                'customer_phone' => $data['customer_phone'],
+                'locale' => app()->getLocale(),
+                'status' => WaitlistEntry::STATUS_WAITING,
+                'note' => $data['note'] ?? null,
+            ]);
+        } finally {
+            $lock->release();
+        }
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -74,5 +83,17 @@ class WaitlistController extends Controller
         }
 
         return back()->with('success', __('waitlist.joined'));
+    }
+
+    private function duplicateResponse(Request $request): JsonResponse|RedirectResponse
+    {
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => 'duplicate',
+                'message' => __('waitlist.duplicate'),
+            ], 409);
+        }
+
+        return back()->with('info', __('waitlist.duplicate'));
     }
 }
