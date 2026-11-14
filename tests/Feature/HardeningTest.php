@@ -110,3 +110,20 @@ it('rate-limits the password-reset link endpoint', function () {
     $this->post(route('password.email'), ['email' => 'someone@example.com'])
         ->assertTooManyRequests();
 });
+
+it('rate-limits the login endpoint', function () {
+    // Login is the brute-force target; it now shares the same five-per-
+    // minute wall as the reset endpoint. Five attempts (failing auth, but
+    // passing validation and the throttle counter) then a 429 on the sixth.
+    for ($i = 0; $i < 5; $i++) {
+        $this->post(route('login'), [
+            'email' => 'someone@example.com',
+            'password' => 'not-the-right-password',
+        ])->assertRedirect(); // back to login with errors, not 429
+    }
+
+    $this->post(route('login'), [
+        'email' => 'someone@example.com',
+        'password' => 'not-the-right-password',
+    ])->assertTooManyRequests();
+});
