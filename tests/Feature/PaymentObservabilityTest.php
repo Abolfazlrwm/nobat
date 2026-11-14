@@ -5,6 +5,19 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+// The default payment driver is 'log'; the observability traces under test
+// live in the ZarinPalGateway, so point the driver at zarinpal with the
+// sandbox gateway config PaymentGatewayTest uses.
+beforeEach(function () {
+    config()->set('nobat.payment.driver', 'zarinpal');
+    config()->set('nobat.payment.gateways.zarinpal', [
+        'merchant_id' => '00000000-0000-0000-0000-000000000000',
+        'sandbox' => true,
+        'timeout' => 10,
+        'retries' => 0,
+    ]);
+});
+
 it('logs the structured payment-confirmation trace on a successful callback', function () {
     Log::spy();
 
@@ -15,7 +28,7 @@ it('logs the structured payment-confirmation trace on a successful callback', fu
     $payment->forceFill(['authority' => 'AUTH-OBSERVE-1'])->save();
 
     Http::fake([
-        'api.zarinpal.com/*' => Http::sequence()
+        'sandbox.zarinpal.com/*' => Http::sequence()
             ->push(['data' => ['code' => 100, 'ref_id' => 'REF123', 'card_pan' => '1234****5678'], 'errors' => null]),
     ]);
 
@@ -61,7 +74,7 @@ it('logs a warning when the verify lock is busy on a concurrent callback', funct
     Cache::lock("payments:verify:{$payment->id}", 10)->get();
 
     Http::fake([
-        'api.zarinpal.com/*' => Http::response(['data' => ['code' => 100, 'ref_id' => 'X'], 'errors' => null]),
+        'sandbox.zarinpal.com/*' => Http::response(['data' => ['code' => 100, 'ref_id' => 'X'], 'errors' => null]),
     ]);
 
     app(PaymentService::class)->handleCallback('AUTH-OBSERVE-2', true);

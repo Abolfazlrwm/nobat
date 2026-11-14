@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Appointment;
-use App\Models\Model;
 use App\Models\Payment;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
