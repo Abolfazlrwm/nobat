@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.0] - 2026-11-14
+
+### Fixed
+
+- **کلید throttle حالا هویت واقعی بازدیدکننده است، نه سرور لبه‌ی پراکسی**: زنجیره‌ی
+  دمو Cloudflare → Render است و ترمیناتور Render مقدار `X-Forwarded-For` را بازنویسی
+  می‌کند — اولین آی‌پیِ آن سرورِ لبه‌ی Cloudflare است که بین درخواست‌ها می‌چرخد. با
+  `trustProxies('*')` لاراول همان آی‌پیِ چرخان را «مشتری» می‌گرفت و باکت‌های
+  rate-limit بین سرورهای لبه پخش می‌شد؛ راستی‌آزمایی زنده نشان داد `x-ratelimit-remaining`
+  در پست‌های متوالی بین ۴ و ۳ نوسان می‌کند — یعنی دیوارِ «۵ در دقیقه» هرگز شکل نمی‌گرفت.
+  middleware جدید `PinClientIpFromProxyHeaders` در انتهای استک سراسری (بعد از
+  `TrustProxies`، قبل از هر خواندنِ `ip()`) وقتی `CF-Connecting-IP` معتبر (v4 یا v6)
+  حاضر است، `X-Forwarded-For` را دقیقاً روی همان مقدار می‌بندد؛ ترافیک مستقیم بدون این
+  هدر دست‌نخورده رد می‌شود. تست یکپارچه‌اش حالتِ خرابیِ پروداکشن را بازسازی می‌کند: پنج
+  درخواست با لبه‌های چرخان و یک بازدیدکننده، یک باکت مشترک می‌سازند و ششمین درخواست 429 می‌گیرد —
+  با غیرفعال‌کردن middleware همان تست می‌شکند.
+- **لاگین تنها endpoint احراز هویت بدون throttle بود**: register و reset و
+  forgot-password و verify-email همه دیوار داشتند، اما `POST /login` — همان که
+  هدف اصلی credential stuffing است — بی‌دیوار بود و اسکریپت مهاجم می‌توانست با سرعت
+  خط آن را بکوبد. حالا `throttle:5,1` دارد؛ پنج تلاشِ ناموفق شمرده می‌شود و ششمین با 429 رد می‌شود.
+
+### Changed
+
+- بج «tests» در هر دو README از ۲۰۷ به **۲۱۴** به‌روز شد (۶ تستِ جدید برای
+  resolution آی‌پی و ۱ تست برای دیوارِ لاگین).
+
 ## [1.17.0] - 2026-11-14
 
 ### Added

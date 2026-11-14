@@ -158,7 +158,8 @@ URL فاکتور **امضادار** است (`URL::signedRoute`) با انقضا�
 
 Rate limit:
 - **Auth POSTs (v1.17)**: register/reset-password/verification-notification با `throttle:10,1`؛ forgot-password با `throttle:5,1` (سخت‌گیرانه‌تر چون کلاسیک‌ترین بردار enumeration ایمیل است).
-- **Login**: `LoginRequest::ensureIsNotRateLimited()` (۵ تلاش).
+- **Login (v1.18)**: علاوه بر `LoginRequest::ensureIsNotRateLimited()` (۵ تلاشِ هر حساب)، خودِ `POST /login` هم `throttle:5,1` گرفت — تا حالا تنها endpoint احراز هویت بدون دیوار بود و هدف اصلی credential stuffing.
+- **هویت واقعی بازدیدکننده (v1.18)**: زنجیره‌ی Cloudflare → Render مقدار `X-Forwarded-For` را بازنویسی می‌کند و اولین آی‌پیِ آن سرورِ لبه‌ی Cloudflare است که بین درخواست‌ها می‌چرخد؛ با `trustProxies('*')` لاراول همان را «مشتری» می‌گرفت و باکت‌های throttle بین سرورهای لبه پخش می‌شد (راستی‌آزمایی زنده: `x-ratelimit-remaining` در پست‌های متوالی بین ۴ و ۳ نوسان می‌کرد). middleware `PinClientIpFromProxyHeaders` در انتهای استک سراسری، وقتی `CF-Connecting-IP` معتبر حاضر است، `X-Forwarded-For` را دقیقاً روی همان مقدار می‌بندد تا همه‌ی دیوارها روی آی‌پیِ واقعیِ بازدیدکننده حساب شوند؛ ترافیک مستقیم بدون آن هدر دست‌نخورده رد می‌شود.
 - **رزرو**: rate limit روی slot/booking routes (از v1.0).
 
 ## ۱۷. مشاهده‌پذیری (v1.17)
