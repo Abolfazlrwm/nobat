@@ -14,17 +14,26 @@ class BusinessController extends Controller
     {
         abort_unless($business->is_active, 404);
 
+        // Single query plan: eager-load services, staff and photos, plus
+        // the approved-review aggregate (avg + count) and the latest six
+        // reviews — all in one DB round-trip per relation, instead of the
+        // three separate approvedReviews() queries (limit, avg, count)
+        // the previous version fired on every public business page view.
         $business->load([
             'activeServices' => fn ($query) => $query->orderBy('sort_order'),
             'activeStaff',
             'photos',
+            'approvedReviews' => fn ($query) => $query
+                ->select(['id', 'business_id', 'customer_name', 'rating', 'comment', 'reply', 'created_at'])
+                ->limit(6)
+                ->latest('id'),
         ]);
 
-        $approvedReviews = $business->approvedReviews()
-            ->limit(6)
-            ->get(['id', 'customer_name', 'rating', 'comment', 'reply', 'created_at']);
+        $business->loadAvg(['approvedReviews' => fn ($query) => $query->whereNotNull('rating')], 'rating');
+        $business->loadCount(['approvedReviews' => fn ($query) => $query->whereNotNull('rating')]);
 
-        $average = $business->approvedReviews()->avg('rating');
+        $average = $business->approved_reviews_avg_rating;
+        $count = (int) $business->approved_reviews_count;
 
         return Inertia::render('public/BusinessShow', [
             'business' => [
@@ -53,9 +62,9 @@ class BusinessController extends Controller
                 ]),
                 'reviews_summary' => [
                     'average' => $average ? round((float) $average, 1) : null,
-                    'count' => (int) $business->approvedReviews()->count(),
+                    'count' => $count,
                 ],
-                'reviews' => $approvedReviews->map(fn ($review) => [
+                'reviews' => $business->approvedReviews->map(fn ($review) => [
                     'id' => $review->id,
                     'customer_name' => $review->customer_name,
                     'rating' => (int) $review->rating,

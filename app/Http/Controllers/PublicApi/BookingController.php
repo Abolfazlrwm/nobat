@@ -85,12 +85,21 @@ class BookingController extends Controller
     {
         $appointment = Appointment::query()
             ->where('code', $code)
-            ->with(['business:id,name,slug,phone,address', 'service:id,name,duration_minutes,price', 'staff:id,name,specialty', 'invoice'])
+            ->with([
+                'business:id,name,slug,phone,address',
+                'service:id,name,duration_minutes,price',
+                'staff:id,name,specialty',
+                'invoice',
+                // Eager-load the review and the active payment's invoice so
+                // the page renders without three lazy queries: review()->exists(),
+                // review()->first() and $payment->invoice?->number.
+                'review:id,appointment_id,rating,comment',
+                'payments' => fn ($query) => $query->whereNotIn('status', [Payment::STATUS_FAILED, Payment::STATUS_CANCELED]),
+                'payments.invoice:id,number,payment_id',
+            ])
             ->firstOrFail();
 
-        $payment = $appointment->payments()
-            ->whereNotIn('status', [Payment::STATUS_FAILED, Payment::STATUS_CANCELED])
-            ->first();
+        $payment = $appointment->payments->first();
 
         return Inertia::render('public/BookingConfirmed', [
             'appointment' => [
@@ -117,7 +126,7 @@ class BookingController extends Controller
                         ? URL::signedRoute('invoices.show', ($payment->invoice ?? $appointment->invoice)->number, now()->addDays(7))
                         : null,
                 ] : null,
-                'has_review' => $appointment->review()->exists(),
+                'has_review' => $appointment->review !== null,
                 'review' => $appointment->review?->only('rating', 'comment'),
             ],
         ]);
