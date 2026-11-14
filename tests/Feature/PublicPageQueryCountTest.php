@@ -73,7 +73,9 @@ it('renders a public business page without any lazy-loaded relation', function (
 
     $response->assertInertia(fn ($page) => $page
         ->where('business.reviews_summary.count', 6)
-        ->where('business.reviews_summary.average', 5.0)
+        // json_encode(5.0) emits 5 — no JSON_PRESERVE_ZERO_FRACTION — so
+        // assert against the encoded form, not the PHP float.
+        ->where('business.reviews_summary.average', 5)
         ->where('business.photos.0.is_cover', true)
         ->where('business.reviews', fn ($reviews) => count($reviews) === 6));
 });
