@@ -3,6 +3,7 @@
 use App\Models\Appointment;
 use App\Models\Payment;
 use App\Services\Payment\PaymentService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -53,7 +54,7 @@ it('logs a warning when the verify lock is busy on a concurrent callback', funct
     [$business, $service, $staff, $appointment, $payment] = $this->paidBookingWorld();
 
     // Hold the verify lock first so the callback finds it busy.
-    \Illuminate\Support\Facades\Cache::lock("payments:verify:{$payment->id}", 10)->get();
+    Cache::lock("payments:verify:{$payment->id}", 10)->get();
 
     Http::fake([
         'api.zarinpal.com/*' => Http::response(['data' => ['code' => 100, 'ref_id' => 'X'], 'errors' => null]),

@@ -4,6 +4,7 @@ use App\Models\Appointment;
 use App\Models\Payment;
 use App\Models\Review;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 it('renders a public business page in a single query plan per relation', function () {
     $business = $this->makeBusiness();
@@ -77,8 +78,8 @@ it('renders the booking confirmation page without N+1 on review and payment.invo
         'gateway' => 'zarinpal',
         'amount' => $service->price,
         'status' => Payment::STATUS_PAID,
-        'idempotency_key' => (string) \Illuminate\Support\Str::ulid(),
-        'authority' => 'AUTH-'.\Illuminate\Support\Str::ulid(),
+        'idempotency_key' => (string) Str::ulid(),
+        'authority' => 'AUTH-'.Str::ulid(),
         'ref_id' => 'REF-1',
         'paid_at' => now(),
     ]);

@@ -2,6 +2,7 @@
 
 use App\Models\Appointment;
 use App\Models\User;
+use App\Models\WaitlistEntry;
 use App\Notifications\AppointmentStatusChanged;
 use Illuminate\Support\Facades\Queue;
 
@@ -21,7 +22,7 @@ it('shares the info flash with the inertia payload, not just the session', funct
         'desired_date' => $startsAt->format('Y-m-d'),
         'customer_name' => 'مریم انتظاری',
         'customer_phone' => '09123334455',
-        'status' => \App\Models\WaitlistEntry::STATUS_WAITING,
+        'status' => WaitlistEntry::STATUS_WAITING,
     ]);
 
     $manager = User::find($business->owner_id);
