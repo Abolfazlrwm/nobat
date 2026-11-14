@@ -2,12 +2,12 @@
 
 # Nobat — نوبت 🗓️
 
-**Multi-business online appointment booking, built with Laravel 13 & Vue 3**
+**Multi-business online appointment booking, built with Laravel 12 & Vue 3**
 
 Persian-first, fully RTL, Jalali calendar — booking without phone calls and waiting on hold
 
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
-[![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/Laravel-12-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
 [![Tests](https://img.shields.io/badge/tests-188%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
@@ -104,7 +104,7 @@ Demo accounts (password for all: `password`):
 
 | Layer | Technology |
 |---|---|
-| Backend | Laravel 13, PHP 8.4+ |
+| Backend | Laravel 12, PHP 8.4+ |
 | Frontend | Inertia 2, Vue 3, TypeScript, Tailwind CSS, shadcn-vue |
 | Auth & roles | Laravel Auth + Spatie Permission |
 | Testing | Pest (Feature + Domain) |
@@ -174,6 +174,7 @@ Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE
 - [x] **v1.13** — customers panel: the per-phone customer book with lifetime spend, the status split, the no-show rate and a full profile with the appointment history
 - [x] **v1.14** — bilingual management panels (the full dashboard in fa/en) and the business photo gallery with multi-file upload, a cover photo and a lightbox
 - [x] **v1.15** — a third language: Arabic (ar) with a full 501-key frontend catalog and 111 server keys, RTL layout shared with Persian, Gregorian dates with Arabic month names and Latin digits (ar-u-nu-latn)
+- [x] **v1.16** — the audit ceremony: trilingual completion (English auth/validation catalog, error pages, invoices, locale-aware sms/mail/db notifications), SEO (sitemap + JSON-LD), guest self-cancel by phone, waitlist auto-promote, manager replies to reviews, gallery reordering and panel pagination
 
 Have an idea? Open a [feature request](../../issues/new?template=feature_request.yml).
 

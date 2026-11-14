@@ -2,12 +2,12 @@
 
 # نوبت — Nobat 🗓️
 
-**سامانه نوبت‌دهی آنلاین چندکسب‌وکاری با Laravel 13 و Vue 3**
+**سامانه نوبت‌دهی آنلاین چندکسب‌وکاری با Laravel 12 و Vue 3**
 
 فارسی، RTL، تقویم جلالی — رزرو بدون تماس تلفنی و بدون معطلی
 
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
-[![Laravel](https://img.shields.io/badge/Laravel-13-red)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/Laravel-12-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
 [![Tests](https://img.shields.io/badge/tests-188%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
@@ -111,7 +111,7 @@
 
 | لایه | فناوری |
 |---|---|
-| بک‌اند | Laravel 13, PHP 8.4+ |
+| بک‌اند | Laravel 12, PHP 8.4+ |
 | فرانت‌اند | Inertia 2, Vue 3, TypeScript, Tailwind CSS, shadcn-vue |
 | احراز هویت و نقش‌ها | Laravel Auth + Spatie Permission |
 | تست | Pest (Feature + Domain) |
@@ -162,7 +162,7 @@ docker compose exec app php artisan migrate --seed
 ## 🧪 اجرای تست‌ها
 
 ```bash
-php artisan test     # ۱۳۱ تست — SQLite درون‌حافظه‌ای
+php artisan test     # ۱۸۸ تست — SQLite درون‌حافظه‌ای
 vendor/bin/pint --test
 ```
 
@@ -175,7 +175,7 @@ flowchart LR
         D["داشبورد کسب‌وکار"]
     end
 
-    subgraph Laravel["Laravel 13"]
+    subgraph Laravel["Laravel 12"]
         SC["SlotController"]
         BC["BookingController"]
         MC["کنترلرهای مدیریت"]

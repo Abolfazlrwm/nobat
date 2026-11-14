@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.0] - 2026-11-14
+
+### Added
+
+- **بسته‌ی صحت چندزبانه (i18n correctness)**: ستون `locale` به `appointments` و
+  `waitlist_entries` اضافه شد. `BookingService::reserve` و `WaitlistController::store`
+  زبان فعالِ request را روی رکورد pin می‌کنند. `SendReminders` (که روی queue worker
+  اجرا می‌شود و `app()->getLocale()` در آن همیشه `fa` است) و `WaitlistPromotion`
+  هرکدام از زبان رکورد می‌خوانند — تا یک مشتری انگلیسی/عربی که در همان زبان رزرو
+  کرده، پیامک یادآوری و ارتقای لیست انتظار را در همان زبان دریافت کند. نوتیفیکیشن
+  `AppointmentStatusChanged` هم زبان appointment را به‌جای زبان actor می‌گیرد.
+- **فلش `info` به Inertia share اضافه شد**: تا حالا `HandleInertiaRequests::share()`
+  فقط `success` و `error` را share می‌کرد؛ `info` (که برای «n مشتری مطلع شد» و
+  «در لیست انتظار هستید» استفاده می‌شود) هرگز به فرانت نمی‌رسید — حالا می‌رسد.
+- **بسته‌ی امنیت (security hardening)**:
+  - **URL امضادار برای فاکتور**: `/invoices/{number}` دیگر عمومی نیست؛
+    `InvoiceController::show` امضای معتبر می‌خواهد. `BookingController::show` و
+    `PaymentConfirmed` مایل signed URL با انقضای ۷ روز صادر می‌کنند.
+  - **Rate limit روی auth POSTها**: register/reset-password با `throttle:10,1`،
+    forgot-password با `throttle:5,1` (سخت‌گیرانه‌تر برای جلوگیری از email
+    enumeration).
+  - **CSP nonce-based**: هر request یک nonce 16-byte تولید می‌شود، به Vite helper
+    و `@routes` پاس داده می‌شود؛ `script-src 'self' 'nonce-…' 'strict-dynamic'`،
+    `object-src 'none'`، `frame-ancestors 'self'`.
+- **بسته‌ی مشاهده‌پذیری (payment observability)**: structured logging در
+  `ZarinPalGateway::request/verify/refund` و در تمام outcomes از
+  `PaymentService::handleCallback` (not_found، busy، canceled_by_user،
+  already_settled، verify_failed، expired_refunded، paid) و در `refundPayment`.
+  `ReleaseExpiredHolds` هم `Log::info` می‌زند نه فقط `$this->info`.
+- **تست‌های جدید** برای همه‌ی موارد بالا.
+
+### Changed
+
+- `BusinessController::show` دیگر سه کوئری جدا روی `approvedReviews` نمی‌زند —
+  eager-load با `loadAvg/loadCount` جایگزین شد (یک کوئری per relation).
+- `BookingController::show` با eager-load `review` و `payments.invoice` از چند
+  lazy query (review()->exists()، review()->first()، $payment->invoice?->number)
+  خلاص شد.
+- `WaitlistController::store` با `Cache::lock` per-phone-per-date روی check-then-insert
+  سریالیزه می‌شود — دو درخواست همزمان دیگر دو ردیف تکراری نمی‌سازند.
+- `docs/ARCHITECTURE.md` با ۸ بخش جدید (پرداخت و idempotency، چندزبانه و RTL،
+  گالری، لیست انتظار، SEO، خطا، امنیت، مشاهده‌پذیری) به‌روز شد.
+- README و README.en از «Laravel 13» به «Laravel 12» اصلاح شدند؛ شمارش تست از ۱۳۱
+  به ۱۸۸ درست شد؛ v1.16 به نقشه‌راه انگلیسی اضافه شد.
+
 ## [1.16.0] - 2026-11-13
 
 ### Added
