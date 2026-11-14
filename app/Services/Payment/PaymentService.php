@@ -10,6 +10,7 @@ use App\Models\Refund;
 use App\Notifications\PaymentConfirmed;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -144,10 +145,23 @@ class PaymentService
         $payment = Payment::query()->where('authority', $authority)->first();
 
         if ($payment === null) {
+            Log::warning('Payment callback for unknown authority', [
+                'authority' => $authority,
+                'gateway_ok' => $gatewaySaysOk,
+            ]);
+
             return ['outcome' => 'not_found', 'appointment' => null];
         }
 
         $appointment = $payment->appointment;
+
+        Log::info('Payment callback received', [
+            'payment_id' => $payment->id,
+            'appointment_code' => $appointment?->code,
+            'authority' => $authority,
+            'gateway_ok' => $gatewaySaysOk,
+            'current_status' => $payment->status,
+        ]);
 
         if (! $gatewaySaysOk) {
             if (in_array($payment->status, [Payment::STATUS_INITIATED, Payment::STATUS_AUTHORIZED], true)) {
@@ -157,11 +171,21 @@ class PaymentService
                 ])->save();
             }
 
+            Log::info('Payment callback — canceled by user', [
+                'payment_id' => $payment->id,
+                'appointment_code' => $appointment?->code,
+            ]);
+
             return ['outcome' => 'canceled_by_user', 'appointment' => $appointment];
         }
 
         // Fast idempotent path: already settled, nothing to do.
         if (in_array($payment->status, [Payment::STATUS_PAID, Payment::STATUS_REFUNDED], true)) {
+            Log::info('Payment callback — already settled, fast path', [
+                'payment_id' => $payment->id,
+                'status' => $payment->status,
+            ]);
+
             return ['outcome' => 'already_settled', 'appointment' => $appointment];
         }
 
@@ -171,6 +195,10 @@ class PaymentService
             if (! $lock->get()) {
                 // A concurrent verify is running; the webhook that follows
                 // will hit the settled-status fast path instead.
+                Log::info('Payment callback — verify lock busy', [
+                    'payment_id' => $payment->id,
+                ]);
+
                 return ['outcome' => 'busy', 'appointment' => $appointment];
             }
 
@@ -190,6 +218,12 @@ class PaymentService
                         'verified_at' => now(),
                     ])->save();
 
+                    Log::error('Payment verify failed', [
+                        'payment_id' => $payment->id,
+                        'appointment_code' => $payment->appointment?->code,
+                        'error' => $result['error'],
+                    ]);
+
                     return ['outcome' => 'verify_failed', 'appointment' => $payment->appointment];
                 }
 
@@ -206,6 +240,12 @@ class PaymentService
                 // Money arrived, but the slot hold expired in the meantime:
                 // the appointment is gone, so the payment is auto-reversed.
                 if ($appointment->status !== Appointment::STATUS_PENDING_PAYMENT || $appointment->paymentExpired()) {
+                    Log::warning('Payment verified but slot hold expired — auto-refunding', [
+                        'payment_id' => $payment->id,
+                        'appointment_code' => $appointment->code,
+                        'appointment_status' => $appointment->status,
+                    ]);
+
                     $this->refundPayment($payment, __('payments.refund_expired_reason'));
 
                     return ['outcome' => 'expired_refunded', 'appointment' => $appointment->refresh()];
@@ -221,6 +261,13 @@ class PaymentService
                 SendPaymentSms::dispatch($appointment->refresh(), app()->getLocale())->afterCommit();
 
                 $appointment->customer?->notify(new PaymentConfirmed($appointment->refresh()));
+
+                Log::info('Payment confirmed', [
+                    'payment_id' => $payment->id,
+                    'appointment_code' => $appointment->code,
+                    'ref_id' => $result['ref_id'],
+                    'amount' => $payment->amount,
+                ]);
 
                 return ['outcome' => 'paid', 'appointment' => $appointment];
             });
@@ -240,6 +287,11 @@ class PaymentService
             $existing = $payment->refunds()->where('status', Refund::STATUS_SUCCEEDED)->first();
 
             if ($existing !== null) {
+                Log::info('Payment refund — already refunded, idempotent fast path', [
+                    'payment_id' => $payment->id,
+                    'refund_id' => $existing->id,
+                ]);
+
                 return $existing;
             }
 
@@ -247,6 +299,13 @@ class PaymentService
                 'payment_id' => $payment->id,
                 'amount' => $payment->amount,
                 'status' => Refund::STATUS_PENDING,
+                'reason' => $reason,
+            ]);
+
+            Log::info('Payment refund initiated', [
+                'payment_id' => $payment->id,
+                'refund_id' => $refund->id,
+                'amount' => $refund->amount,
                 'reason' => $reason,
             ]);
 
@@ -263,12 +322,24 @@ class PaymentService
 
                     $payment->forceFill(['status' => Payment::STATUS_REFUNDED])->save();
                     $payment->invoice?->forceFill(['status' => Invoice::STATUS_REFUNDED])->save();
+
+                    Log::info('Payment refund succeeded', [
+                        'payment_id' => $payment->id,
+                        'refund_id' => $refund->id,
+                        'gateway_refund_id' => $result['gateway_refund_id'],
+                    ]);
                 } else {
                     $refund->forceFill([
                         'status' => Refund::STATUS_FAILED,
                         'processed_at' => now(),
                         'meta' => ['error' => $result['error']],
                     ])->save();
+
+                    Log::error('Payment refund failed at the gateway', [
+                        'payment_id' => $payment->id,
+                        'refund_id' => $refund->id,
+                        'error' => $result['error'],
+                    ]);
                 }
             } catch (Throwable $exception) {
                 // A failed gateway reversal must not erase the record:
@@ -278,6 +349,12 @@ class PaymentService
                     'processed_at' => now(),
                     'meta' => ['error' => $exception->getMessage()],
                 ])->save();
+
+                Log::error('Payment refund threw — refund row marked failed for manual follow-up', [
+                    'payment_id' => $payment->id,
+                    'refund_id' => $refund->id,
+                    'exception' => $exception->getMessage(),
+                ]);
             }
 
             return $refund;
