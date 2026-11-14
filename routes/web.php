@@ -9,6 +9,8 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\ReviewController as DashboardReviewController;
 use App\Http\Controllers\Dashboard\WaitlistController as DashboardWaitlistController;
+use App\Http\Controllers\HealthController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Management\BusinessAdminController;
 use App\Http\Controllers\Management\DiscountController as ManagementDiscountController;
@@ -38,12 +40,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Machine-readable diagnostics for uptime monitors — proves the product is
+// alive (database, storage, scheduler heartbeat), not just PHP. Render's
+// healthCheckPath points here too.
+Route::get('health', HealthController::class)->name('health');
+
 // Crawler entry points — the static public/robots.txt was retired so the
 // sitemap pointer always carries the live APP_URL.
 Route::get('robots.txt', [SeoController::class, 'robots'])->name('robots');
 Route::get('sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 
 Route::post('locale', [LocaleController::class, 'switch'])->name('locale.switch');
+
+// Legal documents — a real product carries its own privacy policy and terms.
+Route::get('privacy', [LegalController::class, 'privacy'])->name('legal.privacy');
+Route::get('terms', [LegalController::class, 'terms'])->name('legal.terms');
 
 Route::get('b/{business:slug}', [BusinessController::class, 'show'])->name('businesses.show');
 

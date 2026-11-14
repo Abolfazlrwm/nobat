@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\SendReminderSms;
 use App\Models\Appointment;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class SendReminders extends Command
 {
@@ -14,6 +15,11 @@ class SendReminders extends Command
 
     public function handle(): int
     {
+        // Health heartbeat: keep the scheduler stamp fresh on the hourly
+        // pass too, so a scheduler that only runs this command still reads
+        // as alive on /health.
+        Cache::put('nobat:health:scheduler-heartbeat', now()->timestamp, 300);
+
         if (! config('nobat.sms.reminders')) {
             $this->line('SMS reminders are disabled.');
 

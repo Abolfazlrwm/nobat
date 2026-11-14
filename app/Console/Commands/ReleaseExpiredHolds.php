@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\Payment\PaymentService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class ReleaseExpiredHolds extends Command
@@ -14,6 +15,10 @@ class ReleaseExpiredHolds extends Command
 
     public function handle(PaymentService $payments): int
     {
+        // Health heartbeat: /health reports scheduler lag from this stamp,
+        // so a dead scheduler (no cron, no worker) is visible from outside.
+        Cache::put('nobat:health:scheduler-heartbeat', now()->timestamp, 300);
+
         $released = $payments->releaseExpiredHolds();
 
         if ($released > 0) {
