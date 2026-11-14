@@ -71,6 +71,7 @@ class BookingService
                 'user_id' => $customer?->id,
                 'customer_name' => $customerName,
                 'customer_phone' => $customerPhone,
+                'locale' => app()->getLocale(),
                 'starts_at' => $startsAt,
                 'ends_at' => $endsAt,
                 'status' => $paymentRequired

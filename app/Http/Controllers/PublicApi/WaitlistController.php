@@ -61,6 +61,7 @@ class WaitlistController extends Controller
             'desired_date' => $data['desired_date'],
             'customer_name' => $data['customer_name'],
             'customer_phone' => $data['customer_phone'],
+            'locale' => app()->getLocale(),
             'status' => WaitlistEntry::STATUS_WAITING,
             'note' => $data['note'] ?? null,
         ]);

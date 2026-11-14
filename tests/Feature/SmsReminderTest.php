@@ -84,3 +84,27 @@ it('respects the disabled reminders flag', function () {
 
     Queue::assertNothingPushed();
 });
+
+it('pins the reminder locale to the appointment row, not the CLI default', function () {
+    Queue::fake();
+
+    $business = $this->makeBusiness();
+    $staff = $this->addStaff($business);
+    $service = $this->serviceOf($business);
+
+    // An English-speaking customer booked through the English panel.
+    $english = $this->createAppointment($staff, $service, CarbonImmutable::now()->addHours(4), Appointment::STATUS_CONFIRMED);
+    $english->forceFill(['locale' => 'en'])->save();
+
+    // An Arabic-speaking customer booked through the Arabic panel.
+    $arabic = $this->createAppointment($staff, $service, CarbonImmutable::now()->addHours(6), Appointment::STATUS_CONFIRMED);
+    $arabic->forceFill(['locale' => 'ar'])->save();
+
+    // The command runs on the queue worker, where app()->getLocale() is 'fa'.
+    // Without the locale column, both reminders would dispatch with 'fa'.
+    $this->artisan('nobat:send-reminders')->assertSuccessful();
+
+    Queue::assertPushed(SendReminderSms::class, 2);
+    Queue::assertPushed(SendReminderSms::class, fn (SendReminderSms $job) => $job->appointment->is($english) && $job->locale === 'en');
+    Queue::assertPushed(SendReminderSms::class, fn (SendReminderSms $job) => $job->appointment->is($arabic) && $job->locale === 'ar');
+});

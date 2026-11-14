@@ -31,7 +31,10 @@ class WaitlistPromotion
         $slotUrl = route('businesses.show', $appointment->business->slug);
 
         foreach ($entries as $entry) {
-            SendWaitlistPromoSms::dispatch($entry, $slotUrl, app()->getLocale());
+            // Each waiting customer gets the SMS in the locale they joined
+            // the waitlist in — not the locale of whoever triggered the
+            // cancellation. The worker's app()->getLocale() is fa by default.
+            SendWaitlistPromoSms::dispatch($entry, $slotUrl, $entry->locale ?: 'fa');
         }
 
         WaitlistEntry::query()

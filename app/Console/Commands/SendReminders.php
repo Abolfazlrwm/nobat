@@ -31,7 +31,11 @@ class SendReminders extends Command
             ->get();
 
         foreach ($appointments as $appointment) {
-            SendReminderSms::dispatch($appointment, app()->getLocale());
+            // The reminder command runs on the queue worker, where
+            // app()->getLocale() is the CLI default. Use the locale the
+            // customer actually booked in — pinned on the appointment row —
+            // so an English/Arabic guest receives an English/Arabic SMS.
+            SendReminderSms::dispatch($appointment, $appointment->locale ?: 'fa');
         }
 
         $this->info("Queued {$appointments->count()} reminder(s) for the next {$within}h.");

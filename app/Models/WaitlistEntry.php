@@ -38,6 +38,7 @@ class WaitlistEntry extends Model
         'desired_date',
         'customer_name',
         'customer_phone',
+        'locale',
         'status',
         'notified_at',
         'note',

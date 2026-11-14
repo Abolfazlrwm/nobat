@@ -78,3 +78,25 @@ it('leaves the waiting list alone when no slot is freed', function () {
 
     Queue::assertNotPushed(SendWaitlistPromoSms::class);
 });
+
+it('pins the promo sms to the locale each entry joined the waitlist in', function () {
+    Queue::fake();
+
+    $business = $this->makeBusiness();
+    $service = $this->serviceOf($business);
+    $startsAt = $this->nextOpenDate()->setTimeFromTimeString('10:00');
+    $appointment = $this->createAppointment($this->addStaff($business), $service, $startsAt, Appointment::STATUS_CONFIRMED);
+
+    // Three waiters, each in a different locale — none in the manager's fa.
+    $english = waitingEntry($business, $service, $startsAt->format('Y-m-d'), ['customer_phone' => '09121110001', 'locale' => 'en']);
+    $arabic = waitingEntry($business, $service, $startsAt->format('Y-m-d'), ['customer_phone' => '09121110002', 'locale' => 'ar']);
+
+    $manager = User::find($business->owner_id);
+    $this->actingAs($manager)
+        ->patch(route('appointments.status', $appointment), ['status' => Appointment::STATUS_CANCELLED])
+        ->assertRedirect();
+
+    Queue::assertPushed(SendWaitlistPromoSms::class, 2);
+    Queue::assertPushed(SendWaitlistPromoSms::class, fn (SendWaitlistPromoSms $job) => $job->entry->is($english) && $job->locale === 'en');
+    Queue::assertPushed(SendWaitlistPromoSms::class, fn (SendWaitlistPromoSms $job) => $job->entry->is($arabic) && $job->locale === 'ar');
+});

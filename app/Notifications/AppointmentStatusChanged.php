@@ -15,9 +15,10 @@ class AppointmentStatusChanged extends Notification implements ShouldQueue
     public function __construct(
         public readonly Appointment $appointment,
     ) {
-        // The database payload is built on the queue worker — pin the locale
-        // of the request that changed the status and restore it in toArray().
-        $this->locale = app()->getLocale();
+        // The database payload is built on the queue worker. Use the locale
+        // the customer booked in — pinned on the appointment row — rather
+        // than the locale of the manager who flipped the status.
+        $this->locale = $appointment->locale ?: app()->getLocale();
     }
 
     /**

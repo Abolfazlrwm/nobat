@@ -78,6 +78,7 @@ class Appointment extends Model
         'user_id',
         'customer_name',
         'customer_phone',
+        'locale',
         'starts_at',
         'ends_at',
         'status',
