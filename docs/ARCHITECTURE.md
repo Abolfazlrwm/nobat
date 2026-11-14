@@ -169,3 +169,18 @@ Structured logging در مسیرهای پرداخت: هر callback، هر verify
 `ReleaseExpiredHolds` command هر بار که اسلات‌ها را آزاد می‌کند، یک خط `Log::info` هم می‌زند (نه فقط `$this->info` artisan).
 
 ادغام با Sentry/Slack با اضافه‌کردن یک channel به `config/logging.php` در آینده ممکن است — فعلاً stack پیش‌فرض Laravel.
+## ۱۸. آماده‌سازی عملیات واقعی (v1.19)
+
+- **ضربان زمان‌بند**: `ReleaseExpiredHolds` و `SendReminders` در هر اجرا کلید
+  `nobat:health:scheduler-heartbeat` را در cache می‌نویسند. `GET /health`
+  (کنترلر `HealthController`) دیتابیس، قابلیت نوشتن storage، فاصله‌ی آخرین اجرا
+  (`last_sweep_ago_seconds`) و اتصال صف را JSON برمی‌گرداند؛ مرگِ زمان‌بند
+  بی‌لاگ دیده‌شدنی می‌شود (بیش از ۱۸۰ ثانیه = ناسالم). `healthCheckPath` در
+  `render.yaml` به همین endpoint اشاره می‌کند.
+- **زمان‌بند در دمو**: `docker/demo-entrypoint.sh` پیش از وب‌سرور
+  `schedule:work` را پس‌زمینه بالا می‌آورد تا یادآوری‌ها و آزادسازی هولد در دمو
+  واقعاً کار کنند؛ استقرار واقعی cron یا worker جدا می‌خواهد — رانبوک کامل در
+  `docs/OPERATIONS.md` (زمان‌بند، صف، پشتیبان‌گیری، هشدار Slack، چک‌لیست go-live).
+- **صفحات حقوقی**: `/privacy` و `/terms` از `lang/{fa,en,ar}/legal.php` رندر
+  می‌شوند (همان ماشینِ ترجمه‌ی محصول، متن قانونی را هم ترجمه می‌کند) و از فوتر
+  عمومی لینک‌اند.

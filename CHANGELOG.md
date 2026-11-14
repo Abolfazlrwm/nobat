@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.19.0] - 2026-11-14
+
+### Added
+
+- **ضربان زمان‌بند و endpoint سلامت واقعی**: تا حالا فقط `/up` فریم‌ورک بود که
+  فقط زنده‌بودن PHP را نشان می‌دهد. حالا `GET /health` دیتابیس، قابلیت نوشتن
+  storage، اتصال صف و — مهم‌تر از همه — **فاصله‌ی آخرین اجرای زمان‌بند** را JSON
+  برمی‌گرداند. دو دستور زمان‌بندی‌شده (`release-expired-holds` و `send-reminders`)
+  در هر اجرا ضربان خود را در cache می‌نویسند؛ مرگِ cron یا worker دیگر بی‌لاگ
+  نیست: `scheduler.healthy` در `/health` false می‌شود و مونیتور uptime می‌تواند
+  هشدار بدهد. دیتابیس پاسخ ندهد، پاسخ 503 است تا load balancer نمونه را از
+  گردش خارج کند. `healthCheckPath` در `render.yaml` به همین endpoint تغییر کرد.
+- **زمان‌بند در کانتینر دمو راه افتاد**: `demo-entrypoint.sh` فقط serve می‌کرد —
+  یعنی یادآوری پیامکی و آزادسازی خودکار هولدِ پرداخت‌نشده در دمو **هرگز اجرا
+  نمی‌شد** و هیچ پیام خطایی هم وجود نداشت. حالا `schedule:work` پیش از
+  وب‌سرور پس‌زمینه بالا می‌آید (`NOBAT_SCHEDULER=false` برای خاموشی) و لاگش در
+  `storage/logs/scheduler.log` است.
+- **صفحات حقوقی**: `/privacy` و `/terms` با محتوای واقعی و دقیق به سه زبان از
+  `lang/{fa,en,ar}/legal.php` رندر می‌شوند — نه بیلبورد خالی. متن‌ها همان چیزی
+  را توضیح می‌دهند که کد واقعاً انجام می‌دهد (چه داده‌ای جمع می‌شود، درگاه
+  پرداخت و پیامک به‌عنوان اشخاص ثالث، کوکی‌ها، حقوق حذف). ستون «مستندات» با
+  لینک هر دو به فوتر عمومی اضافه شد.
+- **رانبوک عملیات** (`docs/OPERATIONS.md`): سه راه اجرای زمان‌بند (cron /
+  worker / کانتینر)، راه‌اندازی صف با درایور database، پشتیبان‌گیری SQLite با
+  `.backup` و تمرین بازیابی، هشدار با کانال Slack بدون وابستگی، چک‌لیست go-live
+  با ۱۱ قلم و نقشه‌ی مقیاس‌پذیری. `docs/DEPLOYMENT.md` به آن لینک داد و دو قلم
+  (زمان‌بند و `/health`) به چک‌لیست go-live اضافه شد.
+
+### Changed
+- تست‌ها: ۲۱۴ → **۲۲۰** (۳ تست سلامت + ۳ تست صفحات حقوقی)؛ بج READMEها به‌روز شد.
+
 ## [1.18.0] - 2026-11-14
 
 ### Fixed
