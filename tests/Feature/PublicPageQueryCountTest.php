@@ -2,7 +2,6 @@
 
 use App\Models\Appointment;
 use App\Models\Payment;
-use App\Models\Review;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
