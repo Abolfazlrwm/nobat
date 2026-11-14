@@ -3,6 +3,7 @@
 use App\Http\Middleware\AddSecurityHeaders;
 use App\Http\Middleware\EnsureApiToken;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\PinClientIpFromProxyHeaders;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +22,12 @@ return Application::configure(basePath: dirname(__DIR__))
         // Behind PaaS TLS terminators (Render, Railway, ...) artisan serve
         // sees plain HTTP — trust forwarded headers so URLs come out https.
         $middleware->trustProxies(at: '*');
+
+        // Runs at the tail of the global stack: after TrustProxies has
+        // registered the forwarded-header resolution, before anything (a
+        // throttle, a log line) computes $request->ip() — so rate-limit
+        // buckets key on the real visitor, not the rotating proxy edge.
+        $middleware->append(PinClientIpFromProxyHeaders::class);
 
         $middleware->web(append: [
             SetLocale::class,
