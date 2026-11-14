@@ -18,6 +18,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -109,7 +110,12 @@ class BookingController extends Controller
                     'status_label' => Payment::STATUS_LABELS[$payment->status] ?? $payment->status,
                     'amount' => $payment->amount,
                     'ref_id' => $payment->ref_id,
+                    // A signed, expiring URL keeps the invoice (which carries
+                    // customer PII) from being replayed via a leaked link.
                     'invoice_number' => $payment->invoice?->number ?? $appointment->invoice?->number,
+                    'invoice_url' => ($payment->invoice ?? $appointment->invoice)
+                        ? URL::signedRoute('invoices.show', ($payment->invoice ?? $appointment->invoice)->number, now()->addDays(7))
+                        : null,
                 ] : null,
                 'has_review' => $appointment->review()->exists(),
                 'review' => $appointment->review?->only('rating', 'comment'),

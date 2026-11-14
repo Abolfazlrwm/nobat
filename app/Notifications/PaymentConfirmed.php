@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 
 class PaymentConfirmed extends Notification
 {
@@ -31,6 +32,13 @@ class PaymentConfirmed extends Notification
         App::setLocale($this->locale ?? 'fa');
 
         $payment = $this->appointment->latestPayment;
+        $invoice = $payment?->invoice ?? $this->appointment->invoice;
+
+        // Sign the link so the PII-bearing invoice can't be opened from a
+        // leaked email forward or a harvested URL. Valid for a week.
+        $invoiceUrl = $invoice
+            ? URL::signedRoute('invoices.show', $invoice->number, now()->addDays(7))
+            : url('/');
 
         return (new MailMessage)
             ->subject(__('mails.payment_subject'))
@@ -41,6 +49,6 @@ class PaymentConfirmed extends Notification
             ->line(__('mails.payment_amount', ['amount' => number_format($payment?->amount ?? $this->appointment->service->price)]))
             ->line(__('mails.payment_code', ['code' => $this->appointment->code]))
             ->line(__('mails.payment_ref', ['ref' => $payment?->ref_id ?? '-']))
-            ->action(__('mails.payment_action'), $payment?->invoice ? route('invoices.show', $payment->invoice->number) : url('/'));
+            ->action(__('mails.payment_action'), $invoiceUrl);
     }
 }

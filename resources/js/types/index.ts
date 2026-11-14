@@ -193,6 +193,7 @@ export interface PaymentSummary {
     amount: number;
     ref_id?: string | null;
     invoice_number?: string | null;
+    invoice_url?: string | null;
 }
 
 export interface BookingConfirmation {

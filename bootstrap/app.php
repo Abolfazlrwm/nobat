@@ -39,8 +39,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Error pages and aborted JSON bypass route middleware — stamp the
-        // security headers onto those responses as well.
+        // security headers (with a fresh CSP nonce, since this responder
+        // does not see the per-request attributes set by AddSecurityHeaders)
+        // onto those responses as well.
         $exceptions->respond(function (Response $response) {
-            return AddSecurityHeaders::apply($response);
+            return AddSecurityHeaders::apply($response, bin2hex(random_bytes(16)));
         });
     })->create();

@@ -3,6 +3,7 @@
 use App\Models\Appointment;
 use App\Models\Invoice;
 use App\Models\User;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 it('serves the persian RTL shell by default', function () {
@@ -281,14 +282,14 @@ it('renders the printed invoice in the visitor language', function () {
         'paid_at' => now(),
     ]);
 
-    $this->get(route('invoices.show', $invoice->number))
+    $this->get(URL::signedRoute('invoices.show', $invoice->number, now()->addDays(7)))
         ->assertOk()
         ->assertSee('lang="fa"', false)
         ->assertSee('فاکتور نوبت', false)
         ->assertSee('پرداخت‌شده', false);
 
     $this->withCookie('nobat_locale', 'en')
-        ->get(route('invoices.show', $invoice->number))
+        ->get(URL::signedRoute('invoices.show', $invoice->number, now()->addDays(7)))
         ->assertOk()
         ->assertSee('lang="en"', false)
         ->assertSee('dir="ltr"', false)

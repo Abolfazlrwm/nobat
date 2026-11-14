@@ -23,7 +23,10 @@
         <link rel="manifest" href="/manifest.webmanifest">
         <link rel="apple-touch-icon" href="/icons/pwa-192.png">
 
-        @routes
+        {{-- Ziggy's @routes emits an inline <script> with every named route.
+             Pass the per-request CSP nonce so the browser accepts it. --}}
+        @php($nonce = request()->attributes->get('csp-nonce') ?? '')
+        @routes(null, $nonce)
         @vite(['resources/js/app.ts'])
         @inertiaHead
     </head>

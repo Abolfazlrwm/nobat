@@ -82,8 +82,8 @@ const cancelForm = useForm({
                             <span dir="ltr" class="font-mono">{{ num(appointment.payment.ref_id ?? '—') }}</span>
                         </span>
                         <a
-                            v-if="appointment.payment.invoice_number"
-                            :href="route('invoices.show', appointment.payment.invoice_number)"
+                            v-if="appointment.payment.invoice_url"
+                            :href="appointment.payment.invoice_url"
                             target="_blank"
                             rel="noopener"
                             class="flex items-center gap-1 text-emerald-700 underline-offset-4 hover:underline dark:text-emerald-300"

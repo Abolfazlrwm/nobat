@@ -5,6 +5,7 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Refund;
 use App\Services\Payment\PaymentService;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 covers(PaymentService::class);
@@ -195,7 +196,7 @@ it('renders the printable invoice from the frozen snapshot', function () {
         'due_at' => $appointment->payment_expires_at,
     ]);
 
-    $this->get(route('invoices.show', $invoice->number))
+    $this->get(URL::signedRoute('invoices.show', $invoice->number, now()->addDays(7)))
         ->assertOk()
         ->assertSee($invoice->number)
         ->assertSee($business->name)
