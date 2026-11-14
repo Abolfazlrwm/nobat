@@ -47,5 +47,15 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
+# The scheduler must run somewhere: ReleaseExpiredHolds frees unpaid
+# bookings every minute and SendReminders queues reminder SMS hourly.
+# In this single-container demo the web container hosts it next to the
+# web server; a real deployment gives it a dedicated worker or cron —
+# see docs/OPERATIONS.md.
+if [ "${NOBAT_SCHEDULER:-true}" != "false" ]; then
+    echo ">> starting the scheduler in the background"
+    nohup php artisan schedule:work >> storage/logs/scheduler.log 2>&1 &
+fi
+
 echo ">> serving on http://0.0.0.0:${PORT:-8080}"
 exec php artisan serve --host=0.0.0.0 --port="${PORT:-8080}"
