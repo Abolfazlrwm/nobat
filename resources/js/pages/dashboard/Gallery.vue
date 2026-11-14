@@ -106,6 +106,31 @@ function stepLightbox(step: number): void {
 
     lightbox.value = (lightbox.value + step + props.photos.length) % props.photos.length;
 }
+
+// Keyboard navigation for the manager lightbox — same semantics as the
+// public BusinessShow one: ArrowLeft/ArrowRight cycle (flipped in RTL),
+// Escape closes.
+function onLightboxKeydown(event: KeyboardEvent): void {
+    if (lightbox.value === null) return;
+
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeLightbox();
+        return;
+    }
+
+    const isRtl = document.documentElement.dir === 'rtl';
+    const forwardKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
+    const backwardKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+
+    if (event.key === forwardKey) {
+        event.preventDefault();
+        stepLightbox(1);
+    } else if (event.key === backwardKey) {
+        event.preventDefault();
+        stepLightbox(-1);
+    }
+}
 </script>
 
 <template>
@@ -182,7 +207,7 @@ function stepLightbox(step: number): void {
                             <Button size="sm" variant="ghost" class="h-7" :disabled="index === photos.length - 1" :aria-label="t('panel.gallery.moveDown')" @click="move(photo, 1)">
                                 <ArrowDown class="size-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" class="ms-auto h-7 text-destructive" @click="destroy(photo)">
+                            <Button size="sm" variant="ghost" class="ms-auto h-7 text-destructive" :aria-label="t('panel.gallery.deletePhoto')" @click="destroy(photo)">
                                 <Trash2 class="size-4" />
                             </Button>
                         </div>
@@ -197,18 +222,21 @@ function stepLightbox(step: number): void {
             </div>
 
             <Dialog :open="lightbox !== null" @update:open="(open: boolean) => (open ? null : closeLightbox())">
-                <DialogContent class="max-w-3xl border-none bg-transparent p-2 shadow-none sm:max-w-3xl">
+                <DialogContent
+                    class="max-w-3xl border-none bg-transparent p-2 shadow-none sm:max-w-3xl"
+                    @keydown="onLightboxKeydown($event)"
+                >
                     <DialogHeader>
-                        <DialogTitle class="text-sm text-white">{{ lightboxPhoto?.caption ?? '' }}</DialogTitle>
+                        <DialogTitle class="text-sm text-white">{{ lightboxPhoto?.caption ?? t('panel.gallery.photo') }}</DialogTitle>
                     </DialogHeader>
 
                     <div v-if="lightboxPhoto" class="space-y-3">
                         <img :src="lightboxPhoto.url" :alt="lightboxPhoto.caption ?? ''" class="max-h-[70vh] w-full rounded-lg object-contain" />
 
                         <div class="flex items-center justify-center gap-2">
-                            <Button size="sm" variant="secondary" @click="stepLightbox(-1)">{{ t('panel.gallery.prev') }}</Button>
-                            <Button size="sm" variant="secondary" @click="closeLightbox()">{{ t('panel.gallery.close') }}</Button>
-                            <Button size="sm" variant="secondary" @click="stepLightbox(1)">{{ t('panel.gallery.next') }}</Button>
+                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.prev')" @click="stepLightbox(-1)">{{ t('panel.gallery.prev') }}</Button>
+                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.close')" @click="closeLightbox()">{{ t('panel.gallery.close') }}</Button>
+                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.next')" @click="stepLightbox(1)">{{ t('panel.gallery.next') }}</Button>
                         </div>
                     </div>
                 </DialogContent>

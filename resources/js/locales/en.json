@@ -111,7 +111,12 @@
         "noStaff": "No staff members yet.",
         "reviewsTitle": "Customer reviews",
         "galleryTitle": "Business gallery",
-        "replyLabel": "Reply from the business"
+        "replyLabel": "Reply from the business",
+        "photo": "Photo",
+        "openPhoto": "Open photo {caption}",
+        "previousPhoto": "Previous photo",
+        "nextPhoto": "Next photo",
+        "closePhoto": "Close photo viewer"
     },
     "booking": {
         "title": "Your booking",
@@ -418,7 +423,9 @@
             "next": "Next photo",
             "close": "Close",
             "moveUp": "Move up",
-            "moveDown": "Move down"
+            "moveDown": "Move down",
+            "photo": "Photo",
+            "deletePhoto": "Delete photo"
         },
         "waitlist": {
             "title": "Waitlist",

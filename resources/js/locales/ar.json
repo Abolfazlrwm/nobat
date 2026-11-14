@@ -111,7 +111,12 @@
         "noStaff": "لم يُسجل أي عضو فريق بعد.",
         "reviewsTitle": "تقييمات العملاء",
         "galleryTitle": "صور النشاط التجاري",
-        "replyLabel": "ردّ النشاط التجاري"
+        "replyLabel": "ردّ النشاط التجاري",
+        "photo": "صورة",
+        "openPhoto": "فتح الصورة {caption}",
+        "previousPhoto": "الصورة السابقة",
+        "nextPhoto": "الصورة التالية",
+        "closePhoto": "إغلاق عارض الصور"
     },
     "booking": {
         "title": "موعدك",
@@ -418,7 +423,9 @@
             "next": "الصورة التالية",
             "close": "إغلاق",
             "moveUp": "تحريك للأعلى",
-            "moveDown": "تحريك للأسفل"
+            "moveDown": "تحريك للأسفل",
+            "photo": "صورة",
+            "deletePhoto": "حذف الصورة"
         },
         "waitlist": {
             "title": "قائمة الانتظار",

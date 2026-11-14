@@ -31,6 +31,10 @@ function approve(id: number): void {
 }
 
 function remove(id: number): void {
+    const review = reviews.data.find((r) => r.id === id);
+
+    if (!confirm(t('panel.common.confirmDeleteName', { name: review?.customer_name ?? '—' }))) return;
+
     router.delete(route('reviews.destroy', id), { preserveScroll: true });
 }
 

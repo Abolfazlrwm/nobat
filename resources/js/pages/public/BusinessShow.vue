@@ -75,6 +75,31 @@ function stepLightbox(business: BusinessWithServices, step: number): void {
 
     lightbox.value = (lightbox.value + step + count) % count;
 }
+
+// Keyboard navigation: ArrowLeft cycles backwards, ArrowRight forwards,
+// Escape closes. RTL flips the direction so the arrows feel native in
+// Persian/Arabic — ArrowLeft visually means "next" there.
+function onLightboxKeydown(business: BusinessWithServices, event: KeyboardEvent): void {
+    if (lightbox.value === null) return;
+
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeLightbox();
+        return;
+    }
+
+    const isRtl = document.documentElement.dir === 'rtl';
+    const forwardKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
+    const backwardKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+
+    if (event.key === forwardKey) {
+        event.preventDefault();
+        stepLightbox(business, 1);
+    } else if (event.key === backwardKey) {
+        event.preventDefault();
+        stepLightbox(business, -1);
+    }
+}
 </script>
 
 <template>
@@ -144,6 +169,7 @@ function stepLightbox(business: BusinessWithServices, step: number): void {
                         :key="photo.id"
                         type="button"
                         class="group relative aspect-video overflow-hidden rounded-xl border"
+                        :aria-label="t('business.openPhoto', { caption: photo.caption ?? '' })"
                         @click="lightbox = index"
                     >
                         <img
@@ -225,9 +251,12 @@ function stepLightbox(business: BusinessWithServices, step: number): void {
             </Card>
 
             <Dialog :open="lightbox !== null" @update:open="(open: boolean) => (open ? null : closeLightbox())">
-                <DialogContent class="max-w-3xl border-none bg-transparent p-2 shadow-none sm:max-w-3xl">
+                <DialogContent
+                    class="max-w-3xl border-none bg-transparent p-2 shadow-none sm:max-w-3xl"
+                    @keydown="onLightboxKeydown(business, $event)"
+                >
                     <DialogHeader>
-                        <DialogTitle class="text-sm text-white">{{ lightboxPhoto(business)?.caption ?? '' }}</DialogTitle>
+                        <DialogTitle class="text-sm text-white">{{ lightboxPhoto(business)?.caption ?? t('business.photo') }}</DialogTitle>
                     </DialogHeader>
 
                     <div v-if="lightboxPhoto(business)" class="space-y-3">
@@ -238,13 +267,28 @@ function stepLightbox(business: BusinessWithServices, step: number): void {
                         />
 
                         <div class="flex items-center justify-center gap-2">
-                            <Button size="sm" variant="secondary" @click="stepLightbox(business, -1)">
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                :aria-label="t('business.previousPhoto')"
+                                @click="stepLightbox(business, -1)"
+                            >
                                 <ChevronRight class="size-4" />
                             </Button>
-                            <Button size="sm" variant="secondary" @click="closeLightbox()">
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                :aria-label="t('business.closePhoto')"
+                                @click="closeLightbox()"
+                            >
                                 <X class="size-4" />
                             </Button>
-                            <Button size="sm" variant="secondary" @click="stepLightbox(business, 1)">
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                :aria-label="t('business.nextPhoto')"
+                                @click="stepLightbox(business, 1)"
+                            >
                                 <ChevronLeft class="size-4" />
                             </Button>
                         </div>
