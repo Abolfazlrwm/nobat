@@ -164,6 +164,7 @@
     "bookings.rescheduled": "زمان نوبت شما با موفقیت تغییر شد.",
     "bookings.guest_not_reschedulable": "این نوبت دیگر قابل جابه‌جایی نیست — برای تغییر زمان با کسب‌وکار هماهنگ کنید.",
     "sms.reschedule": ":name عزیز، زمان نوبت شما در «:business» برای :service از ساعت :old_time به ساعت :time در تاریخ :date تغییر کرد. کد پیگیری: :code",
+    "sms.review_invite": ":name عزیز، نوبت :service در «:business» انجام شد — تجربه‌ات چطور بود؟ با کد :code نظرتان را همین‌جا ثبت کنید: :url",
     "waitlist.promo_sms": ":name عزیز، یک بازه‌ی خالی برای :service در «:business» در تاریخ :date آزاد شد. اگر هنوز منتظرید، همین حالا رزرو کنید: :url",
     "review.replied": "پاسخ به نظر ثبت شد.",
     "review.reply_required": "متن پاسخ الزامی است.",

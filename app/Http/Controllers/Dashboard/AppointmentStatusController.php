@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendReviewInviteSms;
 use App\Models\Appointment;
 use App\Models\Payment;
 use App\Notifications\AppointmentStatusChanged;
@@ -47,6 +48,22 @@ class AppointmentStatusController extends Controller
         }
 
         $appointment->customer?->notify(new AppointmentStatusChanged($appointment));
+
+        // A finished appointment is the moment the memory is fresh — invite
+        // the customer to rate it. Reviews are entered with the tracking
+        // code on the business page, so the sms carries both; guests have
+        // no in-app notification at all, this is their only channel.
+        if ($status === Appointment::STATUS_COMPLETED
+            && filled($appointment->customer_phone)
+            && ! $appointment->review()->exists()) {
+            $appointment->forceFill(['review_invited_at' => now()])->save();
+
+            SendReviewInviteSms::dispatch(
+                $appointment,
+                route('businesses.show', $appointment->business->slug),
+                $appointment->locale ?: app()->getLocale(),
+            )->afterCommit();
+        }
 
         // A freed slot may be exactly what waitlisted customers hoped for —
         // announce it automatically (sms + notified stamp) instead of leaving

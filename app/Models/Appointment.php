@@ -84,6 +84,7 @@ class Appointment extends Model
         'status',
         'payment_expires_at',
         'reminder_sent_at',
+        'review_invited_at',
         'notes',
     ];
 
@@ -94,6 +95,7 @@ class Appointment extends Model
             'ends_at' => 'datetime',
             'payment_expires_at' => 'datetime',
             'reminder_sent_at' => 'datetime',
+            'review_invited_at' => 'datetime',
         ];
     }
 

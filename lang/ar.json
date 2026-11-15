@@ -164,6 +164,7 @@
     "bookings.rescheduled": "تم تغيير موعدك بنجاح.",
     "bookings.guest_not_reschedulable": "لم يعد بإمكانك تغيير هذا الموعد — تواصل مع النشاط التجاري لتغيير وقته.",
     "sms.reschedule": ":name العزيز، تم تغيير موعد :service في \":business\" من الساعة :old_time إلى الساعة :time بتاريخ :date. رمز المتابعة: :code",
+    "sms.review_invite": ":name العزيز، اكتملت نوبة :service في \":business\" — كيف كانت؟ قيّمها بالرمز :code: :url",
     "waitlist.promo_sms": "عزيزي :name، تم تحرير فترة لـ :service في «:business» بتاريخ :date. إذا كنت لا تزال بانتظار، احجز الآن: :url",
     "review.replied": "تم حفظ الردّ.",
     "review.reply_required": "نص الردّ مطلوب.",
