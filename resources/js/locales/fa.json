@@ -151,7 +151,14 @@
         "cancelTitle": "لغو این نوبت",
         "cancelDesc": "برای لغو، شماره موبایلی که هنگام رزرو وارد کردید را بنویسید.",
         "cancelPhonePlaceholder": "09xxxxxxxxx",
-        "cancelButton": "لغو نوبت"
+        "cancelButton": "لغو نوبت",
+        "rescheduleTitle": "تغییر زمان نوبت",
+        "rescheduleDesc": "زمان را عوض کنید — بدون لغو، بدون از دست رفتن تخفیف، بدون تماس. برای تأیید مالکیت، همان شماره‌ای که هنگام رزرو وارد کردید را بنویسید.",
+        "rescheduleDate": "روز جدید",
+        "rescheduleSlotsLoading": "در حال گرفتن بازه‌های آزاد…",
+        "rescheduleNoSlots": "برای این روز بازه‌ای آزاد نیست.",
+        "reschedulePick": "یک بازه را انتخاب کنید",
+        "rescheduleButton": "ثبت زمان جدید"
     },
     "wizard": {
         "steps": {

@@ -110,7 +110,11 @@ class BookingController extends Controller
                 'starts_at' => $appointment->starts_at->format('Y-m-d\TH:i:s'),
                 'payment_expires_at' => $appointment->payment_expires_at?->format('Y-m-d\TH:i:s'),
                 'business' => $appointment->business->only('name', 'slug', 'phone', 'address'),
+                'service_id' => $appointment->service_id,
                 'service' => $appointment->service->only('name', 'duration_minutes', 'price'),
+                // staff_id drives the reschedule picker: the move keeps the
+                // same staff member, so the guest only sees that person's slots.
+                'staff_id' => $appointment->staff_id,
                 'staff' => $appointment->staff->only('name', 'specialty'),
                 'discount_amount' => $appointment->discount_amount,
                 'discount_code' => $appointment->discountCode?->code,
@@ -170,6 +174,60 @@ class BookingController extends Controller
         $this->waitlist->announceFreedSlot($appointment);
 
         return back()->with('success', __('bookings.guest_cancelled'));
+    }
+
+    /**
+     * Guest self-service reschedule: change the time without cancelling,
+     * losing the discount or going through the whole booking form again.
+     * Same ownership proof as cancellation — the tracking code alone must
+     * not move someone's booking. The old slot is announced to the waitlist
+     * exactly like a freed one, because that is what it is now.
+     */
+    public function reschedule(Request $request, string $code): RedirectResponse
+    {
+        $validated = $request->validate([
+            'customer_phone' => ['required', 'string'],
+            'starts_at' => ['required', 'date_format:Y-m-d\TH:i:s'],
+        ]);
+
+        $appointment = Appointment::query()
+            ->where('code', $code)
+            ->firstOrFail();
+
+        if ($this->normalizePhone($validated['customer_phone']) !== $this->normalizePhone($appointment->customer_phone)) {
+            return back()->withErrors(['customer_phone' => __('bookings.guest_phone_mismatch')]);
+        }
+
+        $movable = in_array($appointment->status, [
+            Appointment::STATUS_PENDING,
+            Appointment::STATUS_PENDING_PAYMENT,
+            Appointment::STATUS_CONFIRMED,
+        ], true) && $appointment->starts_at->isFuture();
+
+        if (! $movable) {
+            return back()->withErrors(['starts_at' => __('bookings.guest_not_reschedulable')]);
+        }
+
+        $oldStartsAt = $appointment->starts_at->copy();
+
+        try {
+            $this->bookings->reschedule($appointment, CarbonImmutable::parse($validated['starts_at']));
+        } catch (SlotUnavailableException) {
+            return back()->withErrors(['starts_at' => __('bookings.slot_unavailable')]);
+        } catch (InvalidSlotException) {
+            return back()->withErrors(['starts_at' => __('bookings.slot_invalid')]);
+        }
+
+        // The moment the appointment vacated is a freed slot now — the
+        // waiting list hears about it the same automatic way.
+        $this->waitlist->announceFreedSlotAt(
+            $appointment->business,
+            $appointment->service,
+            $appointment->staff,
+            $oldStartsAt,
+        );
+
+        return back()->with('success', __('bookings.rescheduled'));
     }
 
     /**

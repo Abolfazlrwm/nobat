@@ -9,8 +9,8 @@ import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BookingConfirmation } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { BadgeCheck, CalendarPlus, CheckCircle2, Clock3, CreditCard, ExternalLink, Star, XCircle } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { BadgeCheck, CalendarClock, CalendarPlus, CheckCircle2, ChevronDown, Clock3, CreditCard, ExternalLink, Star, XCircle } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
     appointment: BookingConfirmation;
@@ -36,6 +36,55 @@ const cancellable = computed(() =>
 const cancelForm = useForm({
     customer_phone: '',
 });
+
+// Self-service reschedule: the same phone proof as cancellation, plus a
+// mini slot picker that only offers the same service and staff member —
+// a move never quietly swaps who serves you.
+const rescheduleOpen = ref(false);
+const rescheduleDate = ref('');
+const rescheduleSlots = ref<{ starts_at: string; label: string; ends_label: string }[]>([]);
+const rescheduleLoading = ref(false);
+
+const rescheduleForm = useForm({
+    customer_phone: '',
+    starts_at: '',
+});
+
+async function loadRescheduleSlots() {
+    if (!rescheduleDate.value) {
+        return;
+    }
+
+    rescheduleLoading.value = true;
+    rescheduleForm.starts_at = '';
+    rescheduleForm.clearErrors();
+
+    try {
+        const response = await fetch(
+            route('businesses.slots', {
+                business: props.appointment.business.slug,
+                service_id: props.appointment.service_id,
+                staff_id: props.appointment.staff_id ?? undefined,
+                date: rescheduleDate.value,
+            }),
+            { headers: { Accept: 'application/json' } },
+        );
+        const data = await response.json();
+        rescheduleSlots.value = data.slots ?? [];
+    } finally {
+        rescheduleLoading.value = false;
+    }
+}
+
+function submitReschedule() {
+    rescheduleForm.patch(route('bookings.reschedule', props.appointment.code), {
+        onSuccess: () => {
+            rescheduleOpen.value = false;
+            rescheduleSlots.value = [];
+            rescheduleDate.value = '';
+        },
+    });
+}
 </script>
 
 <template>
@@ -182,6 +231,76 @@ const cancelForm = useForm({
                                 :class="i <= (appointment.review?.rating ?? 0) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'"
                             />
                         </span>
+                    </div>
+
+                    <!-- upcoming booking: self-service reschedule -->
+                    <div
+                        v-if="cancellable"
+                        class="rounded-xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-500/30 dark:bg-sky-500/10"
+                    >
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between text-start"
+                            :aria-expanded="rescheduleOpen"
+                            @click="rescheduleOpen = !rescheduleOpen"
+                        >
+                            <span class="text-sm font-semibold text-sky-800 dark:text-sky-300">{{ t('booking.rescheduleTitle') }}</span>
+                            <ChevronDown class="size-4 transition-transform" :class="rescheduleOpen && 'rotate-180'" />
+                        </button>
+
+                        <div v-if="rescheduleOpen" class="mt-3 grid gap-2">
+                            <p class="text-xs text-muted-foreground">{{ t('booking.rescheduleDesc') }}</p>
+                            <Input
+                                id="reschedule-phone"
+                                v-model="rescheduleForm.customer_phone"
+                                type="tel"
+                                inputmode="tel"
+                                dir="ltr"
+                                :placeholder="t('booking.cancelPhonePlaceholder')"
+                                autocomplete="off"
+                            />
+                            <InputError :message="rescheduleForm.errors.customer_phone" />
+                            <Input
+                                id="reschedule-date"
+                                v-model="rescheduleDate"
+                                type="date"
+                                dir="ltr"
+                                @change="loadRescheduleSlots"
+                            />
+                            <p v-if="rescheduleLoading" class="text-xs text-muted-foreground">
+                                {{ t('booking.rescheduleSlotsLoading') }}
+                            </p>
+                            <template v-else-if="rescheduleSlots.length">
+                                <p class="text-xs font-medium text-muted-foreground">{{ t('booking.reschedulePick') }}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <button
+                                        v-for="slot in rescheduleSlots"
+                                        :key="slot.starts_at"
+                                        type="button"
+                                        dir="ltr"
+                                        class="rounded-lg border px-3 py-1.5 font-mono text-sm transition-colors"
+                                        :class="rescheduleForm.starts_at === slot.starts_at
+                                            ? 'border-sky-500 bg-sky-500 text-white'
+                                            : 'border-border bg-background hover:border-sky-400'"
+                                        @click="rescheduleForm.starts_at = slot.starts_at"
+                                    >
+                                        {{ slot.label }}
+                                    </button>
+                                </div>
+                                <InputError :message="rescheduleForm.errors.starts_at" />
+                                <Button
+                                    class="w-full gap-2"
+                                    :disabled="rescheduleForm.processing || !rescheduleForm.starts_at"
+                                    @click="submitReschedule"
+                                >
+                                    <CalendarClock class="size-4" />
+                                    {{ t('booking.rescheduleButton') }}
+                                </Button>
+                            </template>
+                            <p v-else-if="rescheduleDate" class="text-xs text-muted-foreground">
+                                {{ t('booking.rescheduleNoSlots') }}
+                            </p>
+                        </div>
                     </div>
 
                     <!-- upcoming booking: self-service cancellation -->

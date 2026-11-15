@@ -33,9 +33,12 @@ class SlotGenerator
     ) {}
 
     /**
+     * @param  Appointment|null  $except  an appointment whose own slot must
+     * not block the grid — rescheduling asks for a new time while the old
+     * one is still held by the very row being moved.
      * @return Collection<int, Slot>
      */
-    public function generate(Business $business, Service $service, ?Staff $staff, CarbonImmutable $date): Collection
+    public function generate(Business $business, Service $service, ?Staff $staff, CarbonImmutable $date, ?Appointment $except = null): Collection
     {
         if (! $business->is_active || ! $service->is_active) {
             return collect();
@@ -60,7 +63,7 @@ class SlotGenerator
             return collect();
         }
 
-        $busy = $this->busyIntervals($staffCandidates, $date);
+        $busy = $this->busyIntervals($staffCandidates, $date, $except);
         $earliestStart = $date->isSameDay($today)
             ? CarbonImmutable::now()->addMinutes($this->leadTimeMinutes)
             : null;
@@ -147,11 +150,12 @@ class SlotGenerator
      * @param  Collection<int, Staff>  $staffCandidates
      * @return array<int, list<array{0: CarbonImmutable, 1: CarbonImmutable}>>
      */
-    private function busyIntervals(Collection $staffCandidates, CarbonImmutable $date): array
+    private function busyIntervals(Collection $staffCandidates, CarbonImmutable $date, ?Appointment $except = null): array
     {
         $appointments = Appointment::query()
             ->whereIn('staff_id', $staffCandidates->pluck('id'))
             ->blocking()
+            ->when($except !== null, fn ($query) => $query->whereKeyNot($except->id))
             ->whereBetween('starts_at', [$date->startOfDay(), $date->endOfDay()])
             ->get(['staff_id', 'starts_at', 'ends_at']);
 

@@ -151,7 +151,14 @@
         "cancelTitle": "إلغاء هذا الموعد",
         "cancelDesc": "أدخل رقم الهاتف الذي حجزت به لإلغائه.",
         "cancelPhonePlaceholder": "09xxxxxxxxx",
-        "cancelButton": "إلغاء الموعد"
+        "cancelButton": "إلغاء الموعد",
+        "rescheduleTitle": "تغيير موعد النوبة",
+        "rescheduleDesc": "انقل موعدك دون إلغائه أو فقدان الخصم أو اتصال هاتفي. لإثبات الملكية، أدخل رقم الهاتف الذي حجزت به.",
+        "rescheduleDate": "يوم جديد",
+        "rescheduleSlotsLoading": "جارٍ جلب المواعيد المتاحة…",
+        "rescheduleNoSlots": "لا توجد مواعيد متاحة في هذا اليوم.",
+        "reschedulePick": "اختر موعدًا",
+        "rescheduleButton": "حفظ الموعد الجديد"
     },
     "wizard": {
         "steps": {

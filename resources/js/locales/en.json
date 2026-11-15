@@ -151,7 +151,14 @@
         "cancelTitle": "Cancel this booking",
         "cancelDesc": "Enter the mobile number you booked with to cancel it.",
         "cancelPhonePlaceholder": "09xxxxxxxxx",
-        "cancelButton": "Cancel booking"
+        "cancelButton": "Cancel booking",
+        "rescheduleTitle": "Change appointment time",
+        "rescheduleDesc": "Move it without cancelling, losing the discount, or making a phone call. To prove ownership, enter the phone number you booked with.",
+        "rescheduleDate": "New day",
+        "rescheduleSlotsLoading": "Loading available slots…",
+        "rescheduleNoSlots": "No slots are free on this day.",
+        "reschedulePick": "Pick a slot",
+        "rescheduleButton": "Save new time"
     },
     "wizard": {
         "steps": {

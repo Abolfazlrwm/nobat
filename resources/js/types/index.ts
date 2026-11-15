@@ -204,7 +204,11 @@ export interface BookingConfirmation {
     starts_at: string;
     payment_expires_at?: string | null;
     business: { name: string; slug: string; phone: string; address?: string | null };
+    // ids drive the reschedule picker: the move keeps the same service and
+    // staff, so the guest only sees that service's slots for that person.
+    service_id: number;
     service: { name: string; duration_minutes: number; price: number };
+    staff_id: number | null;
     staff: { name: string; specialty?: string | null };
     discount_amount?: number | null;
     discount_code?: string | null;

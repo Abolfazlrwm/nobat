@@ -78,6 +78,10 @@ Route::post('bookings/{code}/cancel', [BookingController::class, 'guestCancel'])
     ->name('bookings.guest_cancel')
     ->middleware('throttle:5,1');
 
+Route::patch('bookings/{code}/reschedule', [BookingController::class, 'reschedule'])
+    ->name('bookings.reschedule')
+    ->middleware('throttle:10,1');
+
 Route::post('b/{business:slug}/reviews', [ReviewController::class, 'store'])
     ->name('reviews.store')
     ->middleware('throttle:10,1');
