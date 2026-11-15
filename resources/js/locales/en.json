@@ -635,7 +635,10 @@
             "deleteWarningDesc": "Please proceed with caution, this cannot be undone.",
             "deleteButton": "Delete account",
             "deleteConfirmTitle": "Are you sure you want to delete your account?",
-            "deleteConfirmDesc": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account."
+            "deleteConfirmDesc": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
+            "exportTitle": "Data export",
+            "exportDesc": "Download everything we hold on your account and businesses as a JSON file — your data is yours.",
+            "exportAction": "Download my data"
         }
     },
     "legal": {

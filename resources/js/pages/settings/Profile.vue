@@ -108,6 +108,16 @@ const submit = () => {
                 </form>
             </div>
 
+            <div class="flex flex-col space-y-6">
+                <HeadingSmall :title="t('panel.settings.exportTitle')" :description="t('panel.settings.exportDesc')" />
+
+                <div class="flex items-center gap-4">
+                    <Button variant="outline" as-child>
+                        <a :href="route('profile.export')" download>{{ t('panel.settings.exportAction') }}</a>
+                    </Button>
+                </div>
+            </div>
+
             <DeleteUser />
         </SettingsLayout>
     </AppLayout>
