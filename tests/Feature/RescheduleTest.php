@@ -3,9 +3,10 @@
 use App\Jobs\SendRescheduleSms;
 use App\Jobs\SendWaitlistPromoSms;
 use App\Models\Appointment;
-use App\Models\User;
 use App\Models\WaitlistEntry;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Queue;
+use Inertia\Testing\AssertableInertia;
 
 function waitingEntryForReschedule($business, $service, string $date, array $overrides = []): WaitlistEntry
 {
@@ -100,7 +101,7 @@ it('refuses to move a booking whose time has already started', function () {
     $appointment = $this->createAppointment(
         $staff,
         $this->serviceOf($business),
-        Carbon\CarbonImmutable::today()->setTimeFromTimeString('08:00'),
+        CarbonImmutable::today()->setTimeFromTimeString('08:00'),
         Appointment::STATUS_CONFIRMED,
     );
 
@@ -207,7 +208,7 @@ it('shows the reschedule picker its own service and staff ids', function () {
 
     $this->get(route('bookings.show', $appointment->code))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('public/BookingConfirmed')
             ->where('appointment.service_id', $appointment->service_id)
             ->where('appointment.staff_id', $staff->id));

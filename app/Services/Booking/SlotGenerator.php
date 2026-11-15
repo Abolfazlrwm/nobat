@@ -33,9 +33,7 @@ class SlotGenerator
     ) {}
 
     /**
-     * @param  Appointment|null  $except  an appointment whose own slot must
-     * not block the grid — rescheduling asks for a new time while the old
-     * one is still held by the very row being moved.
+     * @param  Appointment|null  $except  an appointment whose own slot must not block the grid — rescheduling moves a row that still holds its old slot
      * @return Collection<int, Slot>
      */
     public function generate(Business $business, Service $service, ?Staff $staff, CarbonImmutable $date, ?Appointment $except = null): Collection
