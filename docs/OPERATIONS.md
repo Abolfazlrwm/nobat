@@ -49,15 +49,28 @@ false می‌شود — مونیتور uptime خود را روی همین فیل
 
 ## ۳. پشتیبان‌گیری (Backup)
 
-- **SQLite (دمو/کوچک):** قبل از هر کاری بکاپ فایل با `.backup`، نه `cp` ساده:
+- **دستور آماده‌ی خودِ محصول (SQLite):**
   ```
-  sqlite3 database/database.sqlite ".backup 'backups/nobat-$(date +%F).sqlite'"
+  php artisan nobat:backup            # → storage/app/backups/nobat-YYYYmmdd-HHuuummmm.sqlite
+  php artisan nobat:backup --keep=14  # بعد از هر اجرا فقط ۱۴ نسخه‌ی جدیدتر می‌ماند
   ```
-  خودکارسازی شبانه با cron + نگهداری ۱۴ روز. برای WAL/durable شدن،
-  [Litestream](https://litestream.io/) فایل را پیوسته به S3 می‌کشد.
+  این دستور با `VACUUM INTO` یک snapshot سازگار می‌گیرد (حتی وسط نوشتن‌های
+  در جریان؛ همان چیزی که `cp` ساده تضمینش را ندارد)، `PRAGMA integrity_check`
+  را روی فایل حاصل اجرا می‌کند و درایور غیر-SQLite را با ارجاع به همین صفحه
+  رد می‌کند. تسته‌هایش فایل تولیدی را با یک PDO تازه باز می‌کنند — دقیقاً مثل
+  یک بازیابی واقعی.
+- **خودکارسازی شبانه با cron** (روی همان کانتینر یا میزبان):
+  ```
+  15 3 * * * cd /var/www/html && php artisan nobat:backup --keep=14
+  ```
+  برای WAL/durable شدن، [Litestream](https://litestream.io/) فایل را پیوسته به
+  S3 می‌کشد؛ پوشه‌ی `storage/app/backups` را هم از گیت بیرون نگه دارید (در
+  `.gitignore` ثبت شده).
+- **بازیابی را یک بار واقعاً تمرین کنید** — بکاپِ بازیابی‌نشده بکاپ نیست:
+  فایل را در مسیری جدید کپی کنید، `DB_DATABASE` را به آن بچرخانید،
+  `php artisan migrate:status` و ورود به داشبورد را چک کنید.
 - **MySQL/Postgres (پروداکت واقعی):** `mysqldump --single-transaction` شبانه +
-  حداقل یک نسخه‌ی خارج از سرور. بازیابی را **یک بار واقعاً تمرین کنید** — بکاپِ
-  بازیابی‌نشده بکاپ نیست.
+  حداقل یک نسخه‌ی خارج از سرور.
 - **APP_KEY را گم نکنید:** اگر `.env` یا secret store نبرد، sessionها و
   فاکتورهای امضاشده (Signed URL) بی‌اعتبار می‌شوند. APP_KEY را در secret
   manager نگه دارید و در بکاپِ جدا از دیتابیس ثبت کنید.
