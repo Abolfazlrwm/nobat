@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Services\Booking\SlotGenerator;
 use App\Services\Payment\PaymentManager;
 use App\Services\Sms\SmsManager;
+use App\View\Creators\SeoMetaCreator;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,5 +38,9 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->isProduction()) {
             URL::forceScheme('https');
         }
+
+        // Per-page SEO meta for the Inertia shell: resolves at render time,
+        // i.e. after SetLocale has picked the visitor's language.
+        View::creator('app', SeoMetaCreator::class);
     }
 }

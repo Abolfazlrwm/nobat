@@ -4,20 +4,24 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Nobat') }}</title>
+        {{-- Per-page meta resolved by SeoMetaCreator; falls back to the
+             trilingual defaults when the route has no page of its own. --}}
+        <title inertia>{{ $seoTitle ?? __('seo.app_title') }}</title>
 
-        <meta name="description" content="نوبت — سامانه‌ی نوبت‌دهی آنلاین چندکسب‌وکاری: رزرو هفت‌روزه، یادآوری پیامکی، پرداخت آنلاین و گزارش‌های حرفه‌ای. | Nobat — online booking for every business: slots, SMS reminders, payments and reports.">
-        <meta property="og:type" content="website">
+        <meta name="description" content="{{ $seoDescription ?? __('seo.app_description') }}">
+        <link rel="canonical" href="{{ $seoUrl ?? url()->current() }}">
+        <meta property="og:type" content="{{ $seoType ?? 'website' }}">
         <meta property="og:site_name" content="Nobat | نوبت">
-        <meta property="og:title" content="نوبت — سامانه نوبت‌دهی آنلاین چندکسب‌وکاری">
-        <meta property="og:description" content="رزرو آنلاین نوبت با یادآوری پیامکی، پرداخت آنلاین و داشبورد تحلیل — برای آرایشگاه‌ها، کلینیک‌ها و هر کسب‌وکار وقت‌محور.">
-        @if (rtrim(config('app.url'), '/') !== '')
-            <meta property="og:url" content="{{ rtrim(config('app.url'), '/') }}">
-            <meta property="og:image" content="{{ rtrim(config('app.url'), '/') }}/social-preview.png">
-        @endif
+        <meta property="og:title" content="{{ $seoTitle ?? __('seo.app_title') }}">
+        <meta property="og:description" content="{{ $seoDescription ?? __('seo.app_description') }}">
+        <meta property="og:url" content="{{ $seoUrl ?? url()->current() }}">
+        <meta property="og:image" content="{{ $seoImage ?? url('/social-preview.png') }}">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="نوبت — سامانه نوبت‌دهی آنلاین">
-        <meta name="twitter:description" content="رزرو آنلاین نوبت با یادآوری پیامکی، پرداخت آنلاین و داشبورد تحلیل.">
+        <meta name="twitter:title" content="{{ $seoTitle ?? __('seo.app_title') }}">
+        <meta name="twitter:description" content="{{ $seoDescription ?? __('seo.app_description') }}">
+        @isset($seoImage)
+            <meta name="twitter:image" content="{{ $seoImage }}">
+        @endisset
 
         <meta name="theme-color" content="#171717">
         <link rel="manifest" href="/manifest.webmanifest">
