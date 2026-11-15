@@ -4,6 +4,7 @@ use App\Jobs\SendWaitlistPromoSms;
 use App\Models\Appointment;
 use App\Models\User;
 use App\Models\WaitlistEntry;
+use App\Services\Booking\WaitlistPromotion;
 use Illuminate\Support\Facades\Queue;
 
 function waitingEntry($business, $service, string $date, array $overrides = []): WaitlistEntry
@@ -99,4 +100,63 @@ it('pins the promo sms to the locale each entry joined the waitlist in', functio
     Queue::assertPushed(SendWaitlistPromoSms::class, 2);
     Queue::assertPushed(SendWaitlistPromoSms::class, fn (SendWaitlistPromoSms $job) => $job->entry->is($english) && $job->locale === 'en');
     Queue::assertPushed(SendWaitlistPromoSms::class, fn (SendWaitlistPromoSms $job) => $job->entry->is($arabic) && $job->locale === 'ar');
+});
+
+it('promotes the waiting list when the expiry sweep releases an unpaid hold', function () {
+    Queue::fake();
+
+    [$business, $service, $staff, $appointment] = $this->paidBookingWorld();
+    waitingEntry($business, $service, $appointment->starts_at->format('Y-m-d'));
+
+    $appointment->forceFill(['payment_expires_at' => now()->subMinute()])->save();
+
+    $this->artisan('nobat:release-expired-holds')->assertExitCode(0);
+
+    Queue::assertPushed(SendWaitlistPromoSms::class, 1);
+    expect($appointment->refresh()->status)->toBe(Appointment::STATUS_EXPIRED);
+});
+
+it('respects the staff a waitlist entry asked for', function () {
+    Queue::fake();
+
+    $business = $this->makeBusiness();
+    $service = $this->serviceOf($business);
+    $startsAt = $this->nextOpenDate()->setTimeFromTimeString('10:00');
+    $amin = $this->addStaff($business, 'امین');
+    $sara = $this->addStaff($business, 'سارا');
+    $appointment = $this->createAppointment($amin, $service, $startsAt, Appointment::STATUS_CONFIRMED);
+
+    $dayAgnostic = waitingEntry($business, $service, $startsAt->format('Y-m-d'));
+    $waitingForSara = waitingEntry($business, $service, $startsAt->format('Y-m-d'), [
+        'customer_name' => 'وفادار به سارا',
+        'customer_phone' => '09125556677',
+        'staff_id' => $sara->id,
+    ]);
+
+    $manager = User::find($business->owner_id);
+    $this->actingAs($manager)
+        ->patch(route('appointments.status', $appointment), ['status' => Appointment::STATUS_CANCELLED])
+        ->assertRedirect();
+
+    Queue::assertPushed(SendWaitlistPromoSms::class, 1);
+    Queue::assertPushed(SendWaitlistPromoSms::class, fn (SendWaitlistPromoSms $job) => $job->entry->is($dayAgnostic));
+    expect($waitingForSara->refresh()->status)->toBe(WaitlistEntry::STATUS_WAITING);
+});
+
+it('never smses the same waiting customer twice for one slot', function () {
+    Queue::fake();
+
+    $business = $this->makeBusiness();
+    $service = $this->serviceOf($business);
+    $startsAt = $this->nextOpenDate()->setTimeFromTimeString('10:00');
+    $appointment = $this->createAppointment($this->addStaff($business), $service, $startsAt, Appointment::STATUS_CONFIRMED);
+    waitingEntry($business, $service, $startsAt->format('Y-m-d'));
+
+    $promotion = app(WaitlistPromotion::class);
+    $first = $promotion->announceFreedSlot($appointment);
+    $second = $promotion->announceFreedSlot($appointment);
+
+    expect($first)->toBe(1)
+        ->and($second)->toBe(0)
+        ->and(Queue::pushedJobs()[SendWaitlistPromoSms::class] ?? [])->toHaveCount(1);
 });

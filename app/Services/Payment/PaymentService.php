@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Refund;
 use App\Notifications\PaymentConfirmed;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -377,10 +378,13 @@ class PaymentService
     }
 
     /**
-     * Expire unpaid holds and free their slots. Returns the number of
-     * released appointments — wired to the scheduler every minute.
+     * Expire unpaid holds and free their slots. Returns the released
+     * appointments so callers can announce the freed slots to the
+     * waitlist — an expired hold frees a real slot just like a cancel.
+     *
+     * @return Collection<int, Appointment>
      */
-    public function releaseExpiredHolds(): int
+    public function releaseExpiredHolds(): Collection
     {
         $expired = Appointment::query()
             ->where('status', Appointment::STATUS_PENDING_PAYMENT)
@@ -390,7 +394,7 @@ class PaymentService
             ->limit(200)
             ->get();
 
-        $released = 0;
+        $released = collect();
 
         foreach ($expired as $appointment) {
             DB::transaction(function () use ($appointment, &$released) {
@@ -408,10 +412,10 @@ class PaymentService
                     ->whereIn('status', [Payment::STATUS_INITIATED, Payment::STATUS_AUTHORIZED])
                     ->update(['status' => Payment::STATUS_CANCELED]);
 
-                $released++;
+                $released->push($appointment);
             });
         }
 
-        return $released;
+        return $released->values();
     }
 }
