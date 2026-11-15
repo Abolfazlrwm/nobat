@@ -21,6 +21,7 @@ class BackupDatabase extends Command
         // tests would try to reach a real server just to check its name).
         if ((string) config('database.default') !== 'sqlite') {
             $this->error('nobat:backup supports SQLite only — use mysqldump for other drivers (docs/OPERATIONS.md, section 3).');
+
             return self::FAILURE;
         }
 
@@ -54,6 +55,7 @@ class BackupDatabase extends Command
         $check = (new PDO('sqlite:'.$target))->query('PRAGMA integrity_check')->fetchColumn();
         if ($check !== 'ok') {
             $this->error("Backup written but integrity check failed: {$check} — do not trust this file.");
+
             return self::FAILURE;
         }
 
@@ -72,6 +74,7 @@ class BackupDatabase extends Command
         $backups = glob($directory.'/nobat-*.sqlite') ?: [];
         if (count($backups) <= $keep) {
             $this->line('Nothing to prune.');
+
             return;
         }
 
