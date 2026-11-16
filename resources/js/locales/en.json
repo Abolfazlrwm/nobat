@@ -156,6 +156,8 @@
         "reviewThanks": "Your rating has been saved — thanks!",
         "home": "Home",
         "addToCalendar": "Add to calendar",
+        "printReceipt": "Print receipt",
+        "qrHint": "Show this code at reception for a quick check-in:",
         "newBooking": "Book again",
         "rebook": "Book again",
         "discount": "Discount",

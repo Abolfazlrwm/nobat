@@ -10,8 +10,9 @@ import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BookingConfirmation } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { BadgeCheck, CalendarClock, CalendarPlus, CheckCircle2, ChevronDown, Clock3, CreditCard, ExternalLink, RefreshCw, Star, XCircle } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { BadgeCheck, CalendarClock, CalendarPlus, CheckCircle2, ChevronDown, Clock3, CreditCard, ExternalLink, Printer, RefreshCw, Star, XCircle } from 'lucide-vue-next';
+import QRCode from 'qrcode';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
     appointment: BookingConfirmation;
@@ -21,6 +22,29 @@ const props = defineProps<{
 const { t, num, price, dateTime, statusLabel } = useLocale();
 
 const series = computed(() => props.series ?? []);
+
+// The QR encodes this page's own URL: reception scans it and lands on the
+// tracking page without a single word spoken. Rendered client-side as a
+// data URI — CSP img-src already allows data:.
+const qrDataUrl = ref('');
+
+onMounted(async () => {
+    try {
+        qrDataUrl.value = await QRCode.toDataURL(window.location.href, {
+            margin: 1,
+            width: 256,
+            color: { dark: '#0f172a', light: '#ffffff' },
+        });
+    } catch {
+        // A missing QR must never break the tracking page — the printed
+        // code stays readable without it.
+        qrDataUrl.value = '';
+    }
+});
+
+function printReceipt(): void {
+    window.print();
+}
 
 const reviewForm = useForm({
     code: props.appointment.code,
@@ -146,11 +170,22 @@ function submitReschedule() {
                         </a>
                     </div>
 
-                    <div class="rounded-xl border border-dashed p-4 text-center">
+                    <div class="print-receipt rounded-xl border border-dashed p-4 text-center">
                         <div class="text-xs text-muted-foreground">{{ t('booking.trackingCode') }}</div>
                         <div class="mt-1 select-all font-mono text-lg font-bold" dir="ltr">
                             {{ num(appointment.code) }}
                         </div>
+                        <img
+                            v-if="qrDataUrl"
+                            :src="qrDataUrl"
+                            :alt="t('booking.trackingCode')"
+                            class="mx-auto mt-3 size-32"
+                        >
+                        <p class="mt-2 text-xs text-muted-foreground">{{ t('booking.qrHint') }}</p>
+                        <Button variant="link" size="sm" class="print:hidden" @click="printReceipt">
+                            <Printer class="size-3.5" />
+                            {{ t('booking.printReceipt') }}
+                        </Button>
                     </div>
 
                     <dl class="space-y-3 text-sm">
@@ -392,3 +427,26 @@ function submitReschedule() {
         </section>
     </PublicLayout>
 </template>
+
+<style scoped>
+/* The printed receipt is the code box alone — navigation, forms and
+   actions stay out of the paper. */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .print-receipt,
+    .print-receipt * {
+        visibility: visible;
+    }
+
+    .print-receipt {
+        position: absolute;
+        top: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 1px solid #cbd5e1;
+    }
+}
+</style>
