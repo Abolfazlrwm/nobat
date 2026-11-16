@@ -49,7 +49,7 @@ class SendReminderSms implements ShouldQueue
         $startsAt = $this->appointment->starts_at;
 
         $message = __('sms.reminder', [
-            'name' => $this->appointment->customer_name,
+            'name' => $this->appointment->greetingName(),
             'business' => $business->name,
             'service' => $this->appointment->service->name,
             'date' => $startsAt->format('Y-m-d'),

@@ -38,7 +38,7 @@ class SendRescheduleSms implements ShouldQueue
         App::setLocale($this->locale);
 
         $message = __('sms.reschedule', [
-            'name' => $this->appointment->customer_name,
+            'name' => $this->appointment->greetingName(),
             'business' => $this->appointment->business?->name ?? '',
             'service' => $this->appointment->service?->name ?? '',
             'old_time' => $this->oldStartsAt->format('H:i'),

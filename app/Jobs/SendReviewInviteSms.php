@@ -45,7 +45,7 @@ class SendReviewInviteSms implements ShouldQueue
         }
 
         $message = __('sms.review_invite', [
-            'name' => $this->appointment->customer_name,
+            'name' => $this->appointment->greetingName(),
             'business' => $this->appointment->business?->name ?? '',
             'service' => $this->appointment->service?->name ?? '',
             'code' => $this->appointment->code,

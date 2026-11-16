@@ -71,6 +71,15 @@ class Appointment extends Model
         return self::STATUS_LABELS[$this->status] ?? $this->status;
     }
 
+    /**
+     * The name the greeting uses: the account name when the booking has an
+     * owner, the ledger name for guests — one person, one spelling.
+     */
+    public function greetingName(): string
+    {
+        return $this->customer?->name ?? $this->customer_name;
+    }
+
     protected $fillable = [
         'code',
         'business_id',

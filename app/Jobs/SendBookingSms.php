@@ -43,7 +43,7 @@ class SendBookingSms implements ShouldQueue
             $expiresAt = $this->appointment->payment_expires_at;
 
             $message = __('sms.booking_draft', [
-                'name' => $this->appointment->customer_name,
+                'name' => $this->appointment->greetingName(),
                 'business' => $business->name,
                 'service' => $this->appointment->service->name,
                 'time' => $startsAt->format('H:i'),
@@ -52,7 +52,7 @@ class SendBookingSms implements ShouldQueue
             ]);
         } else {
             $message = __('sms.booking_confirmed', [
-                'name' => $this->appointment->customer_name,
+                'name' => $this->appointment->greetingName(),
                 'business' => $business->name,
                 'service' => $this->appointment->service->name,
                 'time' => $startsAt->format('H:i'),
