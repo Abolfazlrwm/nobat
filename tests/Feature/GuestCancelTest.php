@@ -2,6 +2,7 @@
 
 use App\Models\Appointment;
 use App\Models\Payment;
+use App\Models\Refund;
 use Carbon\CarbonImmutable;
 
 it('lets a guest cancel their own booking by proving the booking phone', function () {
@@ -78,7 +79,7 @@ it('cancels a paid booking and refunds it automatically for the proved guest', f
 
     expect($appointment->refresh()->status)->toBe(Appointment::STATUS_CANCELLED)
         ->and($payment->refresh()->status)->toBe(Payment::STATUS_REFUNDED)
-        ->and($payment->refunds()->firstOrFail()->status)->toBe(\App\Models\Refund::STATUS_SUCCEEDED);
+        ->and($payment->refunds()->firstOrFail()->status)->toBe(Refund::STATUS_SUCCEEDED);
 });
 
 it('refuses a guest cancellation once the appointment time has passed', function () {
