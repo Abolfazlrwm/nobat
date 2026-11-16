@@ -183,5 +183,13 @@
     "status.waitlist_waiting": "في الانتظار",
     "status.waitlist_notified": "تم الإبلاغ",
     "status.waitlist_booked": "حجز",
-    "status.waitlist_cancelled": "ملغى"
+    "status.waitlist_cancelled": "ملغى",
+    "sms.otp": "رمز الدخول الخاص بك إلى نوبت: :code — صالح لمدة 5 دقائق. إذا لم تطلب هذا الرمز، تجاهل هذه الرسالة.",
+    "auth.otp_invalid_phone": "رقم الهاتف المحمول غير صالح؛ يجب أن يكون بالشكل 09123456789.",
+    "auth.otp_request_throttled": "طلبات كثيرة جدًا؛ حاول مرة أخرى بعد :seconds ثانية.",
+    "auth.otp_sent": "تم إرسال رمز الدخول عبر الرسائل القصيرة. تحقق من رسائلك.",
+    "auth.otp_wrong_code": "الرمز غير صحيح أو منتهي الصلاحية؛ حاول مرة أخرى.",
+    "auth.otp_verify_throttled": "محاولات كثيرة جدًا بهذا الرمز؛ اطلب رمزًا جديدًا بعد بضع دقائق.",
+    "auth.otp_invalid_input": "رقم الهاتف أو الرمز المُدخل غير صالح.",
+    "auth.otp_default_name": "عميل نوبت"
 }

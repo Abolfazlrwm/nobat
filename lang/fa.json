@@ -183,5 +183,13 @@
     "status.waitlist_waiting": "در انتظار",
     "status.waitlist_notified": "مطلع شده",
     "status.waitlist_booked": "نوبت گرفت",
-    "status.waitlist_cancelled": "لغو شده"
+    "status.waitlist_cancelled": "لغو شده",
+    "sms.otp": "کد ورود شما به نوبت: :code — تا ۵ دقیقه اعتبار دارد. اگر شما این کد را نخواسته‌اید، این پیامک را نادیده بگیرید.",
+    "auth.otp_invalid_phone": "شمارهٔ موبایل معتبر نیست؛ شماره باید شبیه 09123456789 باشد.",
+    "auth.otp_request_throttled": "درخواست کد زیاد بود؛ لطفاً :seconds ثانیهٔ دیگر دوباره تلاش کنید.",
+    "auth.otp_sent": "کد ورود پیامک شد. صندوق پیام‌ها را بررسی کنید.",
+    "auth.otp_wrong_code": "کد درست نیست یا منقضی شده؛ دوباره تلاش کنید.",
+    "auth.otp_verify_throttled": "تلاش‌های زیاد با این کد؛ چند دقیقهٔ دیگر کد تازه بگیرید.",
+    "auth.otp_invalid_input": "شماره یا کد واردشده معتبر نیست.",
+    "auth.otp_default_name": "مشتری نوبت"
 }

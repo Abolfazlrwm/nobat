@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\OtpSessionController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
@@ -22,6 +23,19 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store'])
         ->middleware('throttle:5,1');
+
+    Route::get('otp-login', [OtpSessionController::class, 'create'])
+        ->name('otp.login');
+
+    // The controller keeps a per-phone limiter (3 codes per 5 minutes);
+    // this route throttle is only the coarse per-IP net on top.
+    Route::post('otp-request', [OtpSessionController::class, 'request'])
+        ->middleware('throttle:10,1')
+        ->name('otp.request');
+
+    Route::post('otp-verify', [OtpSessionController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('otp.verify');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');

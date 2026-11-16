@@ -107,6 +107,10 @@ const signInAsDemo = (email: string) => {
                 {{ t('auth.noAccount') }}
                 <TextLink :href="route('register')" :tabindex="5">{{ t('auth.registerLink') }}</TextLink>
             </div>
+
+            <div class="text-center text-sm text-muted-foreground">
+                <TextLink :href="route('otp.login')" :tabindex="6">{{ t('auth.otpLink') }}</TextLink>
+            </div>
         </form>
 
         <div v-if="demo" class="mt-2 rounded-xl border border-dashed border-border bg-muted/40 p-4">

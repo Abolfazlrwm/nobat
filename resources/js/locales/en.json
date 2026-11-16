@@ -675,5 +675,19 @@
         "footerNote": "This document is part of the product; the authoritative copy is always this page.",
         "termsLink": "Read the Terms of Service",
         "privacyLink": "Read the Privacy Policy"
-    }
+    },
+    "auth.otpLoginPageTitle": "SMS Code Login | Nobat",
+    "auth.otpLoginTitle": "Sign in with an SMS code",
+    "auth.otpLoginDesc": "Give your mobile number and a one-time code arrives — no password, no signup form.",
+    "auth.otpPhoneLabel": "Mobile number",
+    "auth.otpPhonePlaceholder": "09123456789",
+    "auth.otpSendCode": "Send the code",
+    "auth.otpCodeLabel": "6-digit code",
+    "auth.otpCodePlaceholder": "123456",
+    "auth.otpVerify": "Sign in",
+    "auth.otpResend": "Send a new code",
+    "auth.otpChangePhone": "Change the number",
+    "auth.otpHavePassword": "Have email and password?",
+    "auth.otpUsePassword": "Sign in with email and password",
+    "auth.otpLink": "Sign in with an SMS code — no password"
 }

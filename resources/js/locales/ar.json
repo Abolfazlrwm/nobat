@@ -675,5 +675,19 @@
         "footerNote": "هذا المستند جزء من المنتج؛ النسخة المعتمدة دائمًا هي هذه الصفحة.",
         "termsLink": "اقرأ شروط الاستخدام",
         "privacyLink": "اقرأ سياسة الخصوصية"
-    }
+    },
+    "auth.otpLoginPageTitle": "الدخول برمز عبر الرسائل | نوبت",
+    "auth.otpLoginTitle": "الدخول برمز عبر الرسائل",
+    "auth.otpLoginDesc": "أعطِ رقم هاتفك المحمول ويصلك رمز للاستخدام مرة واحدة — بدون كلمة مرور وبدون نموذج تسجيل.",
+    "auth.otpPhoneLabel": "رقم الهاتف المحمول",
+    "auth.otpPhonePlaceholder": "09123456789",
+    "auth.otpSendCode": "أرسل الرمز",
+    "auth.otpCodeLabel": "الرمز المكوّن من 6 أرقام",
+    "auth.otpCodePlaceholder": "123456",
+    "auth.otpVerify": "دخول",
+    "auth.otpResend": "رمز جديد",
+    "auth.otpChangePhone": "تغيير الرقم",
+    "auth.otpHavePassword": "لديك بريد وكلمة مرور؟",
+    "auth.otpUsePassword": "الدخول بالبريد وكلمة المرور",
+    "auth.otpLink": "الدخول برمز عبر الرسائل — بدون كلمة مرور"
 }

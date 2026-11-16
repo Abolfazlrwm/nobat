@@ -675,5 +675,19 @@
         "footerNote": "این سند بخشی از محصول است؛ نسخهٔ معتبر همیشه همین صفحه است.",
         "termsLink": "شرایط استفاده را ببینید",
         "privacyLink": "سیاست حریم خصوصی را ببینید"
-    }
+    },
+    "auth.otpLoginPageTitle": "ورود با کد پیامکی | نوبت",
+    "auth.otpLoginTitle": "ورود با کد پیامکی",
+    "auth.otpLoginDesc": "شمارهٔ موبایلت را بده؛ یک کد یک‌بارمصرف می‌آید — بدون رمز، بدون فرم ثبت‌نام.",
+    "auth.otpPhoneLabel": "شمارهٔ موبایل",
+    "auth.otpPhonePlaceholder": "09123456789",
+    "auth.otpSendCode": "بفرست",
+    "auth.otpCodeLabel": "کد ۶رقمی پیامک‌شده",
+    "auth.otpCodePlaceholder": "123456",
+    "auth.otpVerify": "ورود",
+    "auth.otpResend": "کد تازه",
+    "auth.otpChangePhone": "تغییر شماره",
+    "auth.otpHavePassword": "رمز و ایمیل داری؟",
+    "auth.otpUsePassword": "ورود با رمز و ایمیل",
+    "auth.otpLink": "ورود با کد پیامکی — بدون رمز"
 }
