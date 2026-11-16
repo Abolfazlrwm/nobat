@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PublicApi;
 
 use App\Http\Controllers\Controller;
 use App\Support\ApiSpec;
+use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,7 +25,7 @@ class DocsController extends Controller
      * The machine-readable contract itself, at a stable URL any client
      * code generator can consume.
      */
-    public function spec(): \Illuminate\Http\JsonResponse
+    public function spec(): JsonResponse
     {
         return response()
             ->json(ApiSpec::toArray())

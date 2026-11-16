@@ -3,6 +3,7 @@
 use App\Support\ApiSpec;
 use Illuminate\Routing\Route as RouteObject;
 use Illuminate\Support\Str;
+use Inertia\Testing\AssertableInertia;
 
 /**
  * Normalise a URI so parameter NAMES never break the comparison: the spec
@@ -44,7 +45,7 @@ function documentedApiOperations(): array
 it('serves the human reference page from the spec', function () {
     $this->get(route('docs.page'))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('public/ApiDocs')
             ->has('spec.paths', 5)
             ->has('spec.servers.0.url'));

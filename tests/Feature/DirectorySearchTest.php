@@ -3,6 +3,8 @@
 use App\Models\Business;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+use Inertia\Testing\AssertableInertia;
 
 function directoryBusiness(string $name, array $overrides = []): Business
 {
@@ -12,7 +14,7 @@ function directoryBusiness(string $name, array $overrides = []): Business
     /** @var Business $business */
     $business = $owner->ownedBusinesses()->create($overrides + [
         'name' => $name,
-        'slug' => 'dir-'.\Illuminate\Support\Str::random(6),
+        'slug' => 'dir-'.Str::random(6),
         'phone' => '02100000000',
         'is_active' => true,
     ]);
@@ -28,14 +30,14 @@ it('filters the directory by a free-text query across name, description and addr
 
     $this->get(route('home', ['q' => 'مهر']))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('public/Directory')
             ->has('businesses', 1)
             ->where('businesses.0.name', $clinic->name));
 
     // "تهران" matches both, "ونک" matches only the salon's address line.
     $this->get(route('home', ['q' => 'ونک']))
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->has('businesses', 1)
             ->where('businesses.0.id', $salon->id));
 
@@ -48,14 +50,14 @@ it('filters the directory by category', function () {
 
     $this->get(route('home', ['category' => 'beauty']))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->has('businesses', 1)
             ->where('businesses.0.id', $salon->id)
             ->where('businesses.0.category_label', __('business_categories.beauty')));
 
     // An unknown category value is ignored, not fatal.
     $this->get(route('home', ['category' => 'spacecraft']))
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->has('businesses', 2)
             ->where('filters.category', null));
 });
@@ -65,7 +67,7 @@ it('combines the category and the search query', function () {
     directoryBusiness('آفتاب‌آرا', ['category' => Business::CATEGORY_SERVICES]);
 
     $this->get(route('home', ['q' => 'آفتاب', 'category' => 'beauty']))
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->has('businesses', 1)
             ->where('businesses.0.id', $match->id));
 });
@@ -74,7 +76,7 @@ it('exposes the localized category vocabulary to the page', function () {
     directoryBusiness('سالن آفتاب');
 
     $this->get(route('home'))
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->has('categories', count(Business::CATEGORIES))
             ->where('categories.0.value', Business::CATEGORY_MEDICAL)
             ->where('categories.0.label', __('business_categories.medical'))
