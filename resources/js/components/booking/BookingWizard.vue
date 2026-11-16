@@ -66,6 +66,10 @@ const payableAmount = computed(() =>
         : (selectedService.value?.price ?? 0),
 );
 
+// Standing appointment: the picked slot repeats weekly for N visits.
+const repeatWeeks = ref(1);
+const seriesTotal = computed(() => payableAmount.value * repeatWeeks.value);
+
 const canContinue = computed(() => {
     if (step.value === 0) return selectedService.value !== null;
     if (step.value === 1) return true; // "any staff" is always allowed
@@ -239,6 +243,7 @@ function submit(): void {
             staff_id: selectedStaffId.value,
             starts_at: selectedSlot.value.starts_at,
             discount_code: discountApplied.value?.code ?? null,
+            repeat_weeks: repeatWeeks.value > 1 ? repeatWeeks.value : undefined,
             ...form.value,
         },
         {
@@ -420,6 +425,23 @@ function submit(): void {
                                 {{ num(slot.label) }}
                             </button>
                         </div>
+
+                        <!-- standing appointment: the picked slot repeats weekly -->
+                        <div v-if="selectedSlot" class="mt-4 flex flex-wrap items-center gap-2">
+                            <span class="text-xs text-muted-foreground">{{ t('wizard.repeatLabel') }}</span>
+                            <button
+                                v-for="option in [1, 2, 4, 8]"
+                                :key="option"
+                                type="button"
+                                class="rounded-full border px-3 py-1 text-xs font-medium transition-colors"
+                                :class="repeatWeeks === option
+                                    ? 'border-primary bg-primary text-primary-foreground'
+                                    : 'border-border bg-background text-muted-foreground hover:text-foreground'"
+                                @click="repeatWeeks = option"
+                            >
+                                {{ option === 1 ? t('wizard.repeatNone') : t('wizard.repeatWeeks', { n: num(option) }) }}
+                            </button>
+                        </div>
                     </template>
                 </div>
             </div>
@@ -447,9 +469,17 @@ function submit(): void {
                         <span>{{ t('wizard.discountLine', { code: discountApplied.code }) }}</span>
                         <span>− {{ price(discountApplied.discount_amount) }}</span>
                     </div>
+                    <div v-if="repeatWeeks > 1" class="flex justify-between py-1 text-primary">
+                        <span>{{ t('wizard.repeatWeeks', { n: num(repeatWeeks) }) }}</span>
+                        <span>{{ price(seriesTotal) }}</span>
+                    </div>
                     <div v-if="discountApplied" class="flex justify-between border-t pt-2 font-medium">
                         <span>{{ t('wizard.discountFinal') }}</span>
-                        <span>{{ price(payableAmount) }}</span>
+                        <span>{{ price(seriesTotal) }}</span>
+                    </div>
+                    <div v-if="!discountApplied && repeatWeeks > 1" class="flex justify-between border-t pt-2 font-medium">
+                        <span>{{ t('wizard.seriesFinal') }}</span>
+                        <span>{{ price(seriesTotal) }}</span>
                     </div>
                 </div>
 
@@ -514,7 +544,7 @@ function submit(): void {
 
                 <Badge v-if="selectedService" variant="secondary">
                     <bdi>{{ selectedService.name }}</bdi>
-                    — {{ price(payableAmount) }}
+                    — {{ price(seriesTotal) }}
                 </Badge>
 
                 <Button :disabled="!canContinue || submitting" @click="next">

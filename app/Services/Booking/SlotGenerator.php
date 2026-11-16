@@ -34,9 +34,10 @@ class SlotGenerator
 
     /**
      * @param  Appointment|null  $except  an appointment whose own slot must not block the grid — rescheduling moves a row that still holds its old slot
+     * @param  bool  $ignoreAdvanceWindow  standing series are the one legitimate way to book past the advance window: occurrence one anchors to a real generated slot, later weeks derive from the same weekday grid — the window still guards every ordinary booking
      * @return Collection<int, Slot>
      */
-    public function generate(Business $business, Service $service, ?Staff $staff, CarbonImmutable $date, ?Appointment $except = null): Collection
+    public function generate(Business $business, Service $service, ?Staff $staff, CarbonImmutable $date, ?Appointment $except = null, bool $ignoreAdvanceWindow = false): Collection
     {
         if (! $business->is_active || ! $service->is_active) {
             return collect();
@@ -44,7 +45,7 @@ class SlotGenerator
 
         $today = CarbonImmutable::today();
 
-        if ($date->lt($today) || $date->gt($today->addDays($this->maxAdvanceDays))) {
+        if (! $ignoreAdvanceWindow && ($date->lt($today) || $date->gt($today->addDays($this->maxAdvanceDays)))) {
             return collect();
         }
 

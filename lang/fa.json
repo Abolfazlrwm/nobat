@@ -117,6 +117,7 @@
     "validation.booking_phone_required": "شماره موبایل الزامی است.",
     "validation.booking_phone_regex": "شماره موبایل باید با فرمت ۰۹xxxxxxxxx وارد شود.",
     "validation.booking_notes_max": "توضیحات حداکثر می‌تواند ۵۰۰ کاراکتر باشد.",
+    "validation.booking_repeat_max": "حداکثر ۸ هفتهٔ پیاپی ممکن است.",
     "errors.back_home": "بازگشت به صفحه‌ی اصلی",
     "status.invoice_draft": "پیش‌نویس",
     "status.invoice_issued": "صادرشده",

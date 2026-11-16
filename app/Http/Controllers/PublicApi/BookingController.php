@@ -56,17 +56,38 @@ class BookingController extends Controller
         }
 
         try {
-            $appointment = $this->bookings->reserve(
-                business: $business,
-                service: $service,
-                staff: $staff,
-                customerName: $request->string('customer_name')->toString(),
-                customerPhone: $request->string('customer_phone')->toString(),
-                startsAt: CarbonImmutable::parse($request->input('starts_at')),
-                customer: $request->user(),
-                notes: $request->input('notes'),
-                discount: $discount,
-            );
+            if ((int) $request->input('repeat_weeks', 1) > 1) {
+                // A standing series: occurrence one is the slot the visitor
+                // picked; later weeks derive from the same weekday grid and
+                // share the series token. All-or-nothing — a conflict in
+                // week three rolls back weeks one and two.
+                $series = $this->bookings->reserveSeries(
+                    business: $business,
+                    service: $service,
+                    staff: $staff,
+                    customerName: $request->string('customer_name')->toString(),
+                    customerPhone: $request->string('customer_phone')->toString(),
+                    firstStartsAt: CarbonImmutable::parse($request->input('starts_at')),
+                    weeks: (int) $request->input('repeat_weeks'),
+                    customer: $request->user(),
+                    notes: $request->input('notes'),
+                    discount: $discount,
+                );
+
+                $appointment = $series->first();
+            } else {
+                $appointment = $this->bookings->reserve(
+                    business: $business,
+                    service: $service,
+                    staff: $staff,
+                    customerName: $request->string('customer_name')->toString(),
+                    customerPhone: $request->string('customer_phone')->toString(),
+                    startsAt: CarbonImmutable::parse($request->input('starts_at')),
+                    customer: $request->user(),
+                    notes: $request->input('notes'),
+                    discount: $discount,
+                );
+            }
         } catch (SlotUnavailableException|InvalidSlotException $exception) {
             return back()
                 ->withErrors(['starts_at' => $exception->getMessage()])
@@ -133,6 +154,14 @@ class BookingController extends Controller
                 'has_review' => $appointment->review !== null,
                 'review' => $appointment->review?->only('rating', 'comment'),
             ],
+            // The other weeks of the same standing appointment — the
+            // visitor sees the whole series without hunting through SMS.
+            'series' => $appointment->seriesSiblings()->map(fn (Appointment $sibling) => [
+                'code' => $sibling->code,
+                'starts_at' => $sibling->starts_at->format('Y-m-d\TH:i:s'),
+                'status' => $sibling->status,
+                'status_label' => $sibling->localizedStatusLabel(),
+            ]),
         ]);
     }
 

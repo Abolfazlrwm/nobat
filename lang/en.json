@@ -117,6 +117,7 @@
     "validation.booking_phone_required": "A mobile number is required.",
     "validation.booking_phone_regex": "The mobile number must look like 09xxxxxxxxx.",
     "validation.booking_notes_max": "The notes may be at most 500 characters.",
+    "validation.booking_repeat_max": "At most 8 consecutive weeks.",
     "errors.back_home": "Back to the homepage",
     "status.invoice_draft": "Draft",
     "status.invoice_issued": "Issued",

@@ -82,4 +82,25 @@ class DiscountService
             return $amount;
         });
     }
+
+    /**
+     * Series siblings carry the same price break as the anchor without
+     * consuming the code again: one standing booking is one redemption,
+     * no matter how many weeks it spans.
+     */
+    public function attachWithoutRedemption(Appointment $appointment, DiscountCode $discount): int
+    {
+        if ($appointment->discount_code_id === $discount->id && $appointment->discount_amount !== null) {
+            return (int) $appointment->discount_amount;
+        }
+
+        $amount = $discount->discountFor((int) $appointment->service->price);
+
+        $appointment->forceFill([
+            'discount_code_id' => $discount->id,
+            'discount_amount' => $amount,
+        ])->save();
+
+        return $amount;
+    }
 }

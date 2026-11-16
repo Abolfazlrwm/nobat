@@ -117,6 +117,7 @@
     "validation.booking_phone_required": "رقم الهاتف المحمول مطلوب.",
     "validation.booking_phone_regex": "يجب أن يبدو رقم الهاتف المحمول بهذا الشكل 09xxxxxxxxx.",
     "validation.booking_notes_max": "قد لا تتجاوز الملاحظات 500 حرف.",
+    "validation.booking_repeat_max": "‏8 أسابيع متتالية كحد أقصى.",
     "errors.back_home": "العودة إلى الصفحة الرئيسية",
     "status.invoice_draft": "مسودة",
     "status.invoice_issued": "صادرة",

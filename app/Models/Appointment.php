@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 class Appointment extends Model
 {
@@ -86,7 +87,25 @@ class Appointment extends Model
         'reminder_sent_at',
         'review_invited_at',
         'notes',
+        'series_token',
     ];
+
+    /**
+     * The other occurrences of the same standing appointment, oldest
+     * first — empty for ordinary, one-off bookings.
+     */
+    public function seriesSiblings(): Collection
+    {
+        if ($this->series_token === null) {
+            return collect();
+        }
+
+        return static::query()
+            ->where('series_token', $this->series_token)
+            ->whereKeyNot($this->id)
+            ->orderBy('starts_at')
+            ->get();
+    }
 
     protected function casts(): array
     {

@@ -21,6 +21,8 @@ class StoreBookingRequest extends FormRequest
             'customer_phone' => ['required', 'string', 'regex:/^09\d{9}$/'],
             'notes' => ['nullable', 'string', 'max:500'],
             'discount_code' => ['nullable', 'string', 'max:40'],
+            // Standing appointment: total occurrences, 1 = a one-off booking.
+            'repeat_weeks' => ['nullable', 'integer', 'min:1', 'max:8'],
         ];
     }
 
@@ -37,6 +39,7 @@ class StoreBookingRequest extends FormRequest
             'customer_phone.required' => __('validation.booking_phone_required'),
             'customer_phone.regex' => __('validation.booking_phone_regex'),
             'notes.max' => __('validation.booking_notes_max'),
+            'repeat_weeks.max' => __('validation.booking_repeat_max'),
         ];
     }
 }

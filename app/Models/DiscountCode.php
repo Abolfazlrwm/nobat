@@ -36,6 +36,14 @@ class DiscountCode extends Model
         'is_active',
     ];
 
+    // Resolution uppercases the visitor's input, so the stored code must
+    // be uppercase too — otherwise a code saved as "welcome10" can never
+    // be found when the guest types "WELCOME10" (or the reverse).
+    protected function setCodeAttribute(string $value): void
+    {
+        $this->attributes['code'] = mb_strtoupper(trim($value));
+    }
+
     protected function casts(): array
     {
         return [

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FlashMessages from '@/components/FlashMessages.vue';
 import InputError from '@/components/InputError.vue';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,9 +15,12 @@ import { computed, ref } from 'vue';
 
 const props = defineProps<{
     appointment: BookingConfirmation;
+    series?: { code: string; starts_at: string; status: string; status_label: string }[];
 }>();
 
 const { t, num, price, dateTime, statusLabel } = useLocale();
+
+const series = computed(() => props.series ?? []);
 
 const reviewForm = useForm({
     code: props.appointment.code,
@@ -330,6 +334,23 @@ function submitReschedule() {
                                 <XCircle class="size-4" />
                                 {{ t('booking.cancelButton') }}
                             </Button>
+                        </div>
+                    </div>
+
+                    <!-- standing appointment: the other weeks of the same series -->
+                    <div v-if="series.length" class="rounded-xl border border-primary/25 bg-primary/5 p-4">
+                        <p class="text-sm font-semibold">{{ t('booking.seriesTitle', { n: num(series.length + 1) }) }}</p>
+                        <p class="mt-1 text-xs text-muted-foreground">{{ t('booking.seriesHint') }}</p>
+                        <div class="mt-3 grid gap-2 sm:grid-cols-2">
+                            <Link
+                                v-for="sibling in series"
+                                :key="sibling.code"
+                                :href="route('bookings.show', sibling.code)"
+                                class="flex items-center justify-between rounded-lg border bg-background px-3 py-2 text-xs transition-colors hover:border-primary/50"
+                            >
+                                <span dir="ltr">{{ dateTime(sibling.starts_at) }}</span>
+                                <Badge variant="outline" class="text-[10px]">{{ sibling.status_label }}</Badge>
+                            </Link>
                         </div>
                     </div>
 

@@ -14,6 +14,7 @@ use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
 use App\Services\Discount\DiscountService;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -44,18 +45,19 @@ class BookingService
         ?User $customer = null,
         ?string $notes = null,
         ?DiscountCode $discount = null,
+        bool $ignoreAdvanceWindow = false,
     ): Appointment {
-        return DB::transaction(function () use ($business, $service, $staff, $customerName, $customerPhone, $startsAt, $customer, $notes, $discount) {
+        return DB::transaction(function () use ($business, $service, $staff, $customerName, $customerPhone, $startsAt, $customer, $notes, $discount, $ignoreAdvanceWindow) {
             $endsAt = $startsAt->addMinutes($service->duration_minutes);
 
             if ($staff !== null) {
                 $this->lockStaff($staff);
 
-                if (! $this->slotExists($business, $service, $staff, $startsAt)) {
+                if (! $this->slotExists($business, $service, $staff, $startsAt, ignoreAdvanceWindow: $ignoreAdvanceWindow)) {
                     throw new InvalidSlotException;
                 }
             } else {
-                $staff = $this->findFreeStaff($business, $service, $startsAt);
+                $staff = $this->findFreeStaff($business, $service, $startsAt, ignoreAdvanceWindow: $ignoreAdvanceWindow);
 
                 if ($staff === null) {
                     throw new SlotUnavailableException;
@@ -94,6 +96,70 @@ class BookingService
         });
     }
 
+    /**
+     * A standing appointment: the same service, the same staff member, the
+     * same time of day, week after week. Occurrence one anchors to a real
+     * generated slot the visitor actually picked; later weeks derive from
+     * the same weekday grid and may deliberately sit past the advance
+     * window — booking a standing series IS the legitimate way to book far
+     * ahead, and the generator's window still guards every ordinary
+     * booking. The whole series commits or nothing does: a conflict in
+     * week three rolls back weeks one and two, and the after-commit SMS
+     * jobs queued along the way never fire.
+     *
+     * @param  int  $weeks  total occurrences, clamped to 1..8
+     * @return Collection<int, Appointment>
+     *
+     * @throws InvalidSlotException when any occurrence misses the weekday grid or collides
+     * @throws SlotUnavailableException when no free staff member remains
+     */
+    public function reserveSeries(
+        Business $business,
+        Service $service,
+        ?Staff $staff,
+        string $customerName,
+        string $customerPhone,
+        CarbonImmutable $firstStartsAt,
+        int $weeks,
+        ?User $customer = null,
+        ?string $notes = null,
+        ?DiscountCode $discount = null,
+    ): Collection {
+        $weeks = min(8, max(1, $weeks));
+        $seriesToken = (string) Str::uuid();
+
+        $appointments = collect();
+
+        DB::transaction(function () use ($business, $service, $staff, $customerName, $customerPhone, $firstStartsAt, $weeks, $customer, $notes, $discount, $seriesToken, $appointments) {
+            foreach (range(0, $weeks - 1) as $index) {
+                $appointment = $this->reserve(
+                    business: $business,
+                    service: $service,
+                    staff: $staff,
+                    customerName: $customerName,
+                    customerPhone: $customerPhone,
+                    startsAt: $firstStartsAt->addWeeks($index),
+                    customer: $customer,
+                    notes: $notes,
+                    // Only the anchor consumes the code — one standing
+                    // booking is one redemption; later weeks inherit the
+                    // same price break without burning the limit again.
+                    discount: $index === 0 ? $discount : null,
+                    ignoreAdvanceWindow: $index > 0,
+                );
+
+                if ($discount !== null && $index > 0) {
+                    $this->discounts->attachWithoutRedemption($appointment, $discount);
+                }
+
+                $appointment->forceFill(['series_token' => $seriesToken])->save();
+                $appointments->push($appointment);
+            }
+        });
+
+        return $appointments;
+    }
+
     private function lockStaff(Staff $staff): Staff
     {
         /** @var Staff $locked */
@@ -107,10 +173,10 @@ class BookingService
         return (int) ($business->payment_deadline_minutes ?: config('nobat.payment.default_deadline_minutes', 15));
     }
 
-    private function slotExists(Business $business, Service $service, Staff $staff, CarbonImmutable $startsAt, ?Appointment $except = null): bool
+    private function slotExists(Business $business, Service $service, Staff $staff, CarbonImmutable $startsAt, ?Appointment $except = null, bool $ignoreAdvanceWindow = false): bool
     {
         return $this->slots
-            ->generate($business, $service, $staff, $startsAt->startOfDay(), $except)
+            ->generate($business, $service, $staff, $startsAt->startOfDay(), $except, $ignoreAdvanceWindow)
             ->contains(fn (Slot $slot) => $slot->startsAt->equalTo($startsAt) && in_array($staff->id, $slot->staffIds, true));
     }
 
@@ -164,14 +230,14 @@ class BookingService
         });
     }
 
-    private function findFreeStaff(Business $business, Service $service, CarbonImmutable $startsAt): ?Staff
+    private function findFreeStaff(Business $business, Service $service, CarbonImmutable $startsAt, bool $ignoreAdvanceWindow = false): ?Staff
     {
         $candidates = $business->activeStaff()->orderBy('id')->get();
 
         foreach ($candidates as $candidate) {
             $this->lockStaff($candidate);
 
-            if ($this->slotExists($business, $service, $candidate, $startsAt)) {
+            if ($this->slotExists($business, $service, $candidate, $startsAt, ignoreAdvanceWindow: $ignoreAdvanceWindow)) {
                 return $candidate;
             }
         }
