@@ -20,17 +20,23 @@ RUN npm run build
 # ---------- Stage 2: php-fpm runtime ----------
 FROM php:8.4-fpm-alpine AS app
 
-# System libraries + PHP extensions
+# System libraries + PHP extensions (gd backs the invoice PDF — mPDF
+# needs it for the font metrics and image handling)
 RUN apk add --no-cache \
         icu-dev \
         libzip-dev \
         oniguruma-dev \
+        libpng-dev \
+        freetype-dev \
+        jpeg-dev \
         linux-headers \
         $PHPIZE_DEPS \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
         pdo_mysql \
         zip \
         intl \
+        gd \
         bcmath \
         pcntl \
         opcache \
