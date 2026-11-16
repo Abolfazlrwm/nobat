@@ -3,6 +3,7 @@
 use App\Models\Business;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Inertia\Testing\AssertableInertia;
 
 function rebookBusiness(string $name): Business
 {
@@ -40,7 +41,7 @@ it('preselects the service and staff a returning customer had last time', functi
         'staff_id' => $staff->id,
     ]))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->where('preset.service_id', $service->id)
             ->where('preset.staff_id', $staff->id));
 });
@@ -50,7 +51,7 @@ it('opens the wizard blank without a preset', function () {
 
     $this->get(route('businesses.show', $business->slug))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->where('preset.service_id', null)
             ->where('preset.staff_id', null));
 });
@@ -64,7 +65,7 @@ it('ignores a service id that belongs to another business', function () {
         'service_id' => $other->services->first()->id,
     ]))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->where('preset.service_id', null));
 });
 
@@ -78,6 +79,6 @@ it('ignores a preset pointing at a deactivated service', function () {
         'service_id' => $service->id,
     ]))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->where('preset.service_id', null));
 });
