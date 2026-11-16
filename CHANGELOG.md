@@ -1,9 +1,20 @@
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.31.0] - 2026-11-16
+
+### Added
+
+- **صفِ واقعی روی دمو — پایپ‌لاینِ دفترِ عملیات، همین حالا کار می‌کند**: دفترِ
+  عملیات از روزِ اول می‌گفت «jobها در جدولِ jobs می‌نشینند و ورکر با تلاشِ
+  مجدد برمی‌دارد»؛ دمو اما با `sync` همه‌چیز را درونِ request اجرا می‌کرد. حالا
+  دمو با `QUEUE_CONNECTION=database` می‌چرخد و اسکریپتِ بوت، ورکرِ `queue:work`
+  را کنارِ شِدولر بالا می‌آورد — هر پیامک (OTP، رزرو، یادآوری، پرداخت) واقعاً
+  صف می‌شود و با `tries=3` پردازش می‌شود. توسعه‌ی محلی با `sync` می‌ماند و
+  ورکر نمی‌خواهد.
+
+### Changed
+
+- تست‌ها: ۳۰۳ → **۳۰۵**؛ نسخهٔ اپ به 1.31.0 رسید.
 
 ## [1.30.1] - 2026-11-16
 
