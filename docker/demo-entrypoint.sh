@@ -57,5 +57,15 @@ if [ "${NOBAT_SCHEDULER:-true}" != "false" ]; then
     nohup php artisan schedule:work >> storage/logs/scheduler.log 2>&1 &
 fi
 
+# The queue must be drained too: with QUEUE_CONNECTION=database every SMS
+# (OTP, booking, reminder, payment) parks in the jobs table and waits for
+# this worker — the pipeline the runbook promised finally runs for real
+# on the demo. sync executes inline and needs no worker.
+if [ "${NOBAT_QUEUE_WORKER:-true}" != "false" ] \
+   && [ "${QUEUE_CONNECTION:-database}" != "sync" ]; then
+    echo ">> starting the queue worker in the background"
+    nohup php artisan queue:work --sleep=1 --tries=3 >> storage/logs/queue.log 2>&1 &
+fi
+
 echo ">> serving on http://0.0.0.0:${PORT:-8080}"
 exec php artisan serve --host=0.0.0.0 --port="${PORT:-8080}"
