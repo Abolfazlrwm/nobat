@@ -9,7 +9,7 @@ import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BookingConfirmation } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { BadgeCheck, CalendarClock, CalendarPlus, CheckCircle2, ChevronDown, Clock3, CreditCard, ExternalLink, Star, XCircle } from 'lucide-vue-next';
+import { BadgeCheck, CalendarClock, CalendarPlus, CheckCircle2, ChevronDown, Clock3, CreditCard, ExternalLink, RefreshCw, Star, XCircle } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -345,6 +345,25 @@ function submitReschedule() {
                         </Button>
                         <Button as-child variant="outline" class="flex-1">
                             <Link :href="`/b/${appointment.business.slug}`">{{ t('booking.newBooking') }}</Link>
+                        </Button>
+                        <!-- finished service: one click back to the same service
+                             and staff member, wizard preselected -->
+                        <Button
+                            v-if="appointment.status === 'completed'"
+                            as-child
+                            variant="outline"
+                            class="flex-1 gap-1"
+                        >
+                            <Link
+                                :href="route('businesses.show', {
+                                    business: appointment.business.slug,
+                                    service_id: appointment.service_id,
+                                    staff_id: appointment.staff_id ?? undefined,
+                                })"
+                            >
+                                <RefreshCw class="size-4" />
+                                {{ t('booking.rebook') }}
+                            </Link>
                         </Button>
                     </div>
                 </CardContent>

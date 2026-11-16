@@ -13,6 +13,7 @@ import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
     business: BusinessWithServices;
+    preset?: { service_id?: number | null; staff_id?: number | null };
 }>();
 
 const { t, num, dateShort } = useLocale();
@@ -190,7 +191,7 @@ function onLightboxKeydown(business: BusinessWithServices, event: KeyboardEvent)
 
             <div class="mt-6 grid gap-6 lg:grid-cols-3">
                 <div class="lg:col-span-2">
-                    <BookingWizard :business="business" />
+                    <BookingWizard :business="business" :preset="preset" />
                 </div>
 
                 <Card>

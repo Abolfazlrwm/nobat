@@ -16,6 +16,10 @@ import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     business: BusinessWithServices;
+    // A "book again" click lands with the previous service and staff
+    // preselected — the visitor starts at the slot grid, not at square one.
+    // The controller only ever presets among this business's active rows.
+    preset?: { service_id?: number | null; staff_id?: number | null };
 }>();
 
 const { t, num, price } = useLocale();
@@ -23,8 +27,12 @@ const { t, num, price } = useLocale();
 const stepCount = 4;
 const step = ref(0);
 
-const selectedService = ref<ServiceItem | null>(null);
-const selectedStaffId = ref<number | null>(null);
+const selectedService = ref<ServiceItem | null>(
+    props.preset?.service_id
+        ? (props.business.services.find((service) => service.id === props.preset?.service_id) ?? null)
+        : null,
+);
+const selectedStaffId = ref<number | null>(props.preset?.staff_id ?? null);
 const selectedDate = ref<string | null>(null);
 const selectedSlot = ref<SlotItem | null>(null);
 

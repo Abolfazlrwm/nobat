@@ -5,14 +5,28 @@ namespace App\Http\Controllers\PublicApi;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\BusinessPhoto;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class BusinessController extends Controller
 {
-    public function show(Business $business): Response
+    public function show(Request $request, Business $business): Response
     {
         abort_unless($business->is_active, 404);
+
+        // A "book again" click arrives with the service and staff the
+        // customer had last time. The preset only ever selects among this
+        // business's own active rows — a foreign id is ignored, never an
+        // error, so a stale link simply opens the wizard blank.
+        $presetServiceId = (int) $request->query('service_id');
+        $presetStaffId = (int) $request->query('staff_id');
+        $presetService = $presetServiceId > 0
+            ? $business->activeServices->firstWhere('id', $presetServiceId)
+            : null;
+        $presetStaff = $presetStaffId > 0
+            ? $business->activeStaff->firstWhere('id', $presetStaffId)
+            : null;
 
         // Single query plan: eager-load services, staff and photos, plus
         // the approved-review aggregate (avg + count) and the latest six
@@ -42,8 +56,7 @@ class BusinessController extends Controller
                 'slug' => $business->slug,
                 'description' => $business->description,
                 'phone' => $business->phone,
-                'address' => $business->address,
-                'photos' => $business->photos->sortByDesc('is_cover')->values()->map(fn (BusinessPhoto $photo) => [
+                'address' => $business->address,                'photos' => $business->photos->sortByDesc('is_cover')->values()->map(fn (BusinessPhoto $photo) => [
                     'id' => $photo->id,
                     'url' => $photo->url,
                     'caption' => $photo->caption,
@@ -72,6 +85,10 @@ class BusinessController extends Controller
                     'reply' => $review->reply,
                     'created_at' => $review->created_at?->format('Y-m-d'),
                 ]),
+            ],
+            'preset' => [
+                'service_id' => $presetService?->id,
+                'staff_id' => $presetStaff?->id,
             ],
         ]);
     }
