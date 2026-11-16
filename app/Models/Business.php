@@ -9,11 +9,33 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Business extends Model
 {
+    public const CATEGORY_MEDICAL = 'medical';
+
+    public const CATEGORY_BEAUTY = 'beauty';
+
+    public const CATEGORY_SPORT = 'sport';
+
+    public const CATEGORY_EDUCATION = 'education';
+
+    public const CATEGORY_SERVICES = 'services';
+
+    public const CATEGORY_OTHER = 'other';
+
+    public const CATEGORIES = [
+        self::CATEGORY_MEDICAL,
+        self::CATEGORY_BEAUTY,
+        self::CATEGORY_SPORT,
+        self::CATEGORY_EDUCATION,
+        self::CATEGORY_SERVICES,
+        self::CATEGORY_OTHER,
+    ];
+
     protected $fillable = [
         'owner_id',
         'name',
         'slug',
         'description',
+        'category',
         'phone',
         'address',
         'is_active',
@@ -27,6 +49,25 @@ class Business extends Model
             'is_active' => 'boolean',
             'payment_required' => 'boolean',
         ];
+    }
+
+    /**
+     * Category label translated through the "business_categories.*" lang
+     * keys, falling back to the raw value.
+     */
+    public function localizedCategoryLabel(): string
+    {
+        if ($this->category === null) {
+            return '';
+        }
+
+        $key = "business_categories.{$this->category}";
+
+        if (trans()->has($key)) {
+            return __($key);
+        }
+
+        return $this->category;
     }
 
     public function owner(): BelongsTo

@@ -179,6 +179,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('businesses/{business}/toggle', [BusinessAdminController::class, 'toggle'])
         ->name('businesses.toggle')
         ->middleware('can:administer,'.Business::class);
+    Route::patch('businesses/{business}/category', [BusinessAdminController::class, 'setCategory'])
+        ->name('businesses.category')
+        ->middleware('can:administer,'.Business::class);
 });
 
 require __DIR__.'/settings.php';

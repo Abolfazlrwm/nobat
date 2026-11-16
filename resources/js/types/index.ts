@@ -64,6 +64,8 @@ export interface BusinessSummary {
     name: string;
     slug: string;
     description?: string | null;
+    category?: string | null;
+    category_label?: string | null;
     phone: string;
     address?: string | null;
     services_count?: number;
@@ -179,6 +181,7 @@ export interface AdminBusiness {
     name: string;
     slug: string;
     phone: string;
+    category?: string | null;
     is_active: boolean;
     owner_name?: string;
     owner_email?: string;

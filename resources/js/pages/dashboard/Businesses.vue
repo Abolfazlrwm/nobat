@@ -11,6 +11,7 @@ import { computed } from 'vue';
 
 defineProps<{
     businesses: AdminBusiness[];
+    categories?: { value: string; label: string }[];
 }>();
 
 const { t, num } = useLocale();
@@ -22,6 +23,12 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => [
 
 function toggle(business: AdminBusiness): void {
     router.patch(route('businesses.toggle', business.id), {}, { preserveScroll: true });
+}
+
+function setCategory(business: AdminBusiness, event: Event): void {
+    router.patch(route('businesses.category', business.id), {
+        category: (event.target as HTMLSelectElement).value,
+    }, { preserveScroll: true });
 }
 </script>
 
@@ -43,6 +50,7 @@ function toggle(business: AdminBusiness): void {
                         <tr>
                             <th class="px-4 py-3 font-medium">{{ t('panel.businesses.thName') }}</th>
                             <th class="px-4 py-3 font-medium">{{ t('panel.businesses.thManager') }}</th>
+                            <th class="px-4 py-3 font-medium">{{ t('panel.businesses.thCategory') }}</th>
                             <th class="px-4 py-3 font-medium">{{ t('panel.businesses.thServices') }}</th>
                             <th class="px-4 py-3 font-medium">{{ t('panel.businesses.thStaff') }}</th>
                             <th class="px-4 py-3 font-medium">{{ t('panel.businesses.thAppointments') }}</th>
@@ -59,6 +67,19 @@ function toggle(business: AdminBusiness): void {
                             <td class="px-4 py-3">
                                 <div>{{ business.owner_name }}</div>
                                 <div class="text-xs text-muted-foreground" dir="ltr">{{ business.owner_email }}</div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <select
+                                    :value="business.category ?? ''"
+                                    class="rounded-lg border bg-background px-2 py-1.5 text-xs"
+                                    :aria-label="t('panel.businesses.thCategory')"
+                                    @change="setCategory(business, $event)"
+                                >
+                                    <option value="" disabled>{{ t('panel.businesses.pickCategory') }}</option>
+                                    <option v-for="category in categories ?? []" :key="category.value" :value="category.value">
+                                        {{ category.label }}
+                                    </option>
+                                </select>
                             </td>
                             <td class="px-4 py-3">{{ num(business.services_count) }}</td>
                             <td class="px-4 py-3">{{ num(business.staff_count) }}</td>
@@ -78,7 +99,7 @@ function toggle(business: AdminBusiness): void {
                         </tr>
 
                         <tr v-if="businesses.length === 0">
-                            <td colspan="7" class="px-4 py-10 text-center text-muted-foreground">{{ t('panel.businesses.empty') }}</td>
+                            <td colspan="8" class="px-4 py-10 text-center text-muted-foreground">{{ t('panel.businesses.empty') }}</td>
                         </tr>
                     </tbody>
                 </table>

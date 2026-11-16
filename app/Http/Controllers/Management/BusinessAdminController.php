@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Management;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,6 +24,7 @@ class BusinessAdminController extends Controller
                 'name' => $business->name,
                 'slug' => $business->slug,
                 'phone' => $business->phone,
+                'category' => $business->category,
                 'is_active' => $business->is_active,
                 'owner_name' => $business->owner?->name,
                 'owner_email' => $business->owner?->email,
@@ -33,6 +35,11 @@ class BusinessAdminController extends Controller
 
         return Inertia::render('dashboard/Businesses', [
             'businesses' => $businesses,
+            'categories' => collect(Business::CATEGORIES)
+                ->map(fn (string $category) => [
+                    'value' => $category,
+                    'label' => __("business_categories.{$category}"),
+                ]),
         ]);
     }
 
@@ -47,5 +54,25 @@ class BusinessAdminController extends Controller
         return back()->with('success', $business->is_active
             ? __('business.activated')
             : __('business.deactivated'));
+    }
+
+    /**
+     * Directory curation is a platform job: the category decides where a
+     * business surfaces on the public directory, so only the super admin
+     * assigns it.
+     */
+    public function setCategory(Request $request, Business $business)
+    {
+        $this->authorize('administer', Business::class);
+
+        $validated = $request->validate([
+            'category' => ['required', 'string', 'in:'.implode(',', Business::CATEGORIES)],
+        ]);
+
+        $business->update(['category' => $validated['category']]);
+
+        cache()->forget('nobat.directory');
+
+        return back()->with('success', __('business.category_set'));
     }
 }

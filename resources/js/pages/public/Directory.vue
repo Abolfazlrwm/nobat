@@ -3,10 +3,11 @@ import FlashMessages from '@/components/FlashMessages.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BusinessSummary, SharedData } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import {
     ArrowLeft,
     ArrowRight,
@@ -20,19 +21,60 @@ import {
     MapPin,
     MessageSquareText,
     Phone,
+    Search,
     Sparkles,
     Star,
     Users,
+    X,
     Zap,
 } from 'lucide-vue-next';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
     businesses: BusinessSummary[];
+    total?: number;
+    categories?: { value: string; label: string }[];
+    filters?: { q: string | null; category: string | null };
 }>();
 
 const page = usePage<SharedData>();
 const { t, isEn, num } = useLocale();
+
+// Server-side directory search: ?q= and ?category= land in the controller,
+// so every filtered view is a shareable URL — and the full list stays
+// cached, filtering happens in memory.
+const searchQuery = ref(props.filters?.q ?? '');
+const activeCategory = ref<string | null>(props.filters?.category ?? null);
+const filtersActive = computed(() => !!(props.filters?.q || props.filters?.category));
+
+let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+function applyFilters(): void {
+    router.get(
+        route('home'),
+        {
+            q: searchQuery.value.trim() || undefined,
+            category: activeCategory.value ?? undefined,
+        },
+        { preserveState: true, preserveScroll: true, replace: true },
+    );
+}
+
+watch(searchQuery, () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(applyFilters, 350);
+});
+
+function toggleCategory(value: string): void {
+    activeCategory.value = activeCategory.value === value ? null : value;
+    applyFilters();
+}
+
+function clearFilters(): void {
+    searchQuery.value = '';
+    activeCategory.value = null;
+    applyFilters();
+}
 
 // WebSite structured data for crawlers — Inertia renders client-side,
 // so the ld+json node is appended to the head after mount.
@@ -235,10 +277,56 @@ const heroGradient = isEn.value
                     <p class="mt-3 text-muted-foreground">{{ t('landing.dirSubtitle') }}</p>
                 </div>
 
+                <!-- search + category filter: every combination is a shareable URL -->
+                <div class="mx-auto mt-8 max-w-2xl">
+                    <div class="relative">
+                        <Search class="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            v-model="searchQuery"
+                            type="search"
+                            class="ps-10"
+                            :placeholder="t('landing.searchPlaceholder')"
+                        />
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
+                        <button
+                            v-for="category in categories ?? []"
+                            :key="category.value"
+                            type="button"
+                            class="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors"
+                            :class="activeCategory === category.value
+                                ? 'border-primary bg-primary text-primary-foreground'
+                                : 'border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'"
+                            @click="toggleCategory(category.value)"
+                        >
+                            {{ category.label }}
+                        </button>
+                        <button
+                            v-if="filtersActive"
+                            type="button"
+                            class="flex items-center gap-1 rounded-full border border-dashed px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+                            @click="clearFilters"
+                        >
+                            <X class="size-3" />
+                            {{ t('landing.clearFilters') }}
+                        </button>
+                    </div>
+
+                    <p class="mt-3 text-center text-xs text-muted-foreground">
+                        {{ t('landing.resultCount', { n: num(businesses.length) }) }}
+                    </p>
+                </div>
+
                 <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <Card v-for="business in businesses" :key="business.id" class="transition-all hover:-translate-y-0.5 hover:shadow-md">
                         <CardHeader>
-                            <CardTitle class="text-lg">{{ business.name }}</CardTitle>
+                            <div class="flex items-start justify-between gap-2">
+                                <CardTitle class="text-lg">{{ business.name }}</CardTitle>
+                                <Badge v-if="business.category_label" variant="outline" class="shrink-0 text-xs">
+                                    {{ business.category_label }}
+                                </Badge>
+                            </div>
                             <CardDescription class="line-clamp-2 min-h-10">{{ business.description }}</CardDescription>
                         </CardHeader>
                         <CardContent class="space-y-3">
@@ -270,7 +358,9 @@ const heroGradient = isEn.value
                     </Card>
                 </div>
 
-                <div v-if="businesses.length === 0" class="mt-16 text-center text-muted-foreground">{{ t('landing.empty') }}</div>
+                <div v-if="businesses.length === 0" class="mt-16 text-center text-muted-foreground">
+                    {{ filtersActive ? t('landing.noResults') : t('landing.empty') }}
+                </div>
             </div>
         </section>
 

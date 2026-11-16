@@ -4,13 +4,14 @@ namespace App\Http\Controllers\PublicApi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class HomeController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $businesses = Cache::remember('nobat.directory', now()->addMinutes(5), function () {
             return Business::query()
@@ -26,6 +27,8 @@ class HomeController extends Controller
                     'name' => $business->name,
                     'slug' => $business->slug,
                     'description' => $business->description,
+                    'category' => $business->category,
+                    'category_label' => $business->localizedCategoryLabel(),
                     'phone' => $business->phone,
                     'address' => $business->address,
                     'services_count' => $business->services_count,
@@ -37,8 +40,37 @@ class HomeController extends Controller
                 ]);
         });
 
+        // The full list is cached; the visitor's query filters it in memory —
+        // a fresh cache entry per search term would defeat the point, and the
+        // directory is small enough to filter faster than reading it back.
+        $query = trim((string) $request->string('q'));
+        $category = (string) $request->string('category');
+
+        if ($category !== '' && in_array($category, Business::CATEGORIES, true)) {
+            $businesses = $businesses->where('category', $category)->values();
+        }
+
+        if ($query !== '') {
+            $needle = mb_strtolower($query);
+            $businesses = $businesses->filter(function (array $business) use ($needle) {
+                $haystack = mb_strtolower($business['name'].' '.($business['description'] ?? '').' '.($business['address'] ?? ''));
+
+                return str_contains($haystack, $needle);
+            })->values();
+        }
+
         return Inertia::render('public/Directory', [
             'businesses' => $businesses,
+            'total' => $businesses->count(),
+            'categories' => collect(Business::CATEGORIES)
+                ->map(fn (string $value) => [
+                    'value' => $value,
+                    'label' => __("business_categories.{$value}"),
+                ]),
+            'filters' => [
+                'q' => $query,
+                'category' => $category !== '' && in_array($category, Business::CATEGORIES, true) ? $category : null,
+            ],
         ]);
     }
 }
