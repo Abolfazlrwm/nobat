@@ -37,8 +37,12 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
-            'journal_mode' => null,
+            // The demo runs SQLite with a scheduler writing every minute —
+            // a payment verify that collides with a sweep must WAIT for the
+            // lock instead of exploding the request into a 500. WAL lets
+            // readers through while one writer holds the lock.
+            'busy_timeout' => 5000,
+            'journal_mode' => 'wal',
             'synchronous' => null,
         ],
 

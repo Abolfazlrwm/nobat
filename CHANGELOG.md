@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.1] - 2026-11-16
+
+### Fixed
+
+- **callbackِ verifyِ پرداخت روی دمو دیگر ۵۰۰ نمی‌شود**: شِدولرِ هر-دقیقه‌ای و
+  درخواستِ کاربر هم‌زمان روی SQLite می‌نویسند و `busy_timeout` صفر یعنی انفجارِ
+  فوری؛ حالا اتصالِ sqlite با `busy_timeout=۵۰۰۰ms` و WAL می‌نشیند — verifyها و
+  استردادها روی قفل صبر می‌کنند، نه منفجر شدن. راستی‌آزماییِ زنده این باگ را بیرون
+  کشید: تأییدِ زرین‌پال درست رد شد («Session is not valid») اما updateِ ردیفِ
+  پرداخت با قفلِ دیتابیس از پا درآمد — دقیقاً همان جفت‌نوشتنِ ریز-ساعتِ sweep.
+  تست‌ها: ۳۰۳ (بدون تغییر)؛ نسخهٔ اپ به 1.30.1 رسید.
+
 ## [1.30.0] - 2026-11-16
 
 ### Added
