@@ -4,8 +4,10 @@ namespace App\Http\Controllers\My;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -20,7 +22,7 @@ class AppointmentsController extends Controller
     {
         $appointments = Appointment::query()
             ->where('user_id', $request->user()->id)
-            ->with(['business:id,name,slug', 'service:id,name', 'staff:id,name'])
+            ->with(['business:id,name,slug', 'service:id,name', 'staff:id,name', 'invoice:id,number,status'])
             ->orderBy('starts_at')
             ->get();
 
@@ -51,6 +53,9 @@ class AppointmentsController extends Controller
             'business' => ['name' => $appointment->business->name, 'slug' => $appointment->business->slug],
             'service_name' => $appointment->service->name,
             'staff_name' => $appointment->staff?->name,
+            'invoice_pdf_url' => ($appointment->invoice !== null && $appointment->invoice->status === Invoice::STATUS_PAID)
+                ? URL::signedRoute('invoices.pdf', $appointment->invoice->number, now()->addDays(7))
+                : null,
             'series_token' => $appointment->series_token,
             'series' => $appointment->series_token === null ? [] : $appointment->seriesSiblings()->map(fn (Appointment $sibling) => [
                 'code' => $sibling->code,

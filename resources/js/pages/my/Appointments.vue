@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { CalendarPlus, CreditCard, ExternalLink, RefreshCw, XCircle } from 'lucide-vue-next';
+import { CalendarPlus, CreditCard, ExternalLink, FileDown, RefreshCw, XCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 interface SeriesOccurrence {
@@ -26,6 +26,7 @@ interface MyAppointment {
     business: { name: string; slug: string };
     service_name: string;
     staff_name?: string | null;
+    invoice_pdf_url?: string | null;
     series_token?: string | null;
     series: SeriesOccurrence[];
 }
@@ -117,6 +118,12 @@ const cancel = (item: MyAppointment): void => {
                                     {{ t('my.ics') }}
                                 </a>
                             </Button>
+                            <Button v-if="item.invoice_pdf_url" variant="outline" as-child>
+                                <a :href="item.invoice_pdf_url" target="_blank" rel="noopener">
+                                    <FileDown class="h-4 w-4" />
+                                    {{ t('my.invoicePdf') }}
+                                </a>
+                            </Button>
                             <Button
                                 v-if="item.cancellable"
                                 variant="outline"
@@ -148,6 +155,15 @@ const cancel = (item: MyAppointment): void => {
                             </div>
                             <div class="flex items-center gap-2">
                                 <Badge variant="outline">{{ item.status_label }}</Badge>
+                                <a
+                                    v-if="item.invoice_pdf_url"
+                                    :href="item.invoice_pdf_url"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="text-sm text-muted-foreground underline"
+                                >
+                                    {{ t('my.invoicePdf') }}
+                                </a>
                                 <Link
                                     :href="route('bookings.show', item.code)"
                                     class="text-sm text-muted-foreground underline"

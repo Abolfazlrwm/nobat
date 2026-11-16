@@ -10,7 +10,7 @@ import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BookingConfirmation } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { BadgeCheck, CalendarClock, CalendarPlus, CheckCircle2, ChevronDown, Clock3, CreditCard, ExternalLink, Printer, RefreshCw, Star, XCircle } from 'lucide-vue-next';
+import { BadgeCheck, CalendarClock, CalendarPlus, CheckCircle2, ChevronDown, Clock3, CreditCard, ExternalLink, FileDown, Printer, RefreshCw, Star, XCircle } from 'lucide-vue-next';
 import QRCode from 'qrcode';
 import { computed, onMounted, ref } from 'vue';
 
@@ -170,6 +170,16 @@ function submitReschedule() {
                         >
                             {{ t('booking.invoice') }}
                             <ExternalLink class="size-3.5" />
+                        </a>
+                        <a
+                            v-if="appointment.payment.invoice_pdf_url"
+                            :href="appointment.payment.invoice_pdf_url"
+                            target="_blank"
+                            rel="noopener"
+                            class="flex items-center gap-1 text-emerald-700 underline-offset-4 hover:underline dark:text-emerald-300"
+                        >
+                            {{ t('booking.invoicePdf') }}
+                            <FileDown class="size-3.5" />
                         </a>
                     </div>
 

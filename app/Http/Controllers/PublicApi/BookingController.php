@@ -154,6 +154,9 @@ class BookingController extends Controller
                     'invoice_url' => ($payment->invoice ?? $appointment->invoice)
                         ? URL::signedRoute('invoices.show', ($payment->invoice ?? $appointment->invoice)->number, now()->addDays(7))
                         : null,
+                    'invoice_pdf_url' => ($payment->invoice ?? $appointment->invoice)
+                        ? URL::signedRoute('invoices.pdf', ($payment->invoice ?? $appointment->invoice)->number, now()->addDays(7))
+                        : null,
                 ] : null,
                 'has_review' => $appointment->review !== null,
                 'review' => $appointment->review?->only('rating', 'comment'),

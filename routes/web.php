@@ -125,6 +125,9 @@ Route::get('payments/{appointment:code}/pay', [PaymentController::class, 'initia
 
 Route::get('invoices/{invoice:number}', [InvoiceController::class, 'show'])->name('invoices.show');
 
+Route::get('invoices/{invoice:number}/pdf', [InvoiceController::class, 'pdf'])
+    ->name('invoices.pdf');
+
 /*
 |--------------------------------------------------------------------------
 | Dashboard (managers, staff and super-admins)

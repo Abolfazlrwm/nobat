@@ -705,5 +705,7 @@
     "my.ics": "افزودن به تقویم",
     "my.series": "سریِ دوره‌ای — هفته‌های بعد:",
     "my.cancelling": "در حال لغو…",
-    "my.confirmCancel": "این نوبت لغو شود؟"
+    "my.confirmCancel": "این نوبت لغو شود؟",
+    "booking.invoicePdf": "فاکتور (PDF)",
+    "my.invoicePdf": "فاکتور (PDF)"
 }

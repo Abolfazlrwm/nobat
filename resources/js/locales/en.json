@@ -705,5 +705,7 @@
     "my.ics": "Add to calendar",
     "my.series": "Standing series — the following weeks:",
     "my.cancelling": "Cancelling…",
-    "my.confirmCancel": "Cancel this appointment?"
+    "my.confirmCancel": "Cancel this appointment?",
+    "booking.invoicePdf": "Invoice (PDF)",
+    "my.invoicePdf": "Invoice (PDF)"
 }
