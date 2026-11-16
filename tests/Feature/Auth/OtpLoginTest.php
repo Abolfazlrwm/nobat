@@ -157,7 +157,7 @@ class OtpLoginTest extends TestCase
         $this->requestCode();
         $code = $this->dispatchedCode();
 
-        $this->verifyCode((string) $code)->assertRedirect('/');
+        $this->verifyCode((string) $code)->assertRedirect(route('my.appointments', absolute: false));
 
         $user = User::query()->where('phone', self::PHONE)->firstOrFail();
         $this->assertAuthenticatedAs($user);
@@ -223,7 +223,7 @@ class OtpLoginTest extends TestCase
         $this->requestCode();
         $code = (string) $this->dispatchedCode();
 
-        $this->verifyCode($code)->assertRedirect('/');
+        $this->verifyCode($code)->assertRedirect(route('my.appointments', absolute: false));
         $this->post(route('logout'));
 
         $this->verifyCode($code)->assertSessionHasErrors('code');

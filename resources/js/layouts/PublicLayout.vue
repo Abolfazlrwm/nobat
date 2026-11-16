@@ -38,6 +38,9 @@ function track(): void {
                     <LanguageSwitcher />
                     <template v-if="page.props.auth.user">
                         <Button variant="ghost" as-child>
+                            <Link :href="route('my.appointments')">{{ t('nav.myAppointments') }}</Link>
+                        </Button>
+                        <Button variant="ghost" as-child>
                             <Link :href="route('dashboard')">{{ t('nav.dashboard') }}</Link>
                         </Button>
                         <Button variant="outline" as-child>

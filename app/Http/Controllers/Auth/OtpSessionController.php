@@ -109,7 +109,7 @@ class OtpSessionController extends Controller
         $request->session()->regenerate();
         $request->session()->forget('otp.phone');
 
-        return redirect()->intended('/');
+        return redirect()->intended(route('my.appointments', absolute: false));
     }
 
     /**

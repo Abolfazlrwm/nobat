@@ -689,5 +689,21 @@
     "auth.otpChangePhone": "تغيير الرقم",
     "auth.otpHavePassword": "لديك بريد وكلمة مرور؟",
     "auth.otpUsePassword": "الدخول بالبريد وكلمة المرور",
-    "auth.otpLink": "الدخول برمز عبر الرسائل — بدون كلمة مرور"
+    "auth.otpLink": "الدخول برمز عبر الرسائل — بدون كلمة مرور",
+    "nav.myAppointments": "مواعيدي",
+    "my.pageTitle": "مواعيدي | نوبت",
+    "my.title": "مواعيدي",
+    "my.desc": "سجل حجوزاتك — القادمة والسابقة، في مكان واحد.",
+    "my.upcoming": "المواعيد القادمة",
+    "my.past": "المواعيد السابقة",
+    "my.empty": "لا مواعيد بعد.",
+    "my.emptyLink": "ابدأ من الدليل",
+    "my.track": "تتبّع",
+    "my.cancel": "إلغاء",
+    "my.reschedule": "إعادة جدولة",
+    "my.pay": "دفع",
+    "my.ics": "إضافة إلى التقويم",
+    "my.series": "سلسلة دورية — الأسابيع التالية:",
+    "my.cancelling": "جارٍ الإلغاء…",
+    "my.confirmCancel": "إلغاء هذا الموعد؟"
 }

@@ -14,6 +14,7 @@ use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
 use App\Services\Booking\WaitlistPromotion;
 use App\Services\Discount\DiscountService;
+use App\Support\Phone;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -181,15 +182,11 @@ class BookingController extends Controller
      */
     public function guestCancel(Request $request, string $code): RedirectResponse
     {
-        $validated = $request->validate([
-            'customer_phone' => ['required', 'string'],
-        ]);
-
         $appointment = Appointment::query()
             ->where('code', $code)
             ->firstOrFail();
 
-        if ($this->normalizePhone($validated['customer_phone']) !== $this->normalizePhone($appointment->customer_phone)) {
+        if (! $this->provedOwner($request, $appointment)) {
             return back()->withErrors(['customer_phone' => __('bookings.guest_phone_mismatch')]);
         }
 
@@ -223,7 +220,7 @@ class BookingController extends Controller
     public function reschedule(Request $request, string $code): RedirectResponse
     {
         $validated = $request->validate([
-            'customer_phone' => ['required', 'string'],
+            'customer_phone' => ['nullable', 'string'],
             'starts_at' => ['required', 'date_format:Y-m-d\TH:i:s'],
         ]);
 
@@ -231,7 +228,7 @@ class BookingController extends Controller
             ->where('code', $code)
             ->firstOrFail();
 
-        if ($this->normalizePhone($validated['customer_phone']) !== $this->normalizePhone($appointment->customer_phone)) {
+        if (! $this->provedOwner($request, $appointment)) {
             return back()->withErrors(['customer_phone' => __('bookings.guest_phone_mismatch')]);
         }
 
@@ -268,19 +265,22 @@ class BookingController extends Controller
     }
 
     /**
-     * Persian and arabic digits both appear in typed phone numbers;
-     * compare digits only, never formatting.
+     * Ownership proof for the self-service endpoints: either the signed-in
+     * account holding the booking, or the guest phone that booked it. The
+     * tracking code alone must never move or kill someone's appointment.
      */
-    private function normalizePhone(string $phone): string
+    private function provedOwner(Request $request, Appointment $appointment): bool
     {
-        $latin = strtr($phone, [
-            '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4',
-            '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
-            '٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4',
-            '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9',
-        ]);
+        $user = $request->user();
 
-        return (string) preg_replace('/\D+/', '', $latin);
+        if ($user !== null && $appointment->user_id === $user->id) {
+            return true;
+        }
+
+        $phone = Phone::normalize((string) $request->input('customer_phone'));
+
+        return $phone !== ''
+            && Phone::normalize($appointment->customer_phone) === $phone;
     }
 
     /**

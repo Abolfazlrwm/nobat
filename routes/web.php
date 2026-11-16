@@ -19,6 +19,7 @@ use App\Http\Controllers\Management\ServiceController;
 use App\Http\Controllers\Management\StaffController;
 use App\Http\Controllers\Management\WorkingHourController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\My\AppointmentsController;
 use App\Http\Controllers\PublicApi\BookingController;
 use App\Http\Controllers\PublicApi\BusinessController;
 use App\Http\Controllers\PublicApi\DiscountController;
@@ -105,6 +106,16 @@ Route::post('b/{business:slug}/waitlist', [WaitlistController::class, 'store'])
 | Online payment
 |--------------------------------------------------------------------------
 */
+
+/*
+|--------------------------------------------------------------------------
+| My bookings — the signed-in customer's own history
+|--------------------------------------------------------------------------
+*/
+
+Route::get('my/appointments', [AppointmentsController::class, 'index'])
+    ->middleware('auth')
+    ->name('my.appointments');
 
 Route::get('payments/callback', [PaymentController::class, 'callback'])->name('payments.callback');
 

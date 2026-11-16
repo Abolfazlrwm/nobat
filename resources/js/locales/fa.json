@@ -689,5 +689,21 @@
     "auth.otpChangePhone": "تغییر شماره",
     "auth.otpHavePassword": "رمز و ایمیل داری؟",
     "auth.otpUsePassword": "ورود با رمز و ایمیل",
-    "auth.otpLink": "ورود با کد پیامکی — بدون رمز"
+    "auth.otpLink": "ورود با کد پیامکی — بدون رمز",
+    "nav.myAppointments": "نوبت‌های من",
+    "my.pageTitle": "نوبت‌های من | نوبت",
+    "my.title": "نوبت‌های من",
+    "my.desc": "تاریخچهٔ رزروهایت — پیش‌رو و گذشته، همه‌جا یک‌جا.",
+    "my.upcoming": "نوبت‌های پیش‌رو",
+    "my.past": "نوبت‌های گذشته",
+    "my.empty": "هنوز نوبتی نداری.",
+    "my.emptyLink": "از دایرکتوری شروع کن",
+    "my.track": "پیگیری",
+    "my.cancel": "لغو",
+    "my.reschedule": "جابه‌جایی",
+    "my.pay": "پرداخت",
+    "my.ics": "افزودن به تقویم",
+    "my.series": "سریِ دوره‌ای — هفته‌های بعد:",
+    "my.cancelling": "در حال لغو…",
+    "my.confirmCancel": "این نوبت لغو شود؟"
 }

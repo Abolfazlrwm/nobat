@@ -689,5 +689,21 @@
     "auth.otpChangePhone": "Change the number",
     "auth.otpHavePassword": "Have email and password?",
     "auth.otpUsePassword": "Sign in with email and password",
-    "auth.otpLink": "Sign in with an SMS code — no password"
+    "auth.otpLink": "Sign in with an SMS code — no password",
+    "nav.myAppointments": "My appointments",
+    "my.pageTitle": "My appointments | Nobat",
+    "my.title": "My appointments",
+    "my.desc": "Your booking history — upcoming and past, all in one place.",
+    "my.upcoming": "Upcoming appointments",
+    "my.past": "Past appointments",
+    "my.empty": "No appointments yet.",
+    "my.emptyLink": "Start from the directory",
+    "my.track": "Track",
+    "my.cancel": "Cancel",
+    "my.reschedule": "Reschedule",
+    "my.pay": "Pay",
+    "my.ics": "Add to calendar",
+    "my.series": "Standing series — the following weeks:",
+    "my.cancelling": "Cancelling…",
+    "my.confirmCancel": "Cancel this appointment?"
 }
