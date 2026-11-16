@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Appointment;
+use Inertia\Testing\AssertableInertia;
 
 it('builds the Google Calendar link server-side with the exact dates format', function () {
     $business = $this->makeBusiness();
@@ -12,7 +13,7 @@ it('builds the Google Calendar link server-side with the exact dates format', fu
 
     $this->get(route('bookings.show', $appointment->code))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->where('gcal_url', function (?string $url) use ($appointment) {
                 expect($url)->toStartWith('https://calendar.google.com/calendar/render?action=TEMPLATE')
                     ->and($url)->toContain('text='.rawurlencode($appointment->business->name.' — '.$appointment->service->name))
@@ -34,7 +35,7 @@ it('still carries the calendar link when the business has no address', function 
 
     $this->get(route('bookings.show', $appointment->code))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->where('gcal_url', fn (?string $url) => str_contains((string) $url, 'location='))
             // an empty address collapses to a harmless empty location param
             ->where('gcal_url', fn (?string $url) => ! str_contains((string) $url, 'location=null')));
