@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.0] - 2026-11-16
+
+### Added
+
+- **فاکتور PDF — رسیدِ واقعی، نه یک برگهٔ چاپی**: برگهٔ چاپی به فونت‌های خودِ بازدیدکننده
+  تکیه داشت؛ حالا همان snapshot منجمد با mPDF و فونتِ همراهِ خودش (XB Riyaz) به یک
+  PDF فارسیِ درست‌شکل‌دهی‌شده می‌رسد — RTL واقعی، جدول‌ها، مبلغ، کد تراکنش و درگاه.
+  دانلود پشت همان امضای صفحهٔ چاپ می‌ماند (فاکتور PII دارد) و لینکش کنار لینک فاکتور
+  در صفحهٔ پیگیری و روی ردیف‌های پرداخت‌شدهٔ «نوبت‌های من» نشسته. تست‌ها بایت‌های واقعی
+  را می‌سنجند (جادوی PDF، کاتالوگ، حجم) و لینکِ امضادار را در payload صفحهٔ پیگیری.
+
+### Changed
+
+- تست‌ها: ۳۰۰ → **۳۰۳**؛ نسخهٔ اپ به 1.30.0 رسید.
+
 ## [1.29.0] - 2026-11-16
 
 ### Added
