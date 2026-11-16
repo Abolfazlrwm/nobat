@@ -24,6 +24,7 @@
         "trackButton": "بحث",
         "privacy": "الخصوصية",
         "terms": "شروط الاستخدام",
+        "docsLink": "وثائق API",
         "legalColumn": "المستندات"
     },
     "landing": {
@@ -94,6 +95,12 @@
         "clearFilters": "مسح عوامل التصفية",
         "resultCount": "{n} نشاط تجاري",
         "noResults": "لا نتائج مطابقة لبحثك.",
+        "apiDocsTitle": "مرجع API نوبت (v1)",
+        "apiDocsSubtitle": "واجهة نوبت البرمجية العامة كاملة في مواصفة OpenAPI واحدة — هذه الصفحة تُبنى من المواصفة نفسها، فلا تسبق الوثائق عن الكود أبدًا.",
+        "apiDocsAuth": "المصادقة",
+        "apiDocsAuthDesc": "أنشئ رمزًا عبر POST /api/v1/tokens ثم أرسل كل طلب مع الترويسة Authorization: Bearer <token>. يُخزَّن فقط sha-256 للرمز على الخادم.",
+        "apiDocsBaseUrl": "العنوان الأساسي",
+        "apiDocsDownload": "تنزيل openapi.json",
         "serviceCount": "{n} خدمة",
         "staffCount": "{n} عضو فريق",
         "ratingOutOf": "من 5",

@@ -22,6 +22,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PublicApi\BookingController;
 use App\Http\Controllers\PublicApi\BusinessController;
 use App\Http\Controllers\PublicApi\DiscountController;
+use App\Http\Controllers\PublicApi\DocsController;
 use App\Http\Controllers\PublicApi\HomeController;
 use App\Http\Controllers\PublicApi\InvoiceController;
 use App\Http\Controllers\PublicApi\PaymentController;
@@ -49,6 +50,11 @@ Route::get('health', HealthController::class)->name('health');
 // sitemap pointer always carries the live APP_URL.
 Route::get('robots.txt', [SeoController::class, 'robots'])->name('robots');
 Route::get('sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+
+// API contract — one OpenAPI structure, two faces: a rendered reference
+// page for humans and the raw JSON for client generators.
+Route::get('docs', [DocsController::class, 'page'])->name('docs.page');
+Route::get('docs/openapi.json', [DocsController::class, 'spec'])->name('docs.spec');
 
 Route::post('locale', [LocaleController::class, 'switch'])->name('locale.switch');
 

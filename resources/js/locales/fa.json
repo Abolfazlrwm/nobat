@@ -24,6 +24,7 @@
         "trackButton": "جستجو",
         "privacy": "حریم خصوصی",
         "terms": "شرایط استفاده",
+        "docsLink": "مستندات API",
         "legalColumn": "مستندات"
     },
     "landing": {
@@ -94,6 +95,12 @@
         "clearFilters": "پاک‌کردن فیلترها",
         "resultCount": "{n} کسب‌وکار",
         "noResults": "چیزی مطابق جست‌وجوی شما پیدا نشد.",
+        "apiDocsTitle": "مستندات API نوبت (v1)",
+        "apiDocsSubtitle": "کل API عمومی نوبت در یک استوری OpenAPI — همین صفحه از همان استوری ساخته می‌شود، پس مستندات هرگز از کد جا نمی‌مانند.",
+        "apiDocsAuth": "احراز هویت",
+        "apiDocsAuthDesc": "با POST /api/v1/tokens توکن بسازید، سپس هر درخواست را با هدر Authorization: Bearer <token> بفرستید. فقط sha-256 توکن روی سرور ذخیره می‌شود.",
+        "apiDocsBaseUrl": "آدرس پایه",
+        "apiDocsDownload": "دانلود openapi.json",
         "serviceCount": "{n} خدمت",
         "staffCount": "{n} همکار",
         "ratingOutOf": "از ۵",

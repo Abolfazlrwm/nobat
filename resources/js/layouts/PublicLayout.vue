@@ -82,6 +82,9 @@ function track(): void {
                                 <li>
                                     <Link class="hover:text-foreground" :href="route('legal.terms')">{{ t('footer.terms') }}</Link>
                                 </li>
+                                <li>
+                                    <Link class="hover:text-foreground" :href="route('docs.page')">{{ t('footer.docsLink') }}</Link>
+                                </li>
                             </ul>
                         </div>
                         <div>

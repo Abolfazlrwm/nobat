@@ -24,6 +24,7 @@
         "trackButton": "Find",
         "privacy": "Privacy",
         "terms": "Terms",
+        "docsLink": "API docs",
         "legalColumn": "Legal"
     },
     "landing": {
@@ -94,6 +95,12 @@
         "clearFilters": "Clear filters",
         "resultCount": "{n} businesses",
         "noResults": "Nothing matches your search.",
+        "apiDocsTitle": "Nobat API reference (v1)",
+        "apiDocsSubtitle": "The whole public Nobat API in one OpenAPI spec — this page is rendered from that very spec, so the docs can never drift from the code.",
+        "apiDocsAuth": "Authentication",
+        "apiDocsAuthDesc": "Create a token with POST /api/v1/tokens, then send every request with Authorization: Bearer <token>. Only the sha-256 of each token is stored server-side.",
+        "apiDocsBaseUrl": "Base URL",
+        "apiDocsDownload": "Download openapi.json",
         "serviceCount": "{n} services",
         "staffCount": "{n} staff",
         "ratingOutOf": "out of 5",
