@@ -2,7 +2,7 @@
 
 use App\Models\Appointment;
 use App\Models\DiscountCode;
-use Illuminate\Support\Facades\Queue;
+use Inertia\Testing\AssertableInertia;
 
 it('creates a standing series — the anchor slot plus weeks beyond the advance window', function () {
     $business = $this->makeBusiness();
@@ -117,7 +117,7 @@ it('lists the series siblings on the tracking page', function () {
 
     $this->get(route('bookings.show', $series[0]->code))
         ->assertOk()
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->has('series', 2)
             ->where('series.0.code', $series[1]->code)
             ->where('series.1.code', $series[2]->code)
@@ -127,7 +127,7 @@ it('lists the series siblings on the tracking page', function () {
     $oneOff = $this->createAppointment($staff, $service, $startsAt->addHours(3));
 
     $this->get(route('bookings.show', $oneOff->code))
-        ->assertInertia(fn (Inertia\Testing\AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page) => $page
             ->has('series', 0));
 });
 
