@@ -14,8 +14,11 @@
 FROM php:8.4-cli-alpine
 
 # unzip lets composer extract dist packages (the zip extension is not
-# compiled in this image on purpose)
-RUN apk add --no-cache unzip
+# compiled in this image on purpose). gd backs the invoice PDF — mPDF
+# needs it for the font metrics and image handling.
+RUN apk add --no-cache unzip libpng-dev freetype-dev jpeg-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
