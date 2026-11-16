@@ -15,6 +15,8 @@ class SmsManager
     private array $drivers = [
         'log' => LogSmsDriver::class,
         'kavenegar' => KavenegarSmsDriver::class,
+        'twilio' => TwilioSmsDriver::class,
+        'intl' => IntlSmsDriver::class,
     ];
 
     public function driver(?string $name = null): SmsDriver
