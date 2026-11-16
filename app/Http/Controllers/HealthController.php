@@ -38,17 +38,39 @@ class HealthController extends Controller
         // scheduler (or its cache) is effectively dead.
         $schedulerHealthy = $lagSeconds !== null && $lagSeconds <= 180;
 
+        $queue = ['connection' => (string) config('queue.default')];
+
+        // A database queue can be watched from here: how deep is the backlog,
+        // how long has the oldest job waited, how many gave up. The worker
+        // being stuck shows up as a rising oldest_pending_seconds before any
+        // customer notices their OTP never arrived.
+        if ($database && config('queue.default') === 'database') {
+            $oldest = DB::table('jobs')->min('created_at');
+
+            $queue['depth'] = (int) DB::table('jobs')->count();
+            $queue['oldest_pending_seconds'] = $oldest !== null
+                ? max(0, now()->timestamp - (int) $oldest)
+                : 0;
+            $queue['failed'] = (int) DB::table('failed_jobs')->count();
+        } else {
+            $queue['depth'] = null;
+            $queue['oldest_pending_seconds'] = null;
+            $queue['failed'] = null;
+        }
+
         $payload = [
             'status' => $database ? 'ok' : 'degraded',
+            'version' => (string) config('app.version'),
             'database' => $database,
             'storage_writable' => $storage,
             'scheduler' => [
                 'healthy' => $schedulerHealthy,
                 'last_sweep_ago_seconds' => $lagSeconds,
             ],
-            'queue' => [
-                'connection' => (string) config('queue.default'),
-            ],
+            'queue' => $queue,
+            'disk_free_mb' => is_numeric($free = disk_free_space(storage_path()))
+                ? (int) round(((float) $free) / 1048576)
+                : null,
             'time' => now()->toIso8601String(),
         ];
 
