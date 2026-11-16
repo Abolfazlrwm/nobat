@@ -191,5 +191,8 @@
     "auth.otp_wrong_code": "کد درست نیست یا منقضی شده؛ دوباره تلاش کنید.",
     "auth.otp_verify_throttled": "تلاش‌های زیاد با این کد؛ چند دقیقهٔ دیگر کد تازه بگیرید.",
     "auth.otp_invalid_input": "شماره یا کد واردشده معتبر نیست.",
-    "auth.otp_default_name": "مشتری نوبت"
+    "auth.otp_default_name": "مشتری نوبت",
+    "bookings.refund_on_cancel_reason": "لغو نوبت توسط مشتری — بازپرداخت خودکار",
+    "bookings.guest_cancelled_refunded": "نوبت لغو شد و مبلغ پرداختی برگشت داده شد.",
+    "bookings.refund_failed_keep": "بازپرداخت در درگاه ناکام ماند — نوبت و پرداخت سرِ جایشان ماندند؛ چند دقیقهٔ دیگر دوباره تلاش کنید."
 }

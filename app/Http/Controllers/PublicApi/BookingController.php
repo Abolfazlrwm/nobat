@@ -7,6 +7,7 @@ use App\Http\Requests\Booking\StoreBookingRequest;
 use App\Models\Appointment;
 use App\Models\Business;
 use App\Models\Payment;
+use App\Models\Refund;
 use App\Models\WaitlistEntry;
 use App\Services\Booking\BookingService;
 use App\Services\Booking\Exceptions\DiscountCodeException;
@@ -14,6 +15,7 @@ use App\Services\Booking\Exceptions\InvalidSlotException;
 use App\Services\Booking\Exceptions\SlotUnavailableException;
 use App\Services\Booking\WaitlistPromotion;
 use App\Services\Discount\DiscountService;
+use App\Services\Payment\PaymentService;
 use App\Support\Phone;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
@@ -28,6 +30,7 @@ class BookingController extends Controller
     public function __construct(
         private readonly BookingService $bookings,
         private readonly DiscountService $discounts,
+        private readonly PaymentService $payments,
         private readonly WaitlistPromotion $waitlist,
     ) {}
 
@@ -195,11 +198,29 @@ class BookingController extends Controller
             Appointment::STATUS_PENDING_PAYMENT,
             Appointment::STATUS_CONFIRMED,
         ], true)
-            && $appointment->starts_at->isFuture()
-            && ! $appointment->payments()->where('status', Payment::STATUS_PAID)->exists();
+            && $appointment->starts_at->isFuture();
 
         if (! $cancellable) {
             return back()->withErrors(['customer_phone' => __('bookings.guest_not_cancellable')]);
+        }
+
+        // A paid booking cancels WITH its money: the refund must land before
+        // the slot is released — a failed gateway reversal keeps both the
+        // booking and the payment exactly where they were, and the customer
+        // is told to retry rather than losing either.
+        $paidPayment = $appointment->payments()->where('status', Payment::STATUS_PAID)->first();
+
+        if ($paidPayment !== null) {
+            $refund = $this->payments->refundPayment($paidPayment, __('bookings.refund_on_cancel_reason'));
+
+            if ($refund->status !== Refund::STATUS_SUCCEEDED) {
+                return back()->withErrors(['customer_phone' => __('bookings.refund_failed_keep')]);
+            }
+
+            $appointment->update(['status' => Appointment::STATUS_CANCELLED]);
+            $this->waitlist->announceFreedSlot($appointment);
+
+            return back()->with('success', __('bookings.guest_cancelled_refunded'));
         }
 
         $appointment->update(['status' => Appointment::STATUS_CANCELLED]);

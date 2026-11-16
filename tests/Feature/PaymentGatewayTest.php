@@ -116,3 +116,28 @@ it('reports a rejection as unverified with the gateway error', function () {
     expect($result['verified'])->toBeFalse()
         ->and($result['error'])->toContain('Insufficient balance');
 });
+
+it('simulates a sandbox refund and reports success', function () {
+    [$business, $service, $staff, $appointment, $payment] = $this->paidBookingWorld();
+
+    Http::fake(['sandbox.zarinpal.com/*' => Http::response(['data' => ['code' => 100]])]);
+
+    $result = zarinpal()->refund($payment, 500_000);
+
+    expect($result['succeeded'])->toBeTrue()
+        ->and($result['simulated'])->toBeTrue();
+});
+
+it('refuses to fake a production refund', function () {
+    [$business, $service, $staff, $appointment, $payment] = $this->paidBookingWorld();
+
+    config()->set('nobat.payment.gateways.zarinpal', [
+        'merchant_id' => '00000000-0000-0000-0000-000000000000',
+        'sandbox' => false,
+        'timeout' => 10,
+        'retries' => 0,
+    ]);
+
+    expect(fn () => app(PaymentManager::class)->driver('zarinpal')->refund($payment, 500_000))
+        ->toThrow(RuntimeException::class);
+});

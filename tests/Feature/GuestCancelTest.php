@@ -59,7 +59,7 @@ it('refuses a guest cancellation when the phone does not match', function () {
     expect($appointment->refresh()->status)->toBe(Appointment::STATUS_CONFIRMED);
 });
 
-it('refuses a guest cancellation for a paid booking', function () {
+it('cancels a paid booking and refunds it automatically for the proved guest', function () {
     $business = $this->makeBusiness();
     $staff = $this->addStaff($business);
     $appointment = $this->createAppointment(
@@ -68,15 +68,17 @@ it('refuses a guest cancellation for a paid booking', function () {
         $this->nextOpenDate()->setTimeFromTimeString('10:00'),
         Appointment::STATUS_CONFIRMED,
     );
-    $this->createPaymentFor($appointment, 500_000, Payment::STATUS_PAID);
+    $payment = $this->createPaymentFor($appointment, 500_000, Payment::STATUS_PAID);
 
     $this->post(route('bookings.guest_cancel', $appointment->code), [
         'customer_phone' => '09120000000',
     ])
         ->assertRedirect()
-        ->assertSessionHasErrors('customer_phone');
+        ->assertSessionHasNoErrors();
 
-    expect($appointment->refresh()->status)->toBe(Appointment::STATUS_CONFIRMED);
+    expect($appointment->refresh()->status)->toBe(Appointment::STATUS_CANCELLED)
+        ->and($payment->refresh()->status)->toBe(Payment::STATUS_REFUNDED)
+        ->and($payment->refunds()->firstOrFail()->status)->toBe(\App\Models\Refund::STATUS_SUCCEEDED);
 });
 
 it('refuses a guest cancellation once the appointment time has passed', function () {

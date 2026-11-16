@@ -4,7 +4,6 @@ namespace App\Http\Controllers\My;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
-use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
@@ -73,7 +72,6 @@ class AppointmentsController extends Controller
             Appointment::STATUS_PENDING_PAYMENT,
             Appointment::STATUS_CONFIRMED,
         ], true)
-            && $appointment->starts_at->isFuture()
-            && ! $appointment->payments()->where('status', Payment::STATUS_PAID)->exists();
+            && $appointment->starts_at->isFuture();
     }
 }

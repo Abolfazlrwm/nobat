@@ -191,5 +191,8 @@
     "auth.otp_wrong_code": "The code is wrong or expired; try again.",
     "auth.otp_verify_throttled": "Too many attempts with this code; request a fresh one in a few minutes.",
     "auth.otp_invalid_input": "The phone number or code is not valid.",
-    "auth.otp_default_name": "Nobat customer"
+    "auth.otp_default_name": "Nobat customer",
+    "bookings.refund_on_cancel_reason": "Cancelled by the customer — automatic refund",
+    "bookings.guest_cancelled_refunded": "The appointment was cancelled and the payment refunded.",
+    "bookings.refund_failed_keep": "The gateway refund failed — the appointment and payment are untouched; try again in a few minutes."
 }

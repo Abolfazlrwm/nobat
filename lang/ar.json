@@ -191,5 +191,8 @@
     "auth.otp_wrong_code": "الرمز غير صحيح أو منتهي الصلاحية؛ حاول مرة أخرى.",
     "auth.otp_verify_throttled": "محاولات كثيرة جدًا بهذا الرمز؛ اطلب رمزًا جديدًا بعد بضع دقائق.",
     "auth.otp_invalid_input": "رقم الهاتف أو الرمز المُدخل غير صالح.",
-    "auth.otp_default_name": "عميل نوبت"
+    "auth.otp_default_name": "عميل نوبت",
+    "bookings.refund_on_cancel_reason": "إلغاء الموعد من قبل العميل — استرداد تلقائي",
+    "bookings.guest_cancelled_refunded": "تم إلغاء الموعد واسترداد المبلغ المدفوع.",
+    "bookings.refund_failed_keep": "فشل الاسترداد لدى بوابة الدفع — الموعد والدفع كما هما؛ حاول مرة أخرى بعد قليل."
 }
