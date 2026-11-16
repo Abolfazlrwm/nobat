@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.27.0] - 2026-11-16
+
+### Added
+
+- **دفتر عملیات، قدم به قدم با حساب‌های موبایلی**: بخش زمان‌بند حالا سه کار را
+  فهرست می‌کند — `nobat:prune-login-otps` روزانه به جدول پیوست — و بخش صف صراحت
+  می‌گوید پیامک‌های OTP هم روی همان صف می‌روند: با `sync` در دمو و با `database`
+  در پروداکت، سه تلاش با backoff، و سقفِ نرخِ مستقلِ درخواستِ کد به‌عنوان دیوارِ
+  ضدِ حملهٔ هزینه‌سازِ پیامک. بج تست‌ها در README هم به ۲۹۳ رسید.
+
+### Changed
+
+- نسخهٔ اپ به 1.27.0 رسید — ریلِ عملیاتی؛ کدِ محصول در این نسخه تغییری نکرده.
+
 ## [1.26.0] - 2026-11-16
 
 ### Added
