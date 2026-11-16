@@ -169,6 +169,7 @@
     "bookings.guest_cancelled": "تم إلغاء موعدك.",
     "bookings.guest_phone_mismatch": "رقم الهاتف لا يطابق هذا الموعد.",
     "bookings.guest_not_cancellable": "لم يعد يمكن إلغاء هذا الموعد — الحجوزات المدفوعة تُنسّق مع النشاط التجاري.",
+    "bookings.gcal_details": "موعد نوبت — رمز التتبع: :code",
     "bookings.rescheduled": "تم تغيير موعدك بنجاح.",
     "bookings.guest_not_reschedulable": "لم يعد بإمكانك تغيير هذا الموعد — تواصل مع النشاط التجاري لتغيير وقته.",
     "sms.reschedule": ":name العزيز، تم تغيير موعد :service في \":business\" من الساعة :old_time إلى الساعة :time بتاريخ :date. رمز المتابعة: :code",

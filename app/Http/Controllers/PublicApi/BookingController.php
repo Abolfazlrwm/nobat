@@ -162,6 +162,14 @@ class BookingController extends Controller
                 'status' => $sibling->status,
                 'status_label' => $sibling->localizedStatusLabel(),
             ]),
+            // Google Calendar accepts an external template URL — built
+            // server-side so the dates format is tested, not hoped for.
+            'gcal_url' => 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+                .'&text='.rawurlencode($appointment->business->name.' — '.$appointment->service->name)
+                .'&dates='.$appointment->starts_at->utc()->format('Ymd\THis\Z')
+                .'/'.$appointment->ends_at->utc()->format('Ymd\THis\Z')
+                .'&details='.rawurlencode(__('bookings.gcal_details', ['code' => $appointment->code]))
+                .'&location='.rawurlencode((string) $appointment->business->address),
         ]);
     }
 

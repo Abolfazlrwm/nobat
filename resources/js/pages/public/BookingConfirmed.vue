@@ -17,11 +17,14 @@ import { computed, onMounted, ref } from 'vue';
 const props = defineProps<{
     appointment: BookingConfirmation;
     series?: { code: string; starts_at: string; status: string; status_label: string }[];
+    // server-built Google Calendar template URL
+    gcalUrl?: string;
 }>();
 
 const { t, num, price, dateTime, statusLabel } = useLocale();
 
 const series = computed(() => props.series ?? []);
+const gcalUrl = computed(() => props.gcalUrl ?? '');
 
 // The QR encodes this page's own URL: reception scans it and lands on the
 // tracking page without a single word spoken. Rendered client-side as a
@@ -397,6 +400,12 @@ function submitReschedule() {
                             <a :href="route('bookings.ics', appointment.code)" download>
                                 <CalendarPlus class="size-4" />
                                 {{ t('booking.addToCalendar') }}
+                            </a>
+                        </Button>
+                        <Button v-if="gcalUrl" as-child variant="outline" class="flex-1 gap-1">
+                            <a :href="gcalUrl" target="_blank" rel="noopener">
+                                <CalendarPlus class="size-4" />
+                                {{ t('booking.addToGoogleCalendar') }}
                             </a>
                         </Button>
                         <Button as-child variant="outline" class="flex-1">

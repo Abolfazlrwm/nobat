@@ -169,6 +169,7 @@
     "bookings.guest_cancelled": "Your booking has been cancelled.",
     "bookings.guest_phone_mismatch": "This mobile number does not match the booking.",
     "bookings.guest_not_cancellable": "This booking can no longer be cancelled — paid bookings go through the business.",
+    "bookings.gcal_details": "Nobat booking — tracking code: :code",
     "bookings.rescheduled": "Your appointment time has been changed.",
     "bookings.guest_not_reschedulable": "This appointment can no longer be moved — contact the business to change its time.",
     "sms.reschedule": "Dear :name, your :service appointment at \":business\" has moved from :old_time to :time on :date. Tracking code: :code",
