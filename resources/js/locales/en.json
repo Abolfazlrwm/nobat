@@ -344,7 +344,8 @@
             "managePanel": "Management panel",
             "menu": "Menu",
             "settings": "Settings",
-            "logout": "Log out"
+            "logout": "Log out",
+            "calendar": "Calendar"
         },
         "weekdays": {
             "0": "Sat",
@@ -669,6 +670,21 @@
             "exportTitle": "Data export",
             "exportDesc": "Download everything we hold on your account and businesses as a JSON file — your data is yours.",
             "exportAction": "Download my data"
+        },
+        "calendar": {
+            "title": "Appointment calendar",
+            "subtitle": "The Jalali month of appointments — each day's load, the waitlist and the selected day.",
+            "today": "Today",
+            "allBusinesses": "All businesses",
+            "emptyDay": "No appointments on this day.",
+            "waitlistDemand": "Waitlist",
+            "cellTooltip": "{n} active appointments — {m} minutes occupied",
+            "waitlist": {
+                "waiting": "Waiting",
+                "notified": "Notified",
+                "booked": "Booked",
+                "cancelled": "Cancelled"
+            }
         }
     },
     "legal": {

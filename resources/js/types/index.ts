@@ -308,3 +308,25 @@ export interface Paginated<T> {
     per_page: number;
     links: { url: string | null; label: string; active: boolean }[];
 }
+
+/** One day of the dashboard's Jalali calendar grid. */
+export interface CalendarDay {
+    date: string;
+    jd: number;
+    weekday: number;
+    counts: Record<string, number>;
+    blocking_count: number;
+    busy_minutes: number;
+    waitlist_count: number;
+    is_today: boolean;
+    is_past: boolean;
+}
+
+/** A waitlist entry listed under the selected calendar day. */
+export interface CalendarWaitlistItem {
+    id: number;
+    customer_name: string;
+    customer_phone: string;
+    status: string;
+    status_label: string;
+}

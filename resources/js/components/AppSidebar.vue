@@ -10,6 +10,7 @@ import {
     Briefcase,
     Building2,
     CalendarDays,
+    CalendarRange,
     Clock4,
     Hourglass,
     Images,
@@ -37,6 +38,7 @@ const canManage = computed(() => {
 const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
         { title: t('panel.nav.dashboard'), href: '/dashboard', icon: LayoutGrid },
+        { title: t('panel.nav.calendar'), href: '/calendar', icon: CalendarRange },
         { title: t('panel.nav.appointments'), href: '/appointments', icon: CalendarDays },
     ];
 

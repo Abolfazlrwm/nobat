@@ -4,6 +4,7 @@ use App\Http\Controllers\Dashboard\AnalyticsController;
 use App\Http\Controllers\Dashboard\ApiTokenController;
 use App\Http\Controllers\Dashboard\AppointmentController;
 use App\Http\Controllers\Dashboard\AppointmentStatusController;
+use App\Http\Controllers\Dashboard\CalendarController;
 use App\Http\Controllers\Dashboard\CustomerController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ReportController;
@@ -136,6 +137,8 @@ Route::get('invoices/{invoice:number}/pdf', [InvoiceController::class, 'pdf'])
 
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
     Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::patch('appointments/{appointment}/status', [AppointmentStatusController::class, 'update'])
