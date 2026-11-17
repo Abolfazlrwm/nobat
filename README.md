@@ -9,7 +9,7 @@
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Laravel](https://img.shields.io/badge/Laravel-12-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-303%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![Tests](https://img.shields.io/badge/tests-330%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -275,6 +275,7 @@ sequenceDiagram
 - [x] **v1.31** — صف واقعی روی دمو: `QUEUE_CONNECTION=database` و ورکرِ همراهِ شِدولر
 - [x] **v1.32** — پیامک بین‌المللی: درایور Twilio با E.164 و روتینگ `intl` (ایران → کاوه‌نگار، دنیا → Twilio)
 - [x] **v1.33** — پایش نسل دوم: `/health` با عمقِ صف و فضای دیسک و نسخهٔ اپ + دستور `nobat:doctor`
+- [x] **v1.34** — تقویم بصری پنل: ماه جلالی با بارِ هر روز (وضعیت‌ها، دقیقهٔ اشغال، صف انتظار) و خطِ زمانِ روزِ منتخب
 
 ایده‌ی جدیدی دارید؟ یک [پیشنهاد فیچر](../../issues/new?template=feature_request.yml) باز کنید.
 
