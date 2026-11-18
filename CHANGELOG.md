@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.35.1] - 2026-11-18
+
+### Security
+
+- **minimatch@9.0.9 آسیب‌پذیر (DoS از راه amplification)**: overrideِ جراحی در
+  package.json مسیرِ `vue-tsc → @vue/language-core` را به `^11.0.9` برد — همان
+  نسخه‌ای که زیرِ typescript-eslint از قبل نشسته بود؛ minimatch@3.1.5 زیرِ eslint
+  بیرونِ بازهٔ هشدار است و دست‌نخورده ماند. هشدارِ Dependabot با این پوش بسته می‌شود.
+- **picomatch (HIGH — ReDoS در extglobهای تک‌شاخه)**: نسخهٔ ترمیم‌شده‌ای روی
+  رجیستری نیست (`<= 4.0.7` همهٔ نسخه‌های موجود را دربر می‌گیرد) و «راه‌حلِ»
+  پیشنهادیِ npm یعنی downgradeِ vite/tailwind نه واقعی است نه امن. آسیب‌پذیری فقط
+  در ابزارِ dev است (watcher ویت، اسکنِ محتوای tailwind، eslint) و در دارایی‌های
+  ساخته‌شده هیچ ردِ پایی ندارد؛ به‌محضِ انتشارِ نسخهٔ پچ‌شده، override اضافه می‌شود.
+
+### Fixed
+
+- نسخهٔ اپ (`config/app.php`) که از 1.34.0 جا مانده بود — بجِ لندینگ و `/health`
+  هنوز «1.34.0» می‌گفتند؛ حالا با هر ریلیز واقعاً بامپ می‌شود.
+
 ## [1.35.0] - 2026-11-18
 
 ### Added
