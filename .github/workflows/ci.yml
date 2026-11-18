@@ -8,7 +8,7 @@ on:
 
 jobs:
     test:
-        name: Pint, Pest & Assets
+        name: Lint, Pint, Pest & Assets
         runs-on: ubuntu-latest
 
         steps:
@@ -32,6 +32,12 @@ jobs:
 
             - name: Install Node dependencies
               run: npm ci
+
+            - name: Code style (ESLint)
+              run: npm run lint:check
+
+            - name: Code style (Prettier)
+              run: npm run format:check
 
             - name: Build frontend assets
               run: npm run build
