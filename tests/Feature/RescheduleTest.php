@@ -96,6 +96,10 @@ it('refuses to move a cancelled or completed booking', function () {
 });
 
 it('refuses to move a booking whose time has already started', function () {
+    // Freeze the clock mid-morning so "today at 08:00" is always already
+    // started — a CI runner that lands before 08:00 made this flaky.
+    CarbonImmutable::setTestNow(CarbonImmutable::today()->setTimeFromTimeString('10:00'));
+
     $business = $this->makeBusiness();
     $staff = $this->addStaff($business);
     $appointment = $this->createAppointment(
@@ -113,6 +117,8 @@ it('refuses to move a booking whose time has already started', function () {
         ->assertSessionHasErrors('starts_at');
 
     expect($appointment->refresh()->starts_at->format('H:i'))->toBe('08:00');
+
+    CarbonImmutable::setTestNow();
 });
 
 it('refuses to move into another booking\'s window', function () {

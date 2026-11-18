@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- تستِ «ردِ جابه‌جاییِ نوبتی که زمانش شروع شده» قطعی شد: با `CarbonImmutable::setTestNow`
+  ساعتِ روی ۱۰ صبح قفل شد تا نوبتِ «امروز ۰۸:۰۰» همیشه گذشته باشد — رانِ CI که پیش
+  از ۰۸:۰۰ UTC می‌افتاد تست را flaky کرده بود (قرمزِ ۲۵ آبان از همین بود).
 - دو ایرادِ واقعیِ ESLint که تا امروز در CI دیده نمی‌شد: در صفحهٔ مشتریانِ داشبورد
   تابعِ `search` با prop همنامِ `search` تصادم داشت (`vue/no-dupe-keys`) و تابع به
   `submitSearch` تغییرِ نام داد؛ در نوبت‌هایِ من یک متغیرِ بلااستفاده حذف شد.
