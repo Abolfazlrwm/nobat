@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.35.0] - 2026-11-18
+
+### Added
+
+- **کدِ رزروِ پیشخوان**: در جدولِ کسب‌وکارها (سوپرادمین) و کنارِ لینکِ عمومی در
+  صفحهٔ گالری (مدیر)، دکمهٔ «کد QR» دیالوگی باز می‌کند که QRِ صفحهٔ عمومیِ رزروِ
+  همان کسب‌وکار را می‌کشد — با دانلودِ PNG باکیفیت (۵۱۲px) و کپیِ لینک؛ چاپش روی
+  پیشخوان یعنی مشتری با یک اسکن در صفحهٔ رزرو است. کاملاً سمتِ مرورگر با همان
+  `qrcode` که رسیدِ نوبت می‌کشد، سه‌زبانه (fa/en/ar) و بدونِ هیچ تغییرِ بک‌اند.
+- **ریلیزِ خودکارِ گیت‌هاب**: پوشِ هر تگِ `v*` یک GitHub Release می‌سازد که متنش
+  دقیقاً بخشِ همان نسخه از همین CHANGELOG است (`.github/extract_changelog.py` —
+  اگر نسخه چنجلاگ نداشته باشد ریلیز با خطا می‌شکند تا خالی منتشر نشود)؛ بجِ
+  «release» در هر دو README مستقیم از تگ‌های گیت‌هاب می‌خواند.
 
 ### Fixed
 
@@ -26,6 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   و advisory های بالادستیِ بدونِ فیکس (sucrase، tinyglobby) به کارِ جداگانه موکول شد.
 - ۲۸ فایلِ فرانت‌اند با Prettier قالب‌بندی شد و `format:check`/`lint:check` به
   CI اضافه شد — از این پس ESLint و Prettier همراهِ Pint در هر push اجرا می‌شوند.
+- اسکرین‌شات‌های واقعیِ دموی زنده: تقویمِ بصریِ v1.34 و داشبوردِ تازه‌شده به
+  گالریِ هر دو README اضافه شد و رودمپِ انگلیسی که از v1.16 عقب‌مانده بود تا
+  v1.35 همگام شد.
 
 ## [1.34.0] - 2026-11-17
 

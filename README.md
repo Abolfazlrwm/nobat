@@ -7,6 +7,7 @@
 فارسی، RTL، تقویم جلالی — رزرو بدون تماس تلفنی و بدون معطلی
 
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Abolfazlrwm/nobat?sort=semver&label=release)](https://github.com/Abolfazlrwm/nobat/releases)
 [![Laravel](https://img.shields.io/badge/Laravel-12-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
 [![Tests](https://img.shields.io/badge/tests-330%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
@@ -62,6 +63,8 @@
 | ![پروفایل مشتری](docs/screenshots/customers-profile.png) | |
 | **🖼️ گالری تصاویر کسب‌وکار (نسخه ۱.۱۴.۰)** | **🌐 پنل چندزبانه — گالری به انگلیسی (LTR)** |
 | ![گالری تصاویر](docs/screenshots/gallery.png) | ![داشبورد انگلیسی](docs/screenshots/dashboard-en.png) |
+| **🗓️ تقویمِ بصریِ پنل — ماهِ کاری در یک نگاه (نسخه ۱.۳۴.۰)** | |
+| ![تقویم بصری پنل](docs/screenshots/calendar.png) | |
 
 ---
 
@@ -276,6 +279,7 @@ sequenceDiagram
 - [x] **v1.32** — پیامک بین‌المللی: درایور Twilio با E.164 و روتینگ `intl` (ایران → کاوه‌نگار، دنیا → Twilio)
 - [x] **v1.33** — پایش نسل دوم: `/health` با عمقِ صف و فضای دیسک و نسخهٔ اپ + دستور `nobat:doctor`
 - [x] **v1.34** — تقویم بصری پنل: ماه جلالی با بارِ هر روز (وضعیت‌ها، دقیقهٔ اشغال، صف انتظار) و خطِ زمانِ روزِ منتخب
+- [x] **v1.35** — کدِ رزروِ پیشخوان: QR صفحهٔ رزروِ هر کسب‌وکار با دانلودِ PNG و کپیِ لینک (سوپرادمین و مدیر) + ریلیزِ خودکارِ گیت‌هاب از روی تگ‌ها
 
 ایده‌ی جدیدی دارید؟ یک [پیشنهاد فیچر](../../issues/new?template=feature_request.yml) باز کنید.
 

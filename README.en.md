@@ -7,6 +7,7 @@
 Persian-first, fully RTL, Jalali calendar — booking without phone calls and waiting on hold
 
 [![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Abolfazlrwm/nobat?sort=semver&label=release)](https://github.com/Abolfazlrwm/nobat/releases)
 [![Laravel](https://img.shields.io/badge/Laravel-12-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
 [![Tests](https://img.shields.io/badge/tests-330%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
@@ -58,6 +59,8 @@ Demo accounts (password for all: `password`):
 | ![Waitlist board](docs/screenshots/waitlist.png) | |
 | **🖼️ The photo gallery (v1.14.0)** | **🌐 The bilingual panels — gallery in English (LTR)** |
 | ![Photo gallery](docs/screenshots/gallery.png) | ![English gallery page](docs/screenshots/dashboard-en.png) |
+| **🗓️ The visual panel calendar — the working month at a glance (v1.34.0)** | |
+| ![Visual panel calendar](docs/screenshots/calendar.png) | |
 
 ---
 
@@ -175,6 +178,20 @@ Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE
 - [x] **v1.14** — bilingual management panels (the full dashboard in fa/en) and the business photo gallery with multi-file upload, a cover photo and a lightbox
 - [x] **v1.15** — a third language: Arabic (ar) with a full 501-key frontend catalog and 111 server keys, RTL layout shared with Persian, Gregorian dates with Arabic month names and Latin digits (ar-u-nu-latn)
 - [x] **v1.16** — the audit ceremony: trilingual completion (English auth/validation catalog, error pages, invoices, locale-aware sms/mail/db notifications), SEO (sitemap + JSON-LD), guest self-cancel by phone, waitlist auto-promote, manager replies to reviews, gallery reordering and panel pagination
+- [x] **v1.17** — the trilingual correctness bundle: a locale column on appointments, SMS in the visitor's language, calendars kept in step
+- [x] **v1.18** — the throttle key is the real visitor's identity, not the edge proxy server (the IP chain)
+- [x] **v1.19** — the scheduler heartbeat and a real health endpoint (`/health` replaces `/up`)
+- [x] **v1.20** — link previews: server-side meta per route
+- [x] **v1.21** — moving an appointment without a phone call: self-service time changes with the same phone proof
+- [x] **v1.22** — a directory that answers: server-side categories and search
+- [x] **v1.23** — the standing appointment: a recurring series booked in one go
+- [x] **v1.24–v1.27** — the identity stage: passwordless OTP sign-in, "my appointments" as the customer's personal book, SMS addressed by account name, a step-by-step ops book
+- [x] **v1.28–v1.30** — the real-money stage: ZarinPal on the real sandbox, cancel-paid with automatic refunds, Persian PDF invoices via mPDF (+ the v1.30.1 SQLite lock patch)
+- [x] **v1.31** — a real queue on the demo: `QUEUE_CONNECTION=database` and a worker running alongside the scheduler
+- [x] **v1.32** — international SMS: the Twilio driver with E.164 and `intl` routing (Iran → Kavenegar, the world → Twilio)
+- [x] **v1.33** — second-generation monitoring: `/health` with queue depth, disk space and the app version + the `nobat:doctor` command
+- [x] **v1.34** — the visual panel calendar: a Jalali month with each day's real load (status counts, busy minutes, waitlist demand) and the selected day's timeline
+- [x] **v1.35** — the reception booking QR: a QR of every business's public booking page with PNG download and link copy (superadmin & manager) + automated GitHub releases from tags
 
 Have an idea? Open a [feature request](../../issues/new?template=feature_request.yml).
 
