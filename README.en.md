@@ -59,8 +59,8 @@ Demo accounts (password for all: `password`):
 | ![Waitlist board](docs/screenshots/waitlist.png) | |
 | **🖼️ The photo gallery (v1.14.0)** | **🌐 The bilingual panels — gallery in English (LTR)** |
 | ![Photo gallery](docs/screenshots/gallery.png) | ![English gallery page](docs/screenshots/dashboard-en.png) |
-| **🗓️ The visual panel calendar — the working month at a glance (v1.34.0)** | |
-| ![Visual panel calendar](docs/screenshots/calendar.png) | |
+| **🗓️ The visual panel calendar — the working month at a glance (v1.34.0)** | **📱 The reception booking QR (v1.35.0)** |
+| ![Visual panel calendar](docs/screenshots/calendar.png) | ![Reception booking QR](docs/screenshots/qr.png) |
 
 ---
 

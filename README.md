@@ -63,8 +63,8 @@
 | ![پروفایل مشتری](docs/screenshots/customers-profile.png) | |
 | **🖼️ گالری تصاویر کسب‌وکار (نسخه ۱.۱۴.۰)** | **🌐 پنل چندزبانه — گالری به انگلیسی (LTR)** |
 | ![گالری تصاویر](docs/screenshots/gallery.png) | ![داشبورد انگلیسی](docs/screenshots/dashboard-en.png) |
-| **🗓️ تقویمِ بصریِ پنل — ماهِ کاری در یک نگاه (نسخه ۱.۳۴.۰)** | |
-| ![تقویم بصری پنل](docs/screenshots/calendar.png) | |
+| **🗓️ تقویمِ بصریِ پنل — ماهِ کاری در یک نگاه (نسخه ۱.۳۴.۰)** | **📱 کدِ رزروِ پیشخوان (نسخه ۱.۳۵.۰)** |
+| ![تقویم بصری پنل](docs/screenshots/calendar.png) | ![کدِ رزروِ پیشخوان](docs/screenshots/qr.png) |
 
 ---
 
