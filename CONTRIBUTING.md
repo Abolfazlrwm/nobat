@@ -36,9 +36,10 @@ lockForUpdate روی رکورد پرسنل اضافه شد تا دو درخوا�
 ## قبل از ارسال PR این‌ها را اجرا کنید
 
 ```bash
-php artisan test          # هر ۴۹ تست باید سبز باشد
+php artisan test          # هر ۳۳۰ تست باید سبز باشد
 vendor/bin/pint --test    # استایل Laravel Pint
-npm run lint              # ESLint + Prettier
+npm run lint:check        # ESLint — صفر خطا
+npm run format:check      # استایل Prettier
 npm run build             # بیلد Vite بدون خطا
 ```
 

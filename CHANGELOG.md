@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- دو ایرادِ واقعیِ ESLint که تا امروز در CI دیده نمی‌شد: در صفحهٔ مشتریانِ داشبورد
+  تابعِ `search` با prop همنامِ `search` تصادم داشت (`vue/no-dupe-keys`) و تابع به
+  `submitSearch` تغییرِ نام داد؛ در نوبت‌هایِ من یک متغیرِ بلااستفاده حذف شد.
+
+### Changed
+
+- **چیدمانِ استانداردِ وابستگی‌های npm**: ابزارهای فقط-ساخت (vite، tailwindcss،
+  typescript، vue-tsc، autoprefixer، laravel-vite-plugin و @types/*) به
+  `devDependencies` منتقل شدند و `lucide` (نسخهٔ بلااستفادهٔ غیر-Vue) حذف شد —
+  `npm audit --omit=dev` از ۱۶ آسیب‌پذیری به صفر رسید؛ vite نیز به ۶.۴.۶ ارتقا
+  یافت (خطای امنیتی تا ۶.۴.۳ را می‌پوشاند). ارتقای major باقی‌ماندهٔ tailwind ۴
+  و advisory های بالادستیِ بدونِ فیکس (sucrase، tinyglobby) به کارِ جداگانه موکول شد.
+- ۲۸ فایلِ فرانت‌اند با Prettier قالب‌بندی شد و `format:check`/`lint:check` به
+  CI اضافه شد — از این پس ESLint و Prettier همراهِ Pint در هر push اجرا می‌شوند.
+
 ## [1.34.0] - 2026-11-17
 
 ### Added
