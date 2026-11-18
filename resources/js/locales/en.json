@@ -685,6 +685,15 @@
                 "booked": "Booked",
                 "cancelled": "Cancelled"
             }
+        },
+        "qr": {
+            "open": "QR code",
+            "title": "Reception booking QR",
+            "desc": "Print this code for the reception desk — one scan takes the customer straight to the booking page.",
+            "download": "Download PNG",
+            "copy": "Copy link",
+            "copied": "Copied",
+            "close": "Close"
         }
     },
     "legal": {

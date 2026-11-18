@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FlashMessages from '@/components/FlashMessages.vue';
+import ReceptionQr from '@/components/ReceptionQr.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -8,7 +9,7 @@ import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, GalleryPhoto } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ArrowDown, ArrowUp, ImageIcon, Images, LoaderCircle, Save, Star, Trash2, ZoomIn } from 'lucide-vue-next';
+import { ArrowDown, ArrowUp, ImageIcon, Images, LoaderCircle, QrCode, Save, Star, Trash2, ZoomIn } from 'lucide-vue-next';
 import { computed, reactive, ref } from 'vue';
 
 const props = defineProps<{
@@ -28,6 +29,7 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const uploading = ref(false);
 const savingCaption = ref<number | null>(null);
 const lightbox = ref<number | null>(null);
+const qrOpen = ref(false);
 
 const captions = reactive<Record<number, string>>(Object.fromEntries(props.photos.map((photo) => [photo.id, photo.caption ?? ''])));
 
@@ -158,6 +160,10 @@ function onLightboxKeydown(event: KeyboardEvent): void {
                         <ImageIcon v-else class="ml-1 size-4" />
                         {{ uploading ? t('panel.gallery.adding') : t('panel.gallery.add') }}
                     </Button>
+                    <Button size="sm" variant="outline" @click="qrOpen = true">
+                        <QrCode class="me-1 size-4" />
+                        {{ t('panel.qr.open') }}
+                    </Button>
                     <Button size="sm" variant="outline" as-child>
                         <Link :href="route('businesses.show', { business: business.slug })" target="_blank">
                             {{ t('panel.gallery.publicLink') }}
@@ -270,6 +276,8 @@ function onLightboxKeydown(event: KeyboardEvent): void {
                     </div>
                 </DialogContent>
             </Dialog>
+
+            <ReceptionQr v-model:open="qrOpen" :business-name="business.name" :slug="business.slug" />
         </div>
     </AppLayout>
 </template>

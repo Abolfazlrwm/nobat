@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import FlashMessages from '@/components/FlashMessages.vue';
+import ReceptionQr from '@/components/ReceptionQr.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { Button } from '@/components/ui/button';
 import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { AdminBusiness, BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
-import { Power } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { Power, QrCode } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
 defineProps<{
     businesses: AdminBusiness[];
@@ -20,6 +21,14 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => [
     { title: t('panel.dashboard.title'), href: '/dashboard' },
     { title: t('panel.businesses.title'), href: '/businesses' },
 ]);
+
+const qrBusiness = ref<AdminBusiness | null>(null);
+const qrOpen = ref(false);
+
+function showQr(business: AdminBusiness): void {
+    qrBusiness.value = business;
+    qrOpen.value = true;
+}
 
 function toggle(business: AdminBusiness): void {
     router.patch(route('businesses.toggle', business.id), {}, { preserveScroll: true });
@@ -95,10 +104,16 @@ function setCategory(business: AdminBusiness, event: Event): void {
                                 />
                             </td>
                             <td class="px-4 py-3">
-                                <Button :variant="business.is_active ? 'outline' : 'default'" size="sm" @click="toggle(business)">
-                                    <Power class="ml-1 size-4" />
-                                    {{ business.is_active ? t('panel.businesses.deactivate') : t('panel.businesses.activate') }}
-                                </Button>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <Button variant="outline" size="sm" @click="showQr(business)">
+                                        <QrCode class="me-1 size-4" />
+                                        {{ t('panel.qr.open') }}
+                                    </Button>
+                                    <Button :variant="business.is_active ? 'outline' : 'default'" size="sm" @click="toggle(business)">
+                                        <Power class="ml-1 size-4" />
+                                        {{ business.is_active ? t('panel.businesses.deactivate') : t('panel.businesses.activate') }}
+                                    </Button>
+                                </div>
                             </td>
                         </tr>
 
@@ -108,6 +123,8 @@ function setCategory(business: AdminBusiness, event: Event): void {
                     </tbody>
                 </table>
             </div>
+
+            <ReceptionQr v-model:open="qrOpen" :business-name="qrBusiness?.name ?? ''" :slug="qrBusiness?.slug ?? ''" />
         </div>
     </AppLayout>
 </template>
