@@ -27,7 +27,8 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => [
 // Search runs server-side (q param) so it covers every page of the book.
 const query = ref(props.search ?? '');
 
-function search(): void {
+// Named submitSearch so it never shadows the `search` prop in template scope.
+function submitSearch(): void {
     router.get(route('customers.index'), { q: query.value.trim() }, { preserveState: true });
 }
 
@@ -37,8 +38,7 @@ const statCards = computed(() => [
     { key: 'revenue', label: t('panel.customers.statRevenue'), icon: Wallet, value: () => price(props.stats.revenue) },
 ]);
 
-const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
-    rate >= 50 ? 'destructive' : rate > 0 ? 'secondary' : 'outline';
+const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' => (rate >= 50 ? 'destructive' : rate > 0 ? 'secondary' : 'outline');
 </script>
 
 <template>
@@ -68,9 +68,9 @@ const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
                 </Card>
             </div>
 
-            <form class="relative max-w-sm" @submit.prevent="search">
-                <Search class="absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input v-model="query" :placeholder="t('panel.customers.search')" class="pr-9" @keydown.enter.prevent="search" />
+            <form class="relative max-w-sm" @submit.prevent="submitSearch">
+                <Search class="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input v-model="query" :placeholder="t('panel.customers.search')" class="pr-9" @keydown.enter.prevent="submitSearch" />
             </form>
 
             <div class="space-y-3">
@@ -89,8 +89,12 @@ const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
                             </Badge>
                         </div>
                         <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                            <span>{{ t('panel.customers.appointmentsLine', { n: num(customer.appointments_count), price: price(customer.total_spent) }) }}</span>
-                            <span v-if="customer.last_visit_at">{{ t('panel.customers.lastVisit', { date: dateShort(customer.last_visit_at) }) }}</span>
+                            <span>{{
+                                t('panel.customers.appointmentsLine', { n: num(customer.appointments_count), price: price(customer.total_spent) })
+                            }}</span>
+                            <span v-if="customer.last_visit_at">{{
+                                t('panel.customers.lastVisit', { date: dateShort(customer.last_visit_at) })
+                            }}</span>
                         </div>
                     </div>
 
@@ -99,10 +103,7 @@ const noShowVariant = (rate: number): 'destructive' | 'secondary' | 'outline' =>
                     </Button>
                 </div>
 
-                <div
-                    v-if="customers.data.length === 0"
-                    class="rounded-xl border border-dashed px-4 py-10 text-center text-muted-foreground"
-                >
+                <div v-if="customers.data.length === 0" class="rounded-xl border border-dashed px-4 py-10 text-center text-muted-foreground">
                     {{ search ? t('panel.customers.emptySearch') : t('panel.customers.empty') }}
                 </div>
 

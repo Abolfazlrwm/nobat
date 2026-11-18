@@ -31,7 +31,7 @@ interface MyAppointment {
     series: SeriesOccurrence[];
 }
 
-const props = defineProps<{
+defineProps<{
     upcoming: MyAppointment[];
     past: MyAppointment[];
 }>();
@@ -41,14 +41,18 @@ const { t, dateTime } = useLocale();
 const cancellingCode = ref('');
 
 const cancel = (item: MyAppointment): void => {
-    if (! window.confirm(t('my.confirmCancel'))) return;
+    if (!window.confirm(t('my.confirmCancel'))) return;
 
     cancellingCode.value = item.code;
-    router.post(route('bookings.guest_cancel', item.code), {}, {
-        onFinish: () => {
-            cancellingCode.value = '';
+    router.post(
+        route('bookings.guest_cancel', item.code),
+        {},
+        {
+            onFinish: () => {
+                cancellingCode.value = '';
+            },
         },
-    });
+    );
 };
 </script>
 
@@ -89,12 +93,7 @@ const cancel = (item: MyAppointment): void => {
                             class="mt-3 rounded-lg border border-dashed border-border bg-muted/30 p-3 text-sm"
                         >
                             <span class="font-medium">{{ t('my.series') }}</span>
-                            <span
-                                v-for="sibling in item.series"
-                                :key="sibling.code"
-                                class="ml-2 inline-block text-muted-foreground"
-                                dir="ltr"
-                            >
+                            <span v-for="sibling in item.series" :key="sibling.code" class="ml-2 inline-block text-muted-foreground" dir="ltr">
                                 {{ dateTime(sibling.starts_at) }} · {{ sibling.status_label }}
                             </span>
                         </div>
@@ -164,10 +163,7 @@ const cancel = (item: MyAppointment): void => {
                                 >
                                     {{ t('my.invoicePdf') }}
                                 </a>
-                                <Link
-                                    :href="route('bookings.show', item.code)"
-                                    class="text-sm text-muted-foreground underline"
-                                >
+                                <Link :href="route('bookings.show', item.code)" class="text-sm text-muted-foreground underline">
                                     {{ t('my.track') }}
                                 </Link>
                             </div>
