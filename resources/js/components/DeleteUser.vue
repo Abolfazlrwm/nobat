@@ -68,7 +68,14 @@ const closeModal = () => {
 
                         <div class="grid gap-2">
                             <Label for="password" class="sr-only">{{ t('auth.password') }}</Label>
-                            <Input id="password" type="password" name="password" ref="passwordInput" v-model="form.password" :placeholder="t('auth.password')" />
+                            <Input
+                                id="password"
+                                type="password"
+                                name="password"
+                                ref="passwordInput"
+                                v-model="form.password"
+                                :placeholder="t('auth.password')"
+                            />
                             <InputError :message="form.errors.password" />
                         </div>
 

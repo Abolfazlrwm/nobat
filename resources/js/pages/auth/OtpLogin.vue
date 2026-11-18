@@ -117,11 +117,7 @@ const backToPhone = () => {
                 </Button>
 
                 <div class="flex items-center justify-between text-sm" tabindex="3">
-                    <button
-                        type="button"
-                        class="text-muted-foreground underline underline-offset-4"
-                        @click="backToPhone"
-                    >
+                    <button type="button" class="text-muted-foreground underline underline-offset-4" @click="backToPhone">
                         {{ t('auth.otpChangePhone') }}
                     </button>
                     <button

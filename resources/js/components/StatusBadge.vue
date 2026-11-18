@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
 import { cn } from '@/lib/utils';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
     status: string;
@@ -20,9 +20,7 @@ const styles: Record<string, string> = {
 
 const classes = computed(() => styles[props.status] ?? 'bg-muted text-muted-foreground');
 
-const display = computed(
-    () => props.label ?? (te(`status.${props.status}`) ? t(`status.${props.status}`) : props.status),
-);
+const display = computed(() => props.label ?? (te(`status.${props.status}`) ? t(`status.${props.status}`) : props.status));
 </script>
 
 <template>

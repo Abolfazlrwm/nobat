@@ -8,9 +8,8 @@ import { computed } from 'vue';
 const { appearance, updateAppearance } = useAppearance();
 const { t } = useLocale();
 
-const isDark = computed(() =>
-    appearance.value === 'dark'
-    || (appearance.value === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches),
+const isDark = computed(
+    () => appearance.value === 'dark' || (appearance.value === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches),
 );
 
 function toggle(): void {

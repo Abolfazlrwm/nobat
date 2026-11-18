@@ -114,10 +114,7 @@ function setStatus(appointment: AppointmentItem, status: string): void {
                             <td class="px-4 py-3">{{ appointment.staff_name }}</td>
                             <td class="px-4 py-3 text-xs" dir="ltr">{{ dateTime(appointment.starts_at) }}</td>
                             <td class="px-4 py-3">
-                                <StatusBadge
-                                    :status="appointment.status"
-                                    :label="statusLabel(appointment.status, appointment.status_label)"
-                                />
+                                <StatusBadge :status="appointment.status" :label="statusLabel(appointment.status, appointment.status_label)" />
                             </td>
                             <td class="px-4 py-3">
                                 <DropdownMenu>

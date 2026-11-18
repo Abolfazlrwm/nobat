@@ -33,7 +33,7 @@ function entriesOf(value: any): [string, any][] {
 
 <template>
     <Head :title="t('landing.apiDocsTitle')">
-        <meta name="description" :content="t('landing.apiDocsSubtitle')">
+        <meta name="description" :content="t('landing.apiDocsSubtitle')" />
     </Head>
 
     <PublicLayout>
@@ -45,10 +45,7 @@ function entriesOf(value: any): [string, any][] {
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold tracking-tight">{{ t('landing.apiDocsTitle') }}</h1>
-                        <Badge variant="secondary" class="mt-1 font-mono text-xs">
-                            OpenAPI {{ spec.openapi }}
-                            · v{{ num(info.version) }}
-                        </Badge>
+                        <Badge variant="secondary" class="mt-1 font-mono text-xs"> OpenAPI {{ spec.openapi }} · v{{ num(info.version) }} </Badge>
                     </div>
                 </div>
                 <Button as-child variant="outline" class="gap-2">
@@ -70,9 +67,7 @@ function entriesOf(value: any): [string, any][] {
                 </CardHeader>
                 <CardContent>
                     <p class="text-sm leading-7 text-muted-foreground">{{ t('landing.apiDocsAuthDesc') }}</p>
-                    <p class="mt-3 font-mono text-xs" dir="ltr">
-                        Authorization: Bearer &lt;token&gt;
-                    </p>
+                    <p class="mt-3 font-mono text-xs" dir="ltr">Authorization: Bearer &lt;token&gt;</p>
                 </CardContent>
             </Card>
 
@@ -128,7 +123,8 @@ function entriesOf(value: any): [string, any][] {
                                 v-if="op['x-curl']"
                                 dir="ltr"
                                 class="mt-3 overflow-x-auto rounded-lg border bg-muted/40 p-3 font-mono text-xs leading-6"
-                            >{{ op['x-curl'] }}</pre>
+                                >{{ op['x-curl'] }}</pre
+                            >
                         </div>
                     </CardContent>
                 </Card>

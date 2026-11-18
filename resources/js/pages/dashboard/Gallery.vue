@@ -29,16 +29,12 @@ const uploading = ref(false);
 const savingCaption = ref<number | null>(null);
 const lightbox = ref<number | null>(null);
 
-const captions = reactive<Record<number, string>>(
-    Object.fromEntries(props.photos.map((photo) => [photo.id, photo.caption ?? ''])),
-);
+const captions = reactive<Record<number, string>>(Object.fromEntries(props.photos.map((photo) => [photo.id, photo.caption ?? ''])));
 
 const canUpload = computed(() => props.photos.length < props.max_photos);
 const remaining = computed(() => props.max_photos - props.photos.length);
 
-const lightboxPhoto = computed<GalleryPhoto | null>(() =>
-    lightbox.value === null ? null : props.photos[lightbox.value] ?? null,
-);
+const lightboxPhoto = computed<GalleryPhoto | null>(() => (lightbox.value === null ? null : (props.photos[lightbox.value] ?? null)));
 
 function chooseFiles(): void {
     fileInput.value?.click();
@@ -67,7 +63,11 @@ function upload(event: Event): void {
 function saveCaption(photo: GalleryPhoto): void {
     savingCaption.value = photo.id;
 
-    router.put(route('gallery.update', photo.id), { caption: captions[photo.id] ?? null }, { preserveScroll: true, onFinish: () => (savingCaption.value = null) });
+    router.put(
+        route('gallery.update', photo.id),
+        { caption: captions[photo.id] ?? null },
+        { preserveScroll: true, onFinish: () => (savingCaption.value = null) },
+    );
 }
 
 function makeCover(photo: GalleryPhoto): void {
@@ -175,7 +175,7 @@ function onLightboxKeydown(event: KeyboardEvent): void {
                     <div class="relative aspect-video overflow-hidden">
                         <img :src="photo.url" :alt="photo.caption ?? ''" class="size-full object-cover" loading="lazy" />
 
-                        <Badge v-if="photo.is_cover" class="absolute top-2 start-2 gap-1">
+                        <Badge v-if="photo.is_cover" class="absolute start-2 top-2 gap-1">
                             <Star class="size-3" />
                             {{ t('panel.gallery.coverBadge') }}
                         </Badge>
@@ -193,7 +193,13 @@ function onLightboxKeydown(event: KeyboardEvent): void {
                     <div class="space-y-2 p-3">
                         <Input v-model="captions[photo.id]" :placeholder="t('panel.gallery.captionPlaceholder')" class="h-8 text-xs" />
                         <div class="flex items-center gap-1">
-                            <Button size="sm" variant="outline" class="h-7 gap-1 text-xs" :disabled="savingCaption === photo.id" @click="saveCaption(photo)">
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                class="h-7 gap-1 text-xs"
+                                :disabled="savingCaption === photo.id"
+                                @click="saveCaption(photo)"
+                            >
                                 <Save class="size-3" />
                                 {{ t('panel.gallery.saveCaption') }}
                             </Button>
@@ -201,13 +207,33 @@ function onLightboxKeydown(event: KeyboardEvent): void {
                                 <Star class="size-3" />
                                 {{ t('panel.gallery.makeCover') }}
                             </Button>
-                            <Button size="sm" variant="ghost" class="h-7" :disabled="index === 0" :aria-label="t('panel.gallery.moveUp')" @click="move(photo, -1)">
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                class="h-7"
+                                :disabled="index === 0"
+                                :aria-label="t('panel.gallery.moveUp')"
+                                @click="move(photo, -1)"
+                            >
                                 <ArrowUp class="size-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" class="h-7" :disabled="index === photos.length - 1" :aria-label="t('panel.gallery.moveDown')" @click="move(photo, 1)">
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                class="h-7"
+                                :disabled="index === photos.length - 1"
+                                :aria-label="t('panel.gallery.moveDown')"
+                                @click="move(photo, 1)"
+                            >
                                 <ArrowDown class="size-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" class="ms-auto h-7 text-destructive" :aria-label="t('panel.gallery.deletePhoto')" @click="destroy(photo)">
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                class="ms-auto h-7 text-destructive"
+                                :aria-label="t('panel.gallery.deletePhoto')"
+                                @click="destroy(photo)"
+                            >
                                 <Trash2 class="size-4" />
                             </Button>
                         </div>
@@ -222,10 +248,7 @@ function onLightboxKeydown(event: KeyboardEvent): void {
             </div>
 
             <Dialog :open="lightbox !== null" @update:open="(open: boolean) => (open ? null : closeLightbox())">
-                <DialogContent
-                    class="max-w-3xl border-none bg-transparent p-2 shadow-none sm:max-w-3xl"
-                    @keydown="onLightboxKeydown($event)"
-                >
+                <DialogContent class="max-w-3xl border-none bg-transparent p-2 shadow-none sm:max-w-3xl" @keydown="onLightboxKeydown($event)">
                     <DialogHeader>
                         <DialogTitle class="text-sm text-white">{{ lightboxPhoto?.caption ?? t('panel.gallery.photo') }}</DialogTitle>
                     </DialogHeader>
@@ -234,9 +257,15 @@ function onLightboxKeydown(event: KeyboardEvent): void {
                         <img :src="lightboxPhoto.url" :alt="lightboxPhoto.caption ?? ''" class="max-h-[70vh] w-full rounded-lg object-contain" />
 
                         <div class="flex items-center justify-center gap-2">
-                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.prev')" @click="stepLightbox(-1)">{{ t('panel.gallery.prev') }}</Button>
-                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.close')" @click="closeLightbox()">{{ t('panel.gallery.close') }}</Button>
-                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.next')" @click="stepLightbox(1)">{{ t('panel.gallery.next') }}</Button>
+                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.prev')" @click="stepLightbox(-1)">{{
+                                t('panel.gallery.prev')
+                            }}</Button>
+                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.close')" @click="closeLightbox()">{{
+                                t('panel.gallery.close')
+                            }}</Button>
+                            <Button size="sm" variant="secondary" :aria-label="t('panel.gallery.next')" @click="stepLightbox(1)">{{
+                                t('panel.gallery.next')
+                            }}</Button>
                         </div>
                     </div>
                 </DialogContent>

@@ -9,7 +9,7 @@ import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, DiscountCodeItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
-import { Pencil, Plus, Trash2, TicketPercent } from 'lucide-vue-next';
+import { Pencil, Plus, TicketPercent, Trash2 } from 'lucide-vue-next';
 import { computed, reactive, ref } from 'vue';
 
 defineProps<{
@@ -207,11 +207,7 @@ function destroy(code: DiscountCodeItem): void {
                             </div>
                             <div class="space-y-2">
                                 <Label for="type">{{ t('panel.discounts.typeLabel') }}</Label>
-                                <select
-                                    id="type"
-                                    v-model="form.type"
-                                    class="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-                                >
+                                <select id="type" v-model="form.type" class="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
                                     <option value="percent">{{ t('panel.discounts.typePercent') }}</option>
                                     <option value="fixed">{{ t('panel.discounts.fixedOption') }}</option>
                                 </select>
@@ -220,24 +216,53 @@ function destroy(code: DiscountCodeItem): void {
 
                         <div class="grid grid-cols-2 gap-3">
                             <div class="space-y-2">
-                                <Label for="value">{{ form.type === 'percent' ? t('panel.discounts.valuePercent') : t('panel.discounts.valueFixed') }}</Label>
-                                <Input id="value" v-model="form.value" type="number" :min="form.type === 'percent' ? 1 : 1"
-                                    :max="form.type === 'percent' ? 100 : undefined" dir="ltr" />
+                                <Label for="value">{{
+                                    form.type === 'percent' ? t('panel.discounts.valuePercent') : t('panel.discounts.valueFixed')
+                                }}</Label>
+                                <Input
+                                    id="value"
+                                    v-model="form.value"
+                                    type="number"
+                                    :min="form.type === 'percent' ? 1 : 1"
+                                    :max="form.type === 'percent' ? 100 : undefined"
+                                    dir="ltr"
+                                />
                             </div>
                             <div class="space-y-2">
                                 <Label for="min_amount">{{ t('panel.discounts.minAmount') }}</Label>
-                                <Input id="min_amount" v-model="form.min_amount" type="number" min="0" dir="ltr" :placeholder="t('panel.common.optional')" />
+                                <Input
+                                    id="min_amount"
+                                    v-model="form.min_amount"
+                                    type="number"
+                                    min="0"
+                                    dir="ltr"
+                                    :placeholder="t('panel.common.optional')"
+                                />
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
                             <div class="space-y-2">
                                 <Label for="max_uses">{{ t('panel.discounts.maxUses') }}</Label>
-                                <Input id="max_uses" v-model="form.max_uses" type="number" min="1" dir="ltr" :placeholder="t('panel.common.optional')" />
+                                <Input
+                                    id="max_uses"
+                                    v-model="form.max_uses"
+                                    type="number"
+                                    min="1"
+                                    dir="ltr"
+                                    :placeholder="t('panel.common.optional')"
+                                />
                             </div>
                             <div class="space-y-2">
                                 <Label for="per_user_limit">{{ t('panel.discounts.perUser') }}</Label>
-                                <Input id="per_user_limit" v-model="form.per_user_limit" type="number" min="1" dir="ltr" :placeholder="t('panel.common.optional')" />
+                                <Input
+                                    id="per_user_limit"
+                                    v-model="form.per_user_limit"
+                                    type="number"
+                                    min="1"
+                                    dir="ltr"
+                                    :placeholder="t('panel.common.optional')"
+                                />
                             </div>
                         </div>
 

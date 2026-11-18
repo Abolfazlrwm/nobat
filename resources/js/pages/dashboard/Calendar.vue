@@ -3,8 +3,8 @@ import FlashMessages from '@/components/FlashMessages.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { Button } from '@/components/ui/button';
 import { useLocale } from '@/composables/useLocale';
-import { parseLocal } from '@/lib/persian';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { parseLocal } from '@/lib/persian';
 import type { AppointmentItem, BreadcrumbItem, CalendarDay, CalendarWaitlistItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { ChevronLeft, ChevronRight, Hourglass } from 'lucide-vue-next';
@@ -38,10 +38,7 @@ const monthLabel = computed(() => `${t(`calendar.months.${props.month.jm - 1}`)}
 const weekdayHeaders = computed(() => [0, 1, 2, 3, 4, 5, 6].map((i) => t(`calendar.weekdays.${i}`)));
 
 /** Leading blanks before day 1, then the month's days — grid fills RTL-first. */
-const cells = computed<(CalendarDay | null)[]>(() => [
-    ...Array.from({ length: props.month.first_weekday }, () => null),
-    ...props.days,
-]);
+const cells = computed<(CalendarDay | null)[]>(() => [...Array.from({ length: props.month.first_weekday }, () => null), ...props.days]);
 
 /** Start-of-month chevron: points "back" in each reading direction. */
 const prevIcon = computed(() => (isEn.value ? ChevronLeft : ChevronRight));
@@ -76,11 +73,9 @@ const dotClass: Record<string, string> = {
     expired: 'bg-zinc-300',
 };
 
-const visibleCounts = (day: CalendarDay) =>
-    ['confirmed', 'pending', 'completed', 'cancelled'].filter((status) => day.counts[status] > 0);
+const visibleCounts = (day: CalendarDay) => ['confirmed', 'pending', 'completed', 'cancelled'].filter((status) => day.counts[status] > 0);
 
-const cellTooltip = (day: CalendarDay): string =>
-    t('panel.calendar.cellTooltip', { n: num(day.blocking_count), m: num(day.busy_minutes) });
+const cellTooltip = (day: CalendarDay): string => t('panel.calendar.cellTooltip', { n: num(day.blocking_count), m: num(day.busy_minutes) });
 
 const timeOf = (iso: string): string => {
     const date = parseLocal(iso);
@@ -88,16 +83,11 @@ const timeOf = (iso: string): string => {
     return num(`${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`);
 };
 
-const waitlistStatusLabel = (entry: CalendarWaitlistItem): string =>
-    t(`panel.calendar.waitlist.${entry.status}`, entry.status_label);
+const waitlistStatusLabel = (entry: CalendarWaitlistItem): string => t(`panel.calendar.waitlist.${entry.status}`, entry.status_label);
 
 // The chosen business stays sticky across month and day navigation.
 function goTo(params: Record<string, string | number | undefined>): void {
-    router.get(
-        route('calendar.index'),
-        { business_id: props.business_id ?? undefined, ...params },
-        { preserveScroll: true },
-    );
+    router.get(route('calendar.index'), { business_id: props.business_id ?? undefined, ...params }, { preserveScroll: true });
 }
 
 function shiftMonth(delta: number): void {
@@ -185,10 +175,7 @@ function switchBusiness(event: Event): void {
                             :title="cellTooltip(cell)"
                             @click="selectDay(cell)"
                         >
-                            <span
-                                class="text-sm font-bold"
-                                :class="cell.weekday === 6 ? 'text-red-500' : 'text-foreground'"
-                            >{{ num(cell.jd) }}</span>
+                            <span class="text-sm font-bold" :class="cell.weekday === 6 ? 'text-red-500' : 'text-foreground'">{{ num(cell.jd) }}</span>
                             <span
                                 v-if="cell.waitlist_count > 0"
                                 class="mt-0.5 inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 text-[10px] font-medium text-amber-800 dark:bg-amber-950 dark:text-amber-300"
@@ -258,11 +245,7 @@ function switchBusiness(event: Event): void {
                         {{ t('panel.calendar.waitlistDemand') }}
                     </div>
                     <div class="mt-2 space-y-1.5">
-                        <div
-                            v-for="entry in selected.waitlist"
-                            :key="entry.id"
-                            class="flex flex-wrap items-center justify-between gap-2 text-sm"
-                        >
+                        <div v-for="entry in selected.waitlist" :key="entry.id" class="flex flex-wrap items-center justify-between gap-2 text-sm">
                             <div>
                                 <span class="font-medium">{{ entry.customer_name }}</span>
                                 <span class="text-xs text-muted-foreground" dir="ltr"> · {{ entry.customer_phone }}</span>

@@ -6,7 +6,7 @@ import { useLocale } from '@/composables/useLocale';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Paginated, WaitlistItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
-import { BellRing, Ban, Trash2, Hourglass } from 'lucide-vue-next';
+import { Ban, BellRing, Hourglass, Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -55,8 +55,7 @@ const statusVariant = (status: string): 'secondary' | 'outline' | 'default' =>
     status === 'waiting' ? 'default' : status === 'notified' ? 'secondary' : 'outline';
 
 /** Server labels are Persian; overlay the localized waitlist status. */
-const waitlistLabel = (entry: WaitlistItem): string =>
-    locale.value === 'fa' ? entry.status_label : t(`panel.waitlistStatus.${entry.status}`);
+const waitlistLabel = (entry: WaitlistItem): string => (locale.value === 'fa' ? entry.status_label : t(`panel.waitlistStatus.${entry.status}`));
 </script>
 
 <template>
@@ -83,9 +82,7 @@ const waitlistLabel = (entry: WaitlistItem): string =>
                     type="button"
                     :class="[
                         'rounded-full border px-4 py-1.5 text-sm transition-colors',
-                        filter === tab.key
-                            ? 'border-primary bg-primary text-primary-foreground'
-                            : 'text-muted-foreground hover:bg-accent',
+                        filter === tab.key ? 'border-primary bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent',
                     ]"
                     @click="setFilter(tab.key)"
                 >

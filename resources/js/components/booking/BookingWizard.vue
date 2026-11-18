@@ -28,9 +28,7 @@ const stepCount = 4;
 const step = ref(0);
 
 const selectedService = ref<ServiceItem | null>(
-    props.preset?.service_id
-        ? (props.business.services.find((service) => service.id === props.preset?.service_id) ?? null)
-        : null,
+    props.preset?.service_id ? (props.business.services.find((service) => service.id === props.preset?.service_id) ?? null) : null,
 );
 const selectedStaffId = ref<number | null>(props.preset?.staff_id ?? null);
 const selectedDate = ref<string | null>(null);
@@ -60,11 +58,7 @@ const waitlistDone = ref(false);
 const waitlistError = ref('');
 const waitlistForm = ref({ customer_name: '', customer_phone: '' });
 
-const payableAmount = computed(() =>
-    discountApplied.value
-        ? discountApplied.value.final_amount
-        : (selectedService.value?.price ?? 0),
-);
+const payableAmount = computed(() => (discountApplied.value ? discountApplied.value.final_amount : (selectedService.value?.price ?? 0)));
 
 // Standing appointment: the picked slot repeats weekly for N visits.
 const repeatWeeks = ref(1);
@@ -188,9 +182,7 @@ async function joinWaitlist(): Promise<void> {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': decodeURIComponent(
-                    (document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/) ?? [])[1] ?? '',
-                ),
+                'X-XSRF-TOKEN': decodeURIComponent((document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/) ?? [])[1] ?? ''),
             },
             body: JSON.stringify({
                 service_id: selectedService.value.id,
@@ -390,12 +382,7 @@ function submit(): void {
 
                                 <form v-else class="w-full max-w-xs space-y-2 text-start" @submit.prevent="joinWaitlist">
                                     <Input v-model="waitlistForm.customer_name" :placeholder="t('wizard.fullName')" />
-                                    <Input
-                                        v-model="waitlistForm.customer_phone"
-                                        inputmode="numeric"
-                                        placeholder="09xxxxxxxxx"
-                                        dir="ltr"
-                                    />
+                                    <Input v-model="waitlistForm.customer_phone" inputmode="numeric" placeholder="09xxxxxxxxx" dir="ltr" />
                                     <p v-if="waitlistError" class="text-sm text-destructive">{{ waitlistError }}</p>
                                     <Button type="submit" size="sm" class="w-full gap-2" :disabled="waitlistSubmitting">
                                         <Loader2 v-if="waitlistSubmitting" class="size-4 animate-spin" />
@@ -434,9 +421,11 @@ function submit(): void {
                                 :key="option"
                                 type="button"
                                 class="rounded-full border px-3 py-1 text-xs font-medium transition-colors"
-                                :class="repeatWeeks === option
-                                    ? 'border-primary bg-primary text-primary-foreground'
-                                    : 'border-border bg-background text-muted-foreground hover:text-foreground'"
+                                :class="
+                                    repeatWeeks === option
+                                        ? 'border-primary bg-primary text-primary-foreground'
+                                        : 'border-border bg-background text-muted-foreground hover:text-foreground'
+                                "
                                 @click="repeatWeeks = option"
                             >
                                 {{ option === 1 ? t('wizard.repeatNone') : t('wizard.repeatWeeks', { n: num(option) }) }}
@@ -487,7 +476,7 @@ function submit(): void {
                     <Label for="discount_code">{{ t('wizard.discountLabel') }}</Label>
                     <div class="flex gap-2">
                         <div class="relative flex-1">
-                            <Tag class="pointer-events-none absolute top-2.5 start-3 size-4 text-muted-foreground" />
+                            <Tag class="pointer-events-none absolute start-3 top-2.5 size-4 text-muted-foreground" />
                             <Input
                                 id="discount_code"
                                 v-model="discountInput"

@@ -26,9 +26,13 @@ function toggle(business: AdminBusiness): void {
 }
 
 function setCategory(business: AdminBusiness, event: Event): void {
-    router.patch(route('businesses.category', business.id), {
-        category: (event.target as HTMLSelectElement).value,
-    }, { preserveScroll: true });
+    router.patch(
+        route('businesses.category', business.id),
+        {
+            category: (event.target as HTMLSelectElement).value,
+        },
+        { preserveScroll: true },
+    );
 }
 </script>
 

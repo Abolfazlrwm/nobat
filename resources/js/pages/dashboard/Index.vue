@@ -94,10 +94,7 @@ function changeBusiness(businessId: number): void {
                                 <div class="text-xs text-muted-foreground">{{ appointment.service_name }} — {{ appointment.staff_name ?? '' }}</div>
                             </div>
                             <div class="flex items-center gap-3">
-                                <StatusBadge
-                                    :status="appointment.status"
-                                    :label="statusLabel(appointment.status, appointment.status_label)"
-                                />
+                                <StatusBadge :status="appointment.status" :label="statusLabel(appointment.status, appointment.status_label)" />
                                 <span class="text-xs text-muted-foreground" dir="ltr">
                                     {{ dateTime(appointment.starts_at).split(' - ')[1] }}
                                 </span>

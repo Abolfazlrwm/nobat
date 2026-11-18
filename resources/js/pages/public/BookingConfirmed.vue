@@ -10,7 +10,21 @@ import { useLocale } from '@/composables/useLocale';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import { BookingConfirmation } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { BadgeCheck, CalendarClock, CalendarPlus, CheckCircle2, ChevronDown, Clock3, CreditCard, ExternalLink, FileDown, Printer, RefreshCw, Star, XCircle } from 'lucide-vue-next';
+import {
+    BadgeCheck,
+    CalendarClock,
+    CalendarPlus,
+    CheckCircle2,
+    ChevronDown,
+    Clock3,
+    CreditCard,
+    ExternalLink,
+    FileDown,
+    Printer,
+    RefreshCw,
+    Star,
+    XCircle,
+} from 'lucide-vue-next';
 import QRCode from 'qrcode';
 import { computed, onMounted, ref } from 'vue';
 
@@ -61,8 +75,7 @@ const deadline = computed(() =>
 
 const displayStatusLabel = computed(() => statusLabel(props.appointment.status, props.appointment.status_label));
 
-const cancellable = computed(() =>
-    ['pending', 'pending_payment', 'confirmed'].includes(props.appointment.status));
+const cancellable = computed(() => ['pending', 'pending_payment', 'confirmed'].includes(props.appointment.status));
 
 const cancelForm = useForm({
     customer_phone: '',
@@ -188,12 +201,7 @@ function submitReschedule() {
                         <div class="mt-1 select-all font-mono text-lg font-bold" dir="ltr">
                             {{ num(appointment.code) }}
                         </div>
-                        <img
-                            v-if="qrDataUrl"
-                            :src="qrDataUrl"
-                            :alt="t('booking.trackingCode')"
-                            class="mx-auto mt-3 size-32"
-                        >
+                        <img v-if="qrDataUrl" :src="qrDataUrl" :alt="t('booking.trackingCode')" class="mx-auto mt-3 size-32" />
                         <p class="mt-2 text-xs text-muted-foreground">{{ t('booking.qrHint') }}</p>
                         <Button variant="link" size="sm" class="print:hidden" @click="printReceipt">
                             <Printer class="size-3.5" />
@@ -286,10 +294,7 @@ function submitReschedule() {
                     </div>
 
                     <!-- upcoming booking: self-service reschedule -->
-                    <div
-                        v-if="cancellable"
-                        class="rounded-xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-500/30 dark:bg-sky-500/10"
-                    >
+                    <div v-if="cancellable" class="rounded-xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-500/30 dark:bg-sky-500/10">
                         <button
                             type="button"
                             class="flex w-full items-center justify-between text-start"
@@ -312,13 +317,7 @@ function submitReschedule() {
                                 autocomplete="off"
                             />
                             <InputError :message="rescheduleForm.errors.customer_phone" />
-                            <Input
-                                id="reschedule-date"
-                                v-model="rescheduleDate"
-                                type="date"
-                                dir="ltr"
-                                @change="loadRescheduleSlots"
-                            />
+                            <Input id="reschedule-date" v-model="rescheduleDate" type="date" dir="ltr" @change="loadRescheduleSlots" />
                             <p v-if="rescheduleLoading" class="text-xs text-muted-foreground">
                                 {{ t('booking.rescheduleSlotsLoading') }}
                             </p>
@@ -331,9 +330,11 @@ function submitReschedule() {
                                         type="button"
                                         dir="ltr"
                                         class="rounded-lg border px-3 py-1.5 font-mono text-sm transition-colors"
-                                        :class="rescheduleForm.starts_at === slot.starts_at
-                                            ? 'border-sky-500 bg-sky-500 text-white'
-                                            : 'border-border bg-background hover:border-sky-400'"
+                                        :class="
+                                            rescheduleForm.starts_at === slot.starts_at
+                                                ? 'border-sky-500 bg-sky-500 text-white'
+                                                : 'border-border bg-background hover:border-sky-400'
+                                        "
                                         @click="rescheduleForm.starts_at = slot.starts_at"
                                     >
                                         {{ slot.label }}
@@ -356,10 +357,7 @@ function submitReschedule() {
                     </div>
 
                     <!-- upcoming booking: self-service cancellation -->
-                    <div
-                        v-if="cancellable"
-                        class="rounded-xl border border-rose-200 bg-rose-50 p-4 dark:border-rose-500/30 dark:bg-rose-500/10"
-                    >
+                    <div v-if="cancellable" class="rounded-xl border border-rose-200 bg-rose-50 p-4 dark:border-rose-500/30 dark:bg-rose-500/10">
                         <p class="text-sm font-semibold text-rose-800 dark:text-rose-300">{{ t('booking.cancelTitle') }}</p>
                         <p class="mt-1 text-xs text-muted-foreground">{{ t('booking.cancelDesc') }}</p>
                         <div class="mt-3 grid gap-2">
@@ -423,18 +421,15 @@ function submitReschedule() {
                         </Button>
                         <!-- finished service: one click back to the same service
                              and staff member, wizard preselected -->
-                        <Button
-                            v-if="appointment.status === 'completed'"
-                            as-child
-                            variant="outline"
-                            class="flex-1 gap-1"
-                        >
+                        <Button v-if="appointment.status === 'completed'" as-child variant="outline" class="flex-1 gap-1">
                             <Link
-                                :href="route('businesses.show', {
-                                    business: appointment.business.slug,
-                                    service_id: appointment.service_id,
-                                    staff_id: appointment.staff_id ?? undefined,
-                                })"
+                                :href="
+                                    route('businesses.show', {
+                                        business: appointment.business.slug,
+                                        service_id: appointment.service_id,
+                                        staff_id: appointment.staff_id ?? undefined,
+                                    })
+                                "
                             >
                                 <RefreshCw class="size-4" />
                                 {{ t('booking.rebook') }}

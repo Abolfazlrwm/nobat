@@ -71,11 +71,7 @@ const statCards = computed(() => [
                 </div>
 
                 <div class="divide-y">
-                    <div
-                        v-for="item in history"
-                        :key="item.id"
-                        class="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-                    >
+                    <div v-for="item in history" :key="item.id" class="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-2 text-sm">
                                 <span class="font-medium" dir="ltr">{{ dateTime(item.starts_at) }}</span>

@@ -139,10 +139,10 @@ const heroGradient = isEn.value
 
 <template>
     <Head :title="t('landing.pageTitle')">
-        <meta name="description" :content="t('landing.heroSubtitle')">
-        <meta property="og:title" :content="t('landing.pageTitle')">
-        <meta property="og:description" :content="t('landing.heroSubtitle')">
-        <meta property="og:type" content="website">
+        <meta name="description" :content="t('landing.heroSubtitle')" />
+        <meta property="og:title" :content="t('landing.pageTitle')" />
+        <meta property="og:description" :content="t('landing.heroSubtitle')" />
+        <meta property="og:type" content="website" />
     </Head>
 
     <PublicLayout>
@@ -281,12 +281,7 @@ const heroGradient = isEn.value
                 <div class="mx-auto mt-8 max-w-2xl">
                     <div class="relative">
                         <Search class="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                            v-model="searchQuery"
-                            type="search"
-                            class="ps-10"
-                            :placeholder="t('landing.searchPlaceholder')"
-                        />
+                        <Input v-model="searchQuery" type="search" class="ps-10" :placeholder="t('landing.searchPlaceholder')" />
                     </div>
 
                     <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
@@ -295,9 +290,11 @@ const heroGradient = isEn.value
                             :key="category.value"
                             type="button"
                             class="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors"
-                            :class="activeCategory === category.value
-                                ? 'border-primary bg-primary text-primary-foreground'
-                                : 'border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'"
+                            :class="
+                                activeCategory === category.value
+                                    ? 'border-primary bg-primary text-primary-foreground'
+                                    : 'border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                            "
                             @click="toggleCategory(category.value)"
                         >
                             {{ category.label }}

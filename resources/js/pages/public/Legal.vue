@@ -28,17 +28,9 @@ const { t } = useLocale();
                 </CardHeader>
 
                 <CardContent class="space-y-6">
-                    <section
-                        v-for="(section, i) in props.sections"
-                        :key="i"
-                        class="space-y-2"
-                    >
+                    <section v-for="(section, i) in props.sections" :key="i" class="space-y-2">
                         <h2 class="text-base font-semibold">{{ section.heading }}</h2>
-                        <p
-                            v-for="(paragraph, j) in section.body"
-                            :key="j"
-                            class="text-sm leading-7 text-muted-foreground"
-                        >
+                        <p v-for="(paragraph, j) in section.body" :key="j" class="text-sm leading-7 text-muted-foreground">
                             {{ paragraph }}
                         </p>
                     </section>

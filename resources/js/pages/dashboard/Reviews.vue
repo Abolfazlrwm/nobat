@@ -119,16 +119,15 @@ function saveReply(id: number): void {
                                         :class="i <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'"
                                     />
                                 </span>
-                                <Badge v-if="review.is_approved" variant="secondary" class="text-emerald-600">{{ t('panel.reviews.approvedBadge') }}</Badge>
+                                <Badge v-if="review.is_approved" variant="secondary" class="text-emerald-600">{{
+                                    t('panel.reviews.approvedBadge')
+                                }}</Badge>
                                 <Badge v-else variant="outline" class="text-amber-600">{{ t('panel.reviews.pendingBadge') }}</Badge>
                             </div>
                             <p v-if="review.comment" class="text-sm text-muted-foreground">{{ review.comment }}</p>
 
                             <!-- manager's public answer -->
-                            <div
-                                v-if="review.reply"
-                                class="rounded-xl border bg-muted/60 px-3 py-2"
-                            >
+                            <div v-if="review.reply" class="rounded-xl border bg-muted/60 px-3 py-2">
                                 <div class="flex items-center gap-1.5 text-xs font-semibold text-primary">
                                     <MessageSquareReply class="size-3.5" />
                                     {{ t('panel.reviews.replyLabel') }}
@@ -161,13 +160,7 @@ function saveReply(id: number): void {
                         </div>
 
                         <div class="flex gap-2">
-                            <Button
-                                v-if="review.is_approved"
-                                size="sm"
-                                variant="outline"
-                                class="gap-1"
-                                @click="startReply(review.id, review.reply)"
-                            >
+                            <Button v-if="review.is_approved" size="sm" variant="outline" class="gap-1" @click="startReply(review.id, review.reply)">
                                 <Pencil v-if="review.reply" class="size-4" />
                                 <MessageSquareReply v-else class="size-4" />
                                 {{ review.reply ? t('panel.reviews.replyEdit') : t('panel.reviews.replyButton') }}

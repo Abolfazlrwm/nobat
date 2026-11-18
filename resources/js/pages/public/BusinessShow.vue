@@ -62,8 +62,7 @@ const lightbox = ref<number | null>(null);
 
 const photos = (business: BusinessWithServices) => business.photos ?? [];
 
-const lightboxPhoto = (business: BusinessWithServices) =>
-    lightbox.value === null ? null : photos(business)[lightbox.value] ?? null;
+const lightboxPhoto = (business: BusinessWithServices) => (lightbox.value === null ? null : (photos(business)[lightbox.value] ?? null));
 
 function closeLightbox(): void {
     lightbox.value = null;
@@ -105,10 +104,10 @@ function onLightboxKeydown(business: BusinessWithServices, event: KeyboardEvent)
 
 <template>
     <Head :title="business.name">
-        <meta name="description" :content="business.description || business.name">
-        <meta property="og:title" :content="business.name">
-        <meta property="og:description" :content="business.description || ''">
-        <meta property="og:type" content="business.business">
+        <meta name="description" :content="business.description || business.name" />
+        <meta property="og:title" :content="business.name" />
+        <meta property="og:description" :content="business.description || ''" />
+        <meta property="og:type" content="business.business" />
     </Head>
 
     <PublicLayout>
@@ -234,10 +233,7 @@ function onLightboxKeydown(business: BusinessWithServices, event: KeyboardEvent)
                             </span>
                         </div>
                         <p v-if="review.comment" class="mt-2 text-sm text-muted-foreground">{{ review.comment }}</p>
-                        <div
-                            v-if="review.reply"
-                            class="mt-2 rounded-xl border bg-background px-3 py-2"
-                        >
+                        <div v-if="review.reply" class="mt-2 rounded-xl border bg-background px-3 py-2">
                             <div class="flex items-center gap-1.5 text-xs font-semibold text-primary">
                                 <MessageSquareReply class="size-3.5" />
                                 {{ t('business.replyLabel') }}
@@ -268,28 +264,13 @@ function onLightboxKeydown(business: BusinessWithServices, event: KeyboardEvent)
                         />
 
                         <div class="flex items-center justify-center gap-2">
-                            <Button
-                                size="sm"
-                                variant="secondary"
-                                :aria-label="t('business.previousPhoto')"
-                                @click="stepLightbox(business, -1)"
-                            >
+                            <Button size="sm" variant="secondary" :aria-label="t('business.previousPhoto')" @click="stepLightbox(business, -1)">
                                 <ChevronRight class="size-4" />
                             </Button>
-                            <Button
-                                size="sm"
-                                variant="secondary"
-                                :aria-label="t('business.closePhoto')"
-                                @click="closeLightbox()"
-                            >
+                            <Button size="sm" variant="secondary" :aria-label="t('business.closePhoto')" @click="closeLightbox()">
                                 <X class="size-4" />
                             </Button>
-                            <Button
-                                size="sm"
-                                variant="secondary"
-                                :aria-label="t('business.nextPhoto')"
-                                @click="stepLightbox(business, 1)"
-                            >
+                            <Button size="sm" variant="secondary" :aria-label="t('business.nextPhoto')" @click="stepLightbox(business, 1)">
                                 <ChevronLeft class="size-4" />
                             </Button>
                         </div>
