@@ -125,6 +125,6 @@ return [
 
     // Bumped with every release — the landing badge reads it through the
     // shared Inertia props instead of a hardcoded literal in Directory.vue.
-    'version' => '1.35.1',
+    'version' => '1.35.2',
 
 ];

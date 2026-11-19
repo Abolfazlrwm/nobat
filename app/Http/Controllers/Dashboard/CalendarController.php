@@ -155,8 +155,12 @@ class CalendarController extends Controller
      */
     private function monthWaitlist($user, ?int $businessId, CarbonImmutable $firstDay, CarbonImmutable $lastDay)
     {
+        // desired_date is a date column, but SQLite stores the 'date' cast
+        // as "Y-m-d H:i:s" — a bare "Y-m-d" upper bound would string-compare
+        // the month's last day out of the window, so bound it like every
+        // other range query here: startOfDay .. endOfDay.
         $query = WaitlistEntry::query()
-            ->whereBetween('desired_date', [$firstDay->format('Y-m-d'), $lastDay->format('Y-m-d')]);
+            ->whereBetween('desired_date', [$firstDay->startOfDay(), $lastDay->endOfDay()]);
 
         if ($user->isSuperAdmin()) {
             if ($businessId) {
