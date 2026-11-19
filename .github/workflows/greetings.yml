@@ -1,0 +1,29 @@
+name: Greetings
+
+on:
+    issues:
+        types: [opened]
+    pull_request_target:
+        types: [opened]
+
+permissions:
+    issues: write
+    pull-requests: write
+
+jobs:
+    greet:
+        name: Welcome first-time contributors
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/first-interaction@v1
+              with:
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}
+                  issue-message: |
+                      سلام و خوش‌آمد! 👋 ممنون که اولین ایشو را در «نوبت» ثبت کردید — گزارش‌های دقیق مثل گزارشِ شما دقیقاً همان چیزی است که پروژه را بهتر می‌کند.
+
+                      Welcome aboard! 🎉 Thanks for opening your first issue — the team will take a look as soon as possible. Please check [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md) for the tiny conventions that keep reviews fast.
+                  pr-message: |
+                      اولین PR شما در «نوبت» — خوش‌آمدید! 🎉 CI را سبز نگه دارید و خطِ [CHANGELOG.md](../blob/main/CHANGELOG.md) را فراموش نکنید؛ بقیه‌اش در [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md) توضیح داده شده.
+
+                      Your first pull request — welcome! 🚀 Keep CI green and add a CHANGELOG line so the release notes stay truthful.

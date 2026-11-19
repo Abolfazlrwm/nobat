@@ -1,0 +1,35 @@
+# Pull-request auto-labeling (actions/labeler v5).
+documentation:
+    - changed-files:
+          - any-glob-to-any-file:
+                - docs/**
+                - README.md
+                - README.en.md
+                - CHANGELOG.md
+
+ci:
+    - changed-files:
+          - any-glob-to-any-file:
+                - .github/**
+
+frontend:
+    - changed-files:
+          - any-glob-to-any-file:
+                - resources/**
+                - package.json
+
+backend:
+    - changed-files:
+          - any-glob-to-any-file:
+                - app/**
+                - routes/**
+                - database/**
+                - config/**
+                - lang/**
+                - composer.json
+
+tests:
+    - changed-files:
+          - any-glob-to-any-file:
+                - tests/**
+                - phpunit.xml

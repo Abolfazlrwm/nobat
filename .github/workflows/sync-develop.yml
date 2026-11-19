@@ -1,0 +1,38 @@
+name: Sync develop
+
+# After CI passes on main, fast-forward develop to the same commit so the
+# two branches never drift apart. If develop has diverged (local commits),
+# the job only warns instead of force-updating.
+on:
+    workflow_run:
+        workflows: [CI]
+        types: [completed]
+        branches: [main]
+
+permissions:
+    contents: write
+
+jobs:
+    sync:
+        name: Fast-forward develop to main
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+        steps:
+            - name: Update develop ref
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const sha = context.payload.workflow_run.head_sha;
+                      try {
+                          await github.rest.git.updateRef({
+                              owner: context.repo.owner,
+                              repo: context.repo.repo,
+                              ref: 'heads/develop',
+                              sha,
+                              force: false,
+                          });
+                          console.log(`develop fast-forwarded to ${sha}`);
+                      } catch (error) {
+                          core.warning(`develop has diverged from main — sync it manually. ${error.message}`);
+                      }
