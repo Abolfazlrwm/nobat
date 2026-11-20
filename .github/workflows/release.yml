@@ -19,7 +19,7 @@ jobs:
               run: python3 .github/extract_changelog.py "${GITHUB_REF_NAME#v}" > release-notes.md
 
             - name: Create the GitHub Release
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               with:
                   body_path: release-notes.md
                   name: Nobat ${{ github.ref_name }}
