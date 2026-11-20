@@ -6,6 +6,9 @@ on:
     pull_request:
     workflow_dispatch:
 
+permissions:
+    contents: read
+
 jobs:
     test:
         name: Lint, Pint, Pest & Assets
@@ -27,8 +30,19 @@ jobs:
                   node-version: '22'
                   cache: npm
 
+            - name: Validate composer.json (strict)
+              run: composer validate --strict
+
             - name: Install PHP dependencies
               run: composer install --prefer-dist --no-interaction --no-progress
+
+            - name: PHP syntax check (php -l on every project PHP file)
+              run: |
+                  ERR=0
+                  while IFS= read -r -d '' f; do
+                      php -l "$f" >/dev/null 2>&1 || { echo "SYNTAX FAIL: $f"; php -l "$f" 2>&1 | head -3; ERR=1; }
+                  done < <(find . -type f -name '*.php' ! -name '*.blade.php' -not -path './vendor/*' -not -path './node_modules/*' -not -path './.git/*' -print0)
+                  exit $ERR
 
             - name: Install Node dependencies
               run: npm ci
