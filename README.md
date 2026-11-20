@@ -10,7 +10,7 @@
 [![Release](https://img.shields.io/github/v/release/Abolfazlrwm/nobat?sort=semver&label=release)](https://github.com/Abolfazlrwm/nobat/releases)
 [![Laravel](https://img.shields.io/badge/Laravel-12-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
-[![Tests](https://img.shields.io/badge/tests-330%20passed-success)](https://github.com/Abolfazlrwm/nobat/actions)
+[![CI](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
 
 </div>
@@ -107,7 +107,7 @@
 - 📨 نوتیفیکیشن صف‌بندی‌شده (Database + SMS با معماری درایور — درایور لاگ و درگاه کاوه‌نگار آماده‌اند)
 - ⏰ **یادآوری پیامکی (نسخه ۱.۹.۰)**: کامند ساعتی `nobat:send-reminders` برای همه‌ی نوبت‌های تأییدشده‌ی ۲۴ ساعت آینده؛ «اول ارسال، بعد مهر» — خطای درگاه پیامک دوباره تلاش می‌شود و موفق هرگز تکرار نمی‌شود؛ با `NOBAT_SMS_REMINDERS=false` خاموش می‌شود
 - 🛡️ **مجموعه‌ی تقویت حرفه‌ای (نسخه ۱.۱۲.۰)**: هدرهای امنیتی روی هر پاسخ وب و API (nosniff، محافظت از فریم، Referrer-Policy، Permissions-Policy و HSTS در production)، صفحات خطای برندشده‌ی RTL فارسی برای ۴۰۳/۴۰۴/۴۱۹/۵۰۰/۵۰۳ بدون وابستگی به بیلد، متای SEO و OpenGraph با تصویر پیش‌نمایش ۱۲۸۰×۶۴۰، کوکی امن روی دمو، کش config/route/view در بوت دمو و پاکسازی آسیب‌پذیری‌های npm با `npm audit fix`
-- 🧪 **۱۵۳ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، سه‌زبانه (صفحه‌ی عمومی و پنل‌ها)، تخفیف، لیست انتظار، API عمومی، پنل مشتری‌ها و گالری تصاویر
+- 🧪 **۲۷۰+ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، سه‌زبانه (صفحه‌ی عمومی و پنل‌ها)، تخفیف، لیست انتظار، API عمومی، پنل مشتری‌ها و گالری تصاویر
 - 🐳 Docker (nginx + php-fpm + worker + MySQL + Redis) و GitHub Actions CI
 
 ## 🧱 استک فناوری
@@ -165,7 +165,7 @@ docker compose exec app php artisan migrate --seed
 ## 🧪 اجرای تست‌ها
 
 ```bash
-php artisan test     # ۲۰۷ تست — SQLite درون‌حافظه‌ای
+php artisan test     # ۲۷۰+ تست — SQLite درون‌حافظه‌ای
 vendor/bin/pint --test
 ```
 
