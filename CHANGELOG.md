@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   استاتیک با بازلاینِ تولیدشده واردِ گیت شد (۳۲۴ خطایِ موجود، مستند در
   `phpstan-baseline.neon`) — از این‌پس هر خطایِ تازهِی نوع‌ها CI را قرمز می‌کند
   و بدهی فقط می‌تواند کم شود، نه زیاد. گامِ تازه بعد از Pint و پیش از Pest.
+  بسته با نامِ رسمیِ تازه‌اش `larastan/larastan` اضافه شده — `nunomaduro/larastan`
+  روی پکجیست abandoned اعلام شده و گیتِ audit را می‌شکست.
 - **دروازهٔ امنیتِ وابستگی‌ها در CI**: `composer audit` و `npm audit --omit=dev`
   هر دو در رانِ محلیِ تمیز بودند و حالا گامِ دائمی‌اند — وابسته‌ی آسیب‌پذیرِ
   prod دیگر پوش نمی‌شود.
