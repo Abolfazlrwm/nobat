@@ -158,7 +158,15 @@ vendor/bin/pint --test
 - **BookingService** reserves inside a single transaction: the staff row is locked with `lockForUpdate` so two concurrent requests can never grab the same slot, then the slot is re-validated against the same source of truth (SlotGenerator).
 - **SMS driver contract**: `log` driver for development, **Kavenegar** driver for real traffic — switching is pure environment configuration.
 
-Full architecture guide (in Persian): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+## 📚 Technical docs
+
+| Document | Contents |
+| --- | --- |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Full architecture — layers, domain services and the diagram map (in Persian) |
+| [`docs/API.md`](docs/API.md) | Complete public API reference (`/api/v1`) |
+| [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Production deployment, Kavenegar SMS setup and the go-live checklist |
+| [`docs/INTERNATIONALIZATION.md`](docs/INTERNATIONALIZATION.md) | How the trilingual (fa/en/ar) layer works and how to add a fourth language |
+| [`docs/OPERATIONS.md`](docs/OPERATIONS.md) | Operations runbook for a real deployment — scheduler, queue, backups, monitoring (in Persian) |
 
 ## 🗺️ Roadmap
 

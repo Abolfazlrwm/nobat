@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.35.3] - 2026-11-24
+
+### Added
+
+- **آنالیز استاتیک PHPStan + Larastan در سطحِ ۵** به CI: کدبیسِ بالغِ بدونِ آنالیز
+  استاتیک با بازلاینِ تولیدشده واردِ گیت شد (۳۲۴ خطایِ موجود، مستند در
+  `phpstan-baseline.neon`) — از این‌پس هر خطایِ تازهِی نوع‌ها CI را قرمز می‌کند
+  و بدهی فقط می‌تواند کم شود، نه زیاد. گامِ تازه بعد از Pint و پیش از Pest.
+- **دروازهٔ امنیتِ وابستگی‌ها در CI**: `composer audit` و `npm audit --omit=dev`
+  هر دو در رانِ محلیِ تمیز بودند و حالا گامِ دائمی‌اند — وابسته‌ی آسیب‌پذیرِ
+  prod دیگر پوش نمی‌شود.
+- **Makefile** برای تجربهٔ توسعه‌دهنده: `make install / dev / test / stan /
+  lint / build / audit / up / down / logs` با `make help`.
+- جدولِ «مستندات فنی» در هر دو README: هر پنج سندِ `docs/` حالا از READMEها
+  لینک می‌شوند — INTERNATIONALIZATION و OPERATIONS تا امروز بیرون از دید بودند.
+- فیلد `authors` در composer.json تکمیل شد.
+
 ## [1.35.2] - 2026-11-19
 
 ### Fixed

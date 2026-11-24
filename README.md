@@ -205,7 +205,15 @@ flowchart LR
 - **BookingService**: رزرو در یک تراکنش؛ ابتدا رکورد پرسنل با `lockForUpdate` قفل می‌شود تا دو درخواست همزمان هرگز نتوانند یک اسلات را رزرو کنند؛ سپس معتبر بودن اسلات با همان منبع حقیقت (SlotGenerator) بازبینی می‌شود.
 - **SMS Driver**: `SmsDriver` یک قرارداد است؛ درایور `log` برای توسعه و **درایور کاوه‌نگار** برای ارسال واقعی آماده‌اند — فعال‌سازی فقط با متغیرهای محیطی.
 
-مستند کامل معماری: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+## 📚 مستندات فنی
+
+| سند | محتوا |
+| --- | --- |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | معماری کامل — لایه‌ها، سرویس‌های دامنه و نقشهٔ دیاگرام‌ها |
+| [`docs/API.md`](docs/API.md) | مرجع کامل API عمومی (`/api/v1`) |
+| [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | استقرار production، درگاه پیامک کاوه‌نگار و چک‌لیست go-live |
+| [`docs/INTERNATIONALIZATION.md`](docs/INTERNATIONALIZATION.md) | معماری سه‌زبانه (fa/en/ar) و راه افزودن زبان چهارم |
+| [`docs/OPERATIONS.md`](docs/OPERATIONS.md) | ران‌بوکِ عملیات واقعی — زمان‌بند، صف، پشتیبان، رصد |
 
 ## 💳 جریان پرداخت آنلاین (زرین‌پال — sandbox)
 

@@ -64,5 +64,14 @@ jobs:
             - name: Code style (Pint)
               run: vendor/bin/pint --test
 
+            - name: Static analysis (PHPStan + Larastan)
+              run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+
+            - name: Dependency audit (composer)
+              run: composer audit
+
+            - name: Dependency audit (npm, production deps)
+              run: npm audit --omit=dev
+
             - name: Tests (Pest)
               run: php artisan test
