@@ -36,7 +36,9 @@ jobs:
                   [ "$HTTP" = "201" ] || { cat /tmp/dep.json; exit 1; }
                   DEPID=$(python3 -c "import json;print(json.load(open('/tmp/dep.json'))['id'])")
                   echo "Deploy $DEPID triggered"
-                  for i in $(seq 1 16); do
+                  # Free-tier builds queue behind other jobs — give the deploy
+                  # 15 minutes before giving up (8 was not enough in practice).
+                  for i in $(seq 1 30); do
                       sleep 30
                       ST=$(curl -s -H "Authorization: Bearer $RENDER_API_KEY" \
                           "https://api.render.com/v1/services/$SVC/deploys/$DEPID" \
@@ -47,4 +49,4 @@ jobs:
                           build_failed|update_failed|deactivated|canceled) echo "Deploy failed: $ST"; exit 1 ;;
                       esac
                   done
-                  echo "Deploy did not reach live within 8 minutes"; exit 1
+                  echo "Deploy did not reach live within 15 minutes"; exit 1
