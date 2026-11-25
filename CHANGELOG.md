@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.36.0] - 2026-11-25
+
+### Added
+
+- **اولین مجموعه‌ی تستِ فرانت‌اند**: Vitest با ۱۶ تست روی `lib/jalali.ts` و
+  `lib/persian.ts` — قلبِ نمایشِ تاریخِ محصول. لنگرها (نوروز ۱۴۰۴ و ۱۴۰۵،
+  کبیسه‌ی ۱۴۰۳، مرزهای پایانِ ماهِ ۳۰ و ۳۱ روزه) با یک پیاده‌سازیِ مستقل
+  (convertdate بر پایه‌ی الگوریتمِ Meeus) اعتبارسنجی شده‌اند، نه با خروجیِ
+  خودِ کد. اجرا با `npm run test:unit` / `make test-js`؛ گامِ تازه در CI.
+- **پوششِ تستِ بک‌اند در CI — گزارش و گیت**: Pest حالا با pcov اجرا می‌شود؛
+  پوششِ فعلی **۸۶.۷٪** است و CI با `--min=85` هر افتِ پوشش را می‌شکند. عددِ
+  دقیق در خلاصه‌ی هر ران (job summary) منتشر می‌شود و `make test-cov` هم
+  همان گیت را محلی اجرا می‌کند.
+
+### Fixed
+
+- مثالِ قدیمیِ docstring در `lib/persian.ts` اصلاح شد (۱۴۰۴/۰۸/۱۵ → ۱۴۰۵/۰۸/۱۴).
+
 ## [1.35.3] - 2026-11-24
 
 ### Added

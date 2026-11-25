@@ -11,6 +11,7 @@
 [![Laravel](https://img.shields.io/badge/Laravel-12-red)](https://laravel.com)
 [![Vue](https://img.shields.io/badge/Vue-3-brightgreen)](https://vuejs.org)
 [![Deploy to Render](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render)](https://render.com/deploy?repo=https://github.com/Abolfazlrwm/nobat)
+[![Coverage](https://img.shields.io/badge/coverage-%E2%89%A5%2085%25%20enforced-brightgreen)](https://github.com/Abolfazlrwm/nobat/actions/workflows/ci.yml)
 
 </div>
 

@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install dev test test-js stan lint lint-check build audit up down logs
+.PHONY: help install dev test test-js test-cov stan lint lint-check build audit up down logs
 
 ## Show available targets
 help:
@@ -25,6 +25,10 @@ test:
 ## Run the Vitest suite (frontend units)
 test-js:
 	npm run test:unit
+
+## Run the Pest suite with coverage (fails below 85%)
+test-cov:
+	vendor/bin/pest --coverage --min=85
 
 ## Static analysis (PHPStan + Larastan, level 5)
 stan:

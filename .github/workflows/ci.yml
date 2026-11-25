@@ -77,7 +77,7 @@ jobs:
               run: npm audit --omit=dev
 
             - name: Tests (Pest, with coverage)
-              run: vendor/bin/pest --coverage --coverage-clover=coverage.xml
+              run: vendor/bin/pest --coverage --min=85 --coverage-clover=coverage.xml
 
             - name: Coverage summary
               run: |
