@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Notifications\AppointmentStatusChanged;
 use App\Services\Booking\WaitlistPromotion;
 use App\Services\Payment\PaymentService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -19,7 +20,7 @@ class AppointmentStatusController extends Controller
         private readonly WaitlistPromotion $waitlist,
     ) {}
 
-    public function update(Request $request, Appointment $appointment)
+    public function update(Request $request, Appointment $appointment): RedirectResponse
     {
         $this->authorize('changeStatus', $appointment);
 

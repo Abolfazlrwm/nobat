@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Management;
 use App\Http\Controllers\Concerns\ResolvesManagedBusiness;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessPhoto;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -36,7 +37,7 @@ class GalleryController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $business = $this->managedBusiness($request, $request->integer('business_id') ?: null);
         $this->authorize('manage', $business);
@@ -83,7 +84,7 @@ class GalleryController extends Controller
      * submitted list must cover exactly the business's own photos, so a
      * forged id can never touch another business's gallery.
      */
-    public function reorder(Request $request)
+    public function reorder(Request $request): RedirectResponse
     {
         $business = $this->managedBusiness($request, $request->integer('business_id') ?: null);
         $this->authorize('manage', $business);
@@ -111,7 +112,7 @@ class GalleryController extends Controller
         return back()->with('success', __('gallery.reordered'));
     }
 
-    public function update(Request $request, BusinessPhoto $photo)
+    public function update(Request $request, BusinessPhoto $photo): RedirectResponse
     {
         $this->authorize('manage', $photo->business);
 
@@ -124,7 +125,7 @@ class GalleryController extends Controller
         return back()->with('success', __('gallery.caption_saved'));
     }
 
-    public function cover(Request $request, BusinessPhoto $photo)
+    public function cover(Request $request, BusinessPhoto $photo): RedirectResponse
     {
         $this->authorize('manage', $photo->business);
 
@@ -133,7 +134,7 @@ class GalleryController extends Controller
         return back()->with('success', __('gallery.cover_set'));
     }
 
-    public function destroy(Request $request, BusinessPhoto $photo)
+    public function destroy(Request $request, BusinessPhoto $photo): RedirectResponse
     {
         $this->authorize('manage', $photo->business);
 

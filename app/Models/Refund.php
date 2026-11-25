@@ -47,6 +47,9 @@ class Refund extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Payment, $this>
+     */
     public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class);

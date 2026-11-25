@@ -34,7 +34,7 @@ test-cov:
 test-e2e:
 	npm run test:e2e
 
-## Static analysis (PHPStan + Larastan, level 5)
+## Static analysis (PHPStan + Larastan, level 6)
 stan:
 	vendor/bin/phpstan analyse --no-progress --memory-limit=1G
 

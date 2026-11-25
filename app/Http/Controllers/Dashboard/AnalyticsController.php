@@ -8,6 +8,7 @@ use App\Models\Appointment;
 use App\Models\DiscountRedemption;
 use App\Models\WorkingHour;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -42,7 +43,7 @@ class AnalyticsController extends Controller
         $revenue = (int) $completed->sum($netPrice);
         $bookings = $appointments->count();
 
-        $byDay = $appointments->groupBy(fn (Appointment $appointment) => $appointment->starts_at->format('Y-m-d'));
+        $byDay = $appointments->groupBy(fn (Appointment $appointment): string => $appointment->starts_at->format('Y-m-d'));
 
         $series = [];
         for ($date = $from; $date->lte($to); $date = $date->addDay()) {
@@ -92,7 +93,7 @@ class AnalyticsController extends Controller
             ],
             'series' => $series,
             'by_status' => $appointments
-                ->groupBy('status')
+                ->groupBy(fn (Appointment $appointment): string => $appointment->status)
                 ->map(fn ($group, $status) => [
                     'status' => $status,
                     'label' => Appointment::STATUS_LABELS[$status] ?? $status,
@@ -101,7 +102,7 @@ class AnalyticsController extends Controller
                 ->sortByDesc('count')
                 ->values(),
             'top_services' => $appointments
-                ->groupBy('service_name')
+                ->groupBy(fn (Appointment $appointment): string => (string) $appointment->service_name)
                 ->map(fn ($group, $name) => [
                     'name' => $name,
                     'count' => $group->count(),
@@ -161,7 +162,10 @@ class AnalyticsController extends Controller
      * Appointments of one business in the range, enriched with the service
      * name/price for revenue and ranking maths.
      */
-    private function appointmentsBetween(int $businessId, CarbonImmutable $from, CarbonImmutable $to)
+    /**
+     * @return Collection<int, Appointment>
+     */
+    private function appointmentsBetween(int $businessId, CarbonImmutable $from, CarbonImmutable $to): Collection
     {
         return Appointment::query()
             ->where('appointments.business_id', $businessId)

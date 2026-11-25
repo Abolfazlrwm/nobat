@@ -71,11 +71,17 @@ class Invoice extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Appointment, $this>
+     */
     public function appointment(): BelongsTo
     {
         return $this->belongsTo(Appointment::class);
     }
 
+    /**
+     * @return BelongsTo<Business, $this>
+     */
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);

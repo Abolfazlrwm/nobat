@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\SaveStaffRequest;
 use App\Models\Staff;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,7 +39,7 @@ class StaffController extends Controller
         ]);
     }
 
-    public function store(SaveStaffRequest $request)
+    public function store(SaveStaffRequest $request): RedirectResponse
     {
         $business = $this->managedBusiness($request, $request->integer('business_id') ?: null);
         $this->authorize('manage', $business);
@@ -48,7 +49,7 @@ class StaffController extends Controller
         return back()->with('success', __('staff.created'));
     }
 
-    public function update(SaveStaffRequest $request, Staff $staff)
+    public function update(SaveStaffRequest $request, Staff $staff): RedirectResponse
     {
         $this->authorize('manage', $staff);
 
@@ -57,7 +58,7 @@ class StaffController extends Controller
         return back()->with('success', __('staff.updated'));
     }
 
-    public function destroy(Staff $staff)
+    public function destroy(Staff $staff): RedirectResponse
     {
         $this->authorize('manage', $staff);
 

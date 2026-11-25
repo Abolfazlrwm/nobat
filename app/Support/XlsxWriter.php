@@ -12,6 +12,10 @@ namespace App\Support;
  */
 class XlsxWriter
 {
+    /**
+     * @param  list<string>  $header
+     * @param  list<array<int|string, mixed>>  $rows
+     */
     public static function make(string $sheetName, array $header, array $rows): string
     {
         $sheet = str_replace(['[', ']', ':', '*', '?', '/', '\\'], ['(', ')', '-', '-', '-', '-', '-'], $sheetName);

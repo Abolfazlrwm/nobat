@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Management;
 use App\Http\Controllers\Concerns\ResolvesManagedBusiness;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\SaveDiscountCodeRequest;
+use App\Models\Business;
 use App\Models\DiscountCode;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -21,7 +23,7 @@ class DiscountController extends Controller
         $codes = $business->discountCodes()
             ->orderByDesc('created_at')
             ->get()
-            ->map(fn (DiscountCode $code) => [
+            ->map(fn (DiscountCode $code): array => [
                 'id' => $code->id,
                 'code' => $code->code,
                 'type' => $code->type,
@@ -43,7 +45,7 @@ class DiscountController extends Controller
         ]);
     }
 
-    public function store(SaveDiscountCodeRequest $request)
+    public function store(SaveDiscountCodeRequest $request): RedirectResponse
     {
         $business = $this->managedBusiness($request, $request->integer('business_id') ?: null);
 
@@ -60,7 +62,7 @@ class DiscountController extends Controller
         return back()->with('success', __('discount.created'));
     }
 
-    public function update(SaveDiscountCodeRequest $request, DiscountCode $discountCode)
+    public function update(SaveDiscountCodeRequest $request, DiscountCode $discountCode): RedirectResponse
     {
         $this->authorize('manage', $discountCode);
 
@@ -75,7 +77,7 @@ class DiscountController extends Controller
         return back()->with('success', __('discount.updated'));
     }
 
-    public function toggle(Request $request, DiscountCode $discountCode)
+    public function toggle(Request $request, DiscountCode $discountCode): RedirectResponse
     {
         $this->authorize('manage', $discountCode);
 
@@ -88,7 +90,7 @@ class DiscountController extends Controller
             : __('discount.activated'));
     }
 
-    public function destroy(DiscountCode $discountCode)
+    public function destroy(DiscountCode $discountCode): RedirectResponse
     {
         $this->authorize('manage', $discountCode);
 
@@ -103,6 +105,9 @@ class DiscountController extends Controller
         return back()->with('success', __('discount.deleted'));
     }
 
+    /**
+     * @param  Business  $business
+     */
     private function duplicateExists($business, string $code, ?int $ignoreId = null): bool
     {
         return $business->discountCodes()

@@ -52,21 +52,33 @@ class WaitlistEntry extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Business, $this>
+     */
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
     }
 
+    /**
+     * @return BelongsTo<Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);
     }
 
+    /**
+     * @return BelongsTo<Staff, $this>
+     */
     public function staff(): BelongsTo
     {
         return $this->belongsTo(Staff::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -87,11 +99,17 @@ class WaitlistEntry extends Model
         return self::STATUS_LABELS[$this->status] ?? $this->status;
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     public function scopeWaiting(Builder $query): void
     {
         $query->where('status', self::STATUS_WAITING);
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     public function scopeOnDate(Builder $query, string $date): void
     {
         $query->whereDate('desired_date', $date);
@@ -99,6 +117,8 @@ class WaitlistEntry extends Model
 
     /**
      * Managers see their businesses, super-admins everything.
+     *
+     * @param  Builder<self>  $query
      */
     public function scopeVisibleTo(Builder $query, User $user): void
     {

@@ -27,11 +27,11 @@ class AppointmentsController extends Controller
             ->get();
 
         $upcoming = $appointments->filter(
-            fn (Appointment $appointment) => $appointment->starts_at->isFuture()
+            fn (Appointment $appointment): bool => $appointment->starts_at->isFuture()
                 && ! in_array($appointment->status, [Appointment::STATUS_CANCELLED, Appointment::STATUS_EXPIRED], true)
         )->values();
 
-        $past = $appointments->reject(fn (Appointment $appointment) => $upcoming->contains($appointment))
+        $past = $appointments->reject(fn (Appointment $appointment): bool => $upcoming->contains($appointment))
             ->sortByDesc('starts_at')
             ->values();
 
@@ -41,9 +41,13 @@ class AppointmentsController extends Controller
         ]);
     }
 
+    /**
+     * @param  Collection<int, Appointment>  $appointments
+     * @return list<array<string, mixed>>
+     */
     private function shape(Collection $appointments): array
     {
-        return $appointments->map(fn (Appointment $appointment) => [
+        return $appointments->map(fn (Appointment $appointment): array => [
             'code' => $appointment->code,
             'starts_at' => $appointment->starts_at->toIso8601String(),
             'ends_at' => $appointment->ends_at->toIso8601String(),
@@ -57,7 +61,7 @@ class AppointmentsController extends Controller
                 ? URL::signedRoute('invoices.pdf', $appointment->invoice->number, now()->addDays(7))
                 : null,
             'series_token' => $appointment->series_token,
-            'series' => $appointment->series_token === null ? [] : $appointment->seriesSiblings()->map(fn (Appointment $sibling) => [
+            'series' => $appointment->series_token === null ? [] : $appointment->seriesSiblings()->map(fn (Appointment $sibling): array => [
                 'code' => $sibling->code,
                 'starts_at' => $sibling->starts_at->toIso8601String(),
                 'status' => $sibling->status,

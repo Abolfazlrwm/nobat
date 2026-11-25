@@ -24,6 +24,9 @@ class WorkingHour extends Model
 
     public const FRIDAY = 6;
 
+    /**
+     * @var array<int, string>
+     */
     public const WEEKDAY_NAMES = [
         self::SATURDAY => 'شنبه',
         self::SUNDAY => 'یکشنبه',
@@ -54,11 +57,17 @@ class WorkingHour extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Business, $this>
+     */
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
     }
 
+    /**
+     * @return BelongsTo<Staff, $this>
+     */
     public function staff(): BelongsTo
     {
         return $this->belongsTo(Staff::class);

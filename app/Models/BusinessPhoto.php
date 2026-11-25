@@ -22,6 +22,9 @@ class BusinessPhoto extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Business, $this>
+     */
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);

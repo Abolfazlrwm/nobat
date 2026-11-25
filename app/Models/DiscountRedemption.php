@@ -14,11 +14,17 @@ class DiscountRedemption extends Model
         'amount',
     ];
 
+    /**
+     * @return BelongsTo<DiscountCode, $this>
+     */
     public function discountCode(): BelongsTo
     {
         return $this->belongsTo(DiscountCode::class);
     }
 
+    /**
+     * @return BelongsTo<Appointment, $this>
+     */
     public function appointment(): BelongsTo
     {
         return $this->belongsTo(Appointment::class);

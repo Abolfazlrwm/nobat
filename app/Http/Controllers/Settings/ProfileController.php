@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Models\Appointment;
 use App\Models\Business;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -58,7 +60,7 @@ class ProfileController extends Controller
             ->with(['services', 'staff', 'workingHours', 'appointments' => fn ($query) => $query->orderBy('id')])
             ->orderBy('id')
             ->get()
-            ->map(fn (Business $business) => [
+            ->map(fn (Business $business): array => [
                 'name' => $business->name,
                 'slug' => $business->slug,
                 'phone' => $business->phone,
@@ -82,13 +84,13 @@ class ProfileController extends Controller
                     'starts_at' => $hours->starts_at,
                     'ends_at' => $hours->ends_at,
                 ]),
-                'appointments' => $business->appointments->map(fn ($appointment) => [
+                'appointments' => $business->appointments->map(fn (Appointment $appointment): array => [
                     'code' => $appointment->code,
                     'service_id' => $appointment->service_id,
                     'staff_id' => $appointment->staff_id,
                     'customer_name' => $appointment->customer_name,
                     'customer_phone' => $appointment->customer_phone,
-                    'starts_at' => $appointment->starts_at?->toIso8601String(),
+                    'starts_at' => Carbon::parse($appointment->starts_at)->toIso8601String(),
                     'status' => $appointment->status,
                 ]),
             ]);

@@ -31,11 +31,17 @@ class Review extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Business, $this>
+     */
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
     }
 
+    /**
+     * @return BelongsTo<Appointment, $this>
+     */
     public function appointment(): BelongsTo
     {
         return $this->belongsTo(Appointment::class);
@@ -43,6 +49,8 @@ class Review extends Model
 
     /**
      * Only reviews the manager has approved for public display.
+     *
+     * @param  Builder<self>  $query
      */
     public function scopeApproved(Builder $query): void
     {

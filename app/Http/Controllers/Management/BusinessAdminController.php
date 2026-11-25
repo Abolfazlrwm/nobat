@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Management;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,7 +44,7 @@ class BusinessAdminController extends Controller
         ]);
     }
 
-    public function toggle(Business $business)
+    public function toggle(Business $business): RedirectResponse
     {
         $this->authorize('administer', Business::class);
 
@@ -61,7 +62,7 @@ class BusinessAdminController extends Controller
      * business surfaces on the public directory, so only the super admin
      * assigns it.
      */
-    public function setCategory(Request $request, Business $business)
+    public function setCategory(Request $request, Business $business): RedirectResponse
     {
         $this->authorize('administer', Business::class);
 

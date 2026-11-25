@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\ResolvesManagedBusiness;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\SaveServiceRequest;
 use App\Models\Service;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -37,7 +38,7 @@ class ServiceController extends Controller
         ]);
     }
 
-    public function store(SaveServiceRequest $request)
+    public function store(SaveServiceRequest $request): RedirectResponse
     {
         $business = $this->managedBusiness($request, $request->integer('business_id') ?: null);
         $this->authorize('manage', $business);
@@ -47,7 +48,7 @@ class ServiceController extends Controller
         return back()->with('success', __('service.created'));
     }
 
-    public function update(SaveServiceRequest $request, Service $service)
+    public function update(SaveServiceRequest $request, Service $service): RedirectResponse
     {
         $this->authorize('manage', $service);
 
@@ -56,7 +57,7 @@ class ServiceController extends Controller
         return back()->with('success', __('service.updated'));
     }
 
-    public function destroy(Service $service)
+    public function destroy(Service $service): RedirectResponse
     {
         $this->authorize('manage', $service);
 

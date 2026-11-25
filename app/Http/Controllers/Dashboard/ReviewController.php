@@ -34,7 +34,7 @@ class ReviewController extends Controller
             ->orderByDesc('created_at')
             ->paginate(20)
             ->withQueryString()
-            ->through(fn (Review $review) => [
+            ->through(fn (Review $review): array => [
                 'id' => $review->id,
                 'customer_name' => $review->customer_name,
                 'rating' => $review->rating,

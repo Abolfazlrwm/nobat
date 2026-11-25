@@ -35,7 +35,7 @@ class AppointmentController extends Controller
             ->orderByDesc('starts_at')
             ->paginate(15)
             ->withQueryString()
-            ->through(fn (Appointment $appointment) => [
+            ->through(fn (Appointment $appointment): array => [
                 'id' => $appointment->id,
                 'code' => $appointment->code,
                 'customer_name' => $appointment->customer_name,

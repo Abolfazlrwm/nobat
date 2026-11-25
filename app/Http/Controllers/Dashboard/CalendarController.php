@@ -11,6 +11,7 @@ use App\Models\WaitlistEntry;
 use App\Models\WorkingHour;
 use App\Support\Jalali;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
@@ -51,10 +52,10 @@ class CalendarController extends Controller
         $selectedDate = $selectedDate->startOfDay();
 
         $appointments = $this->monthAppointments($request, $businessId, $firstDay, $lastDay)
-            ->groupBy(fn (Appointment $appointment) => $appointment->starts_at->format('Y-m-d'));
+            ->groupBy(fn (Appointment $appointment): string => $appointment->starts_at->format('Y-m-d'));
 
         $waitlist = $this->monthWaitlist($user, $businessId, $firstDay, $lastDay)
-            ->groupBy(fn (WaitlistEntry $entry) => $entry->desired_date->format('Y-m-d'));
+            ->groupBy(fn (WaitlistEntry $entry): string => $entry->desired_date->format('Y-m-d'));
 
         $days = [];
         for ($jd = 1; $jd <= $monthLength; $jd++) {
@@ -135,7 +136,10 @@ class CalendarController extends Controller
      * appointments page (super-admins all, managers their business, staff
      * their own shifts).
      */
-    private function monthAppointments(Request $request, ?int $businessId, CarbonImmutable $firstDay, CarbonImmutable $lastDay)
+    /**
+     * @return Collection<int, Appointment>
+     */
+    private function monthAppointments(Request $request, ?int $businessId, CarbonImmutable $firstDay, CarbonImmutable $lastDay): Collection
     {
         $query = Appointment::query()
             ->visibleTo($request->user())
@@ -153,7 +157,10 @@ class CalendarController extends Controller
      * Waitlist demand of the rendered month, scoped by the businesses the
      * user manages (the calendar never leaks another business's queue).
      */
-    private function monthWaitlist($user, ?int $businessId, CarbonImmutable $firstDay, CarbonImmutable $lastDay)
+    /**
+     * @return Collection<int, WaitlistEntry>
+     */
+    private function monthWaitlist(User $user, ?int $businessId, CarbonImmutable $firstDay, CarbonImmutable $lastDay): Collection
     {
         // desired_date is a date column, but SQLite stores the 'date' cast
         // as "Y-m-d H:i:s" — a bare "Y-m-d" upper bound would string-compare

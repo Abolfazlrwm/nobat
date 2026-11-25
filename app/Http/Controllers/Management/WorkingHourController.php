@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\ResolvesManagedBusiness;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\SaveWorkingHoursRequest;
 use App\Models\WorkingHour;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,7 +24,7 @@ class WorkingHourController extends Controller
             ->orderBy('weekday')
             ->orderBy('starts_at')
             ->get()
-            ->map(fn (WorkingHour $hour) => [
+            ->map(fn (WorkingHour $hour): array => [
                 'id' => $hour->id,
                 'weekday' => $hour->weekday,
                 'weekday_name' => $hour->weekdayName(),
@@ -43,7 +44,7 @@ class WorkingHourController extends Controller
     /**
      * Replace the whole business-level schedule in one request.
      */
-    public function store(SaveWorkingHoursRequest $request)
+    public function store(SaveWorkingHoursRequest $request): RedirectResponse
     {
         $business = $this->managedBusiness($request, $request->integer('business_id') ?: null);
         $this->authorize('manage', $business);
@@ -64,7 +65,7 @@ class WorkingHourController extends Controller
         return back()->with('success', __('hours.saved'));
     }
 
-    public function destroy(WorkingHour $workingHour)
+    public function destroy(WorkingHour $workingHour): RedirectResponse
     {
         $this->authorize('manage', $workingHour);
 

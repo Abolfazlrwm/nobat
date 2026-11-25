@@ -25,16 +25,25 @@ class Service extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Business, $this>
+     */
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
     }
 
+    /**
+     * @return HasMany<Appointment, $this>
+     */
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     public function scopeActive(Builder $query): void
     {
         $query->where('is_active', true);

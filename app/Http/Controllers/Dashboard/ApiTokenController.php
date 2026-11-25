@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\ApiToken;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -18,7 +19,7 @@ class ApiTokenController extends Controller
             // never persisted server-side — only its sha-256 is.
             'issued' => fn () => $request->session()->get('api_token'),
             'tokens' => $request->user()->apiTokens()->orderByDesc('created_at')->get()->map(
-                fn (ApiToken $token) => [
+                fn (ApiToken $token): array => [
                     'id' => $token->id,
                     'name' => $token->name,
                     'last_used_at' => $token->last_used_at?->toISOString(),
@@ -28,7 +29,7 @@ class ApiTokenController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -46,7 +47,7 @@ class ApiTokenController extends Controller
             ->with('api_token', $plain);
     }
 
-    public function destroy(Request $request, ApiToken $apiToken)
+    public function destroy(Request $request, ApiToken $apiToken): RedirectResponse
     {
         abort_unless($apiToken->user_id === $request->user()->id, 404);
 

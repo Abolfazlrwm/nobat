@@ -103,6 +103,9 @@ class Appointment extends Model
      * The other occurrences of the same standing appointment, oldest
      * first — empty for ordinary, one-off bookings.
      */
+    /**
+     * @return Collection<int, static>
+     */
     public function seriesSiblings(): Collection
     {
         if ($this->series_token === null) {
@@ -127,61 +130,97 @@ class Appointment extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Business, $this>
+     */
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
     }
 
+    /**
+     * @return BelongsTo<Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);
     }
 
+    /**
+     * @return BelongsTo<Staff, $this>
+     */
     public function staff(): BelongsTo
     {
         return $this->belongsTo(Staff::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * @return HasOne<Invoice, $this>
+     */
     public function invoice(): HasOne
     {
         return $this->hasOne(Invoice::class)->latestOfMany();
     }
 
+    /**
+     * @return HasMany<Payment, $this>
+     */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class)->latest('id');
     }
 
+    /**
+     * @return HasOne<Payment, $this>
+     */
     public function latestPayment(): HasOne
     {
         return $this->hasOne(Payment::class)->latestOfMany();
     }
 
+    /**
+     * @return BelongsTo<DiscountCode, $this>
+     */
     public function discountCode(): BelongsTo
     {
         return $this->belongsTo(DiscountCode::class);
     }
 
+    /**
+     * @return HasOne<Review, $this>
+     */
     public function review(): HasOne
     {
         return $this->hasOne(Review::class);
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     public function scopeBlocking(Builder $query): void
     {
         $query->whereIn('status', self::BLOCKING_STATUSES);
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     public function scopeUpcoming(Builder $query): void
     {
         $query->where('starts_at', '>=', now())->orderBy('starts_at');
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     public function scopeOnDate(Builder $query, string $date): void
     {
         $query->whereBetween('starts_at', [
@@ -194,6 +233,8 @@ class Appointment extends Model
      * Limit appointments to what the user is allowed to see:
      * super-admins see everything, managers see their businesses,
      * staff see their own schedule and customers their own bookings.
+     *
+     * @param  Builder<self>  $query
      */
     public function scopeVisibleTo(Builder $query, User $user): void
     {

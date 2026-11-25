@@ -4,6 +4,7 @@ namespace App\Services\Payment;
 
 use App\Models\Payment;
 use App\Services\Payment\Contracts\PaymentGateway;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -201,7 +202,7 @@ class ZarinPalGateway implements PaymentGateway
         ];
     }
 
-    private function http()
+    private function http(): PendingRequest
     {
         return Http::asJson()
             ->acceptJson()

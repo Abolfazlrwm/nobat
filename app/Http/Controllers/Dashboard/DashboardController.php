@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Business;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -69,9 +70,10 @@ class DashboardController extends Controller
     /**
      * Appointment counts of the last seven days for the dashboard chart.
      *
+     * @param  Builder<Appointment>  $query
      * @return list<array{date: string, count: int}>
      */
-    private function weeklyChart($query): array
+    private function weeklyChart(Builder $query): array
     {
         $start = now()->subDays(6)->startOfDay();
         $end = now()->endOfDay();
@@ -79,7 +81,7 @@ class DashboardController extends Controller
         $counts = (clone $query)
             ->whereBetween('starts_at', [$start, $end])
             ->get(['starts_at'])
-            ->groupBy(fn (Appointment $appointment) => $appointment->starts_at->format('Y-m-d'))
+            ->groupBy(fn (Appointment $appointment): string => $appointment->starts_at->format('Y-m-d'))
             ->map->count();
 
         $days = [];

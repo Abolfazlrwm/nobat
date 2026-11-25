@@ -163,7 +163,7 @@ class BookingController extends Controller
             ],
             // The other weeks of the same standing appointment — the
             // visitor sees the whole series without hunting through SMS.
-            'series' => $appointment->seriesSiblings()->map(fn (Appointment $sibling) => [
+            'series' => $appointment->seriesSiblings()->map(fn (Appointment $sibling): array => [
                 'code' => $sibling->code,
                 'starts_at' => $sibling->starts_at->format('Y-m-d\TH:i:s'),
                 'status' => $sibling->status,

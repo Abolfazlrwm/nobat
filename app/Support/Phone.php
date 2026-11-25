@@ -50,6 +50,9 @@ class Phone
      * 123 4567") and LIKE cannot ignore punctuation, so a wider tail sweeps
      * the candidates and the exact normalized comparison decides.
      */
+    /**
+     * @return list<string>
+     */
     public static function likePatterns(string $phone): array
     {
         $patterns = [];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\WaitlistEntry;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -36,7 +37,7 @@ class WaitlistController extends Controller
             ->orderBy('id')
             ->paginate(20)
             ->withQueryString()
-            ->through(fn (WaitlistEntry $entry) => [
+            ->through(fn (WaitlistEntry $entry): array => [
                 'id' => $entry->id,
                 'desired_date' => $entry->desired_date->format('Y-m-d'),
                 'customer_name' => $entry->customer_name,
@@ -65,7 +66,7 @@ class WaitlistController extends Controller
      * The manager has reached out (call/SMS) — record it without blocking
      * further notifications, since a freed slot may still be taken by others.
      */
-    public function notify(Request $request, WaitlistEntry $waitlistEntry)
+    public function notify(Request $request, WaitlistEntry $waitlistEntry): RedirectResponse
     {
         $this->authorize('manage', $waitlistEntry);
 
@@ -83,7 +84,7 @@ class WaitlistController extends Controller
         return back()->with('success', __('waitlist.notified'));
     }
 
-    public function cancel(Request $request, WaitlistEntry $waitlistEntry)
+    public function cancel(Request $request, WaitlistEntry $waitlistEntry): RedirectResponse
     {
         $this->authorize('manage', $waitlistEntry);
 
@@ -92,7 +93,7 @@ class WaitlistController extends Controller
         return back()->with('success', __('waitlist.cancelled'));
     }
 
-    public function destroy(WaitlistEntry $waitlistEntry)
+    public function destroy(WaitlistEntry $waitlistEntry): RedirectResponse
     {
         $this->authorize('manage', $waitlistEntry);
 

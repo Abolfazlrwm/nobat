@@ -34,6 +34,9 @@ class LoginOtp extends Model
     /**
      * A code is alive while it is unspent, unexpired, and has not burned
      * through its attempt budget.
+     *
+     * @param  Builder<self>  $query
+     * @return Builder<self>
      */
     public function scopeAlive(Builder $query): Builder
     {

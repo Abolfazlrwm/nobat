@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.1] - 2026-11-25
+
+### Changed
+
+- **PHPStan از سطح ۵ به سطح ۶ ارتقا یافت** — پایه‌گذاریِ تایپ‌ها در کل لایه‌ی
+  دامنه: ۶۴ annotation جنریک روی روابط و اسکوپ‌های Eloquent
+  (`BelongsTo<Business, $this>`، `Builder<self>` و…)، نوعِ بازگشتیِ صریح روی
+  ~۴۰ اکشنِ کنترلر (`RedirectResponse`/`Collection`)، تایپِ پارامتر و خروجیِ
+  closureهای `map`/`through`/`groupBy`، phpdoc روی `rules()` فرم‌ریکوئست‌ها،
+  `Validator` صریح و FQCN در phpdoc. baseline از ۳۲۴ ورودیِ سطح ۵ به ۱۳۵
+  ورودیِ سطح ۶ رسید (۴۱٪ آنچه توسط استنتاجِ template روی کوئری‌های join و
+  paginate قابل‌اثبات نبود) — کل سوئیت ۳۳۲ Pest و CI بدون تغییر سبز ماند.
+- مستندات (`Makefile`) به سطح تازه اشاره می‌کنند.
+
+### Fixed
+
+- `CustomerController::aggregate()`: مقدار خامِ جمع‌شده (`max/first`) قبل از
+  فراخوانی متد Carbon با `Carbon::parse` نرمال می‌شود — کلاسِ cast را صرف‌نظر
+  از نوعِ ستون درست می‌خواند.
+
 ## [1.37.0] - 2026-11-25
 
 ### Added

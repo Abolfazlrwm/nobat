@@ -4,6 +4,7 @@ namespace App\Http\Requests\Management;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class SaveDiscountCodeRequest extends FormRequest
 {
@@ -20,6 +21,9 @@ class SaveDiscountCodeRequest extends FormRequest
         ]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -54,7 +58,7 @@ class SaveDiscountCodeRequest extends FormRequest
     /**
      * A percent code can never exceed 100.
      */
-    public function withValidator($validator): void
+    public function withValidator(Validator $validator): void
     {
         $validator->after(function ($validator): void {
             if ($this->input('type') === 'percent' && (int) $this->input('value') > 100) {

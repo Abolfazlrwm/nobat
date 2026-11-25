@@ -25,7 +25,7 @@ class AppointmentController extends Controller
         // An explicit data/links/meta envelope keeps the public contract
         // stable instead of relying on the paginator's default flat shape.
         return response()->json([
-            'data' => $page->through(fn (Appointment $appointment) => [
+            'data' => $page->through(fn (Appointment $appointment): array => [
                 'id' => $appointment->id,
                 'code' => $appointment->code,
                 'status' => $appointment->status,

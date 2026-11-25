@@ -63,16 +63,25 @@ class Payment extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Appointment, $this>
+     */
     public function appointment(): BelongsTo
     {
         return $this->belongsTo(Appointment::class);
     }
 
+    /**
+     * @return BelongsTo<Invoice, $this>
+     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
     }
 
+    /**
+     * @return HasMany<Refund, $this>
+     */
     public function refunds(): HasMany
     {
         return $this->hasMany(Refund::class);

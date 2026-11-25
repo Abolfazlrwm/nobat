@@ -70,46 +70,73 @@ class Business extends Model
         return $this->category;
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /**
+     * @return HasMany<Service, $this>
+     */
     public function services(): HasMany
     {
         return $this->hasMany(Service::class);
     }
 
+    /**
+     * @return HasMany<Service, $this>
+     */
     public function activeServices(): HasMany
     {
         return $this->hasMany(Service::class)->where('is_active', true)->orderBy('sort_order');
     }
 
+    /**
+     * @return HasMany<Staff, $this>
+     */
     public function staff(): HasMany
     {
         return $this->hasMany(Staff::class);
     }
 
+    /**
+     * @return HasMany<Staff, $this>
+     */
     public function activeStaff(): HasMany
     {
         return $this->hasMany(Staff::class)->where('is_active', true);
     }
 
+    /**
+     * @return HasMany<WorkingHour, $this>
+     */
     public function workingHours(): HasMany
     {
         return $this->hasMany(WorkingHour::class);
     }
 
+    /**
+     * @return HasMany<Appointment, $this>
+     */
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
     }
 
+    /**
+     * @return HasMany<Review, $this>
+     */
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
+    /**
+     * @return HasMany<Review, $this>
+     */
     public function approvedReviews(): HasMany
     {
         return $this->hasMany(Review::class)
@@ -117,16 +144,25 @@ class Business extends Model
             ->orderByDesc('created_at');
     }
 
+    /**
+     * @return HasMany<DiscountCode, $this>
+     */
     public function discountCodes(): HasMany
     {
         return $this->hasMany(DiscountCode::class);
     }
 
+    /**
+     * @return HasMany<WaitlistEntry, $this>
+     */
     public function waitlistEntries(): HasMany
     {
         return $this->hasMany(WaitlistEntry::class);
     }
 
+    /**
+     * @return HasMany<BusinessPhoto, $this>
+     */
     public function photos(): HasMany
     {
         return $this->hasMany(BusinessPhoto::class)->orderBy('sort_order')->orderBy('id');
@@ -137,6 +173,9 @@ class Business extends Model
         return $this->photos()->where('is_cover', true)->first() ?? $this->photos()->first();
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     public function scopeActive(Builder $query): void
     {
         $query->where('is_active', true);

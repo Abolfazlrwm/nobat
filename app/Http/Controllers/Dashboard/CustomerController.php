@@ -55,7 +55,7 @@ class CustomerController extends Controller
             ->orderByDesc('total_spent')
             ->paginate(self::PER_PAGE)
             ->withQueryString()
-            ->through(fn (object $row) => [
+            ->through(fn (object $row): array => [
                 'phone' => $row->customer_phone,
                 'name' => $row->name,
                 'appointments_count' => (int) $row->appointments_count,
@@ -92,7 +92,7 @@ class CustomerController extends Controller
         return Inertia::render('dashboard/CustomerProfile', [
             'business' => ['id' => $business->id, 'name' => $business->name],
             'customer' => $this->aggregate($appointments)->first(),
-            'history' => $appointments->map(fn (Appointment $appointment) => [
+            'history' => $appointments->map(fn (Appointment $appointment): array => [
                 'id' => $appointment->id,
                 'code' => $appointment->code,
                 'service_name' => $appointment->service_name,
@@ -138,6 +138,9 @@ class CustomerController extends Controller
      * name/price and staff name, newest first — the raw material the
      * aggregation below collapses into customers.
      */
+    /**
+     * @return Collection<int, Appointment>
+     */
     private function appointmentsOf(int $businessId, ?string $phone = null): Collection
     {
         return Appointment::query()
@@ -155,10 +158,14 @@ class CustomerController extends Controller
      * completed/cancelled/no-show split, lifetime spend and the no-show
      * rate counted over the visits that reached the chair.
      */
+    /**
+     * @param  Collection<int, Appointment>  $appointments
+     * @return Collection<int, array{phone: string, name: string, appointments_count: int, completed_count: int, cancelled_count: int, no_show_count: int, no_show_rate: int, total_spent: int, last_visit_at: string|null}>
+     */
     private function aggregate(Collection $appointments): Collection
     {
         return $appointments
-            ->groupBy('customer_phone')
+            ->groupBy(fn (Appointment $appointment): string => $appointment->customer_phone)
             ->map(function (Collection $rows, string $phone): array {
                 $completed = $rows->where('status', Appointment::STATUS_COMPLETED);
                 $noShows = $rows->where('status', Appointment::STATUS_NO_SHOW);
@@ -175,7 +182,7 @@ class CustomerController extends Controller
                     'no_show_count' => $noShows->count(),
                     'no_show_rate' => $attended > 0 ? (int) round($noShows->count() / $attended * 100) : 0,
                     'total_spent' => (int) $completed->sum('service_price'),
-                    'last_visit_at' => $completed->first()?->starts_at?->format('Y-m-d\TH:i:s'),
+                    'last_visit_at' => $completed->first()?->starts_at->format('Y-m-d\TH:i:s'),
                 ];
             })
             ->sortByDesc('total_spent')

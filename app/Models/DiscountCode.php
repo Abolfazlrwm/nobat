@@ -53,16 +53,25 @@ class DiscountCode extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Business, $this>
+     */
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
     }
 
+    /**
+     * @return HasMany<DiscountRedemption, $this>
+     */
     public function redemptions(): HasMany
     {
         return $this->hasMany(DiscountRedemption::class);
     }
 
+    /**
+     * @return HasMany<Appointment, $this>
+     */
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
@@ -70,6 +79,8 @@ class DiscountCode extends Model
 
     /**
      * Codes whose activation window contains now and have not burnt out.
+     *
+     * @param  Builder<self>  $query
      */
     public function scopeActive(Builder $query): void
     {
