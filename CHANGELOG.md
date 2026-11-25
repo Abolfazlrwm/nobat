@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.36.1] - 2026-11-25
+
+### Fixed
+
+- **زمان‌بندیِ سراسریِ یک‌جا شد**: تعریفِ schedule تا حالا در `routes/console.php`
+  بود و `nobat:backup` جا مانده بود؛ حالا هر چهار فرمانِ نگهداری
+  (`release-expired-holds` هر دقیقه، `send-reminders` ساعتی با دی‌دوپِ
+  `reminder_sent_at`، `prune-login-otps` و `backup` روزانه) از یک نقطه ثبت
+  می‌شوند. تستِ تازه با `schedule:list` هر فرمان را **دقیقاً یک‌بار** و با
+  کادنسِ مستند می‌سنجد — ثبتِ دومِ پنهان هر sweep را بی‌سروصدا دوبرابر می‌کرد
+  و از این‌پس CI آن را می‌گیرد.
+
+### Added
+
+- **workflow «Deploy demo»**: با هر تگِ نسخه، دموی Render با API تریگر و تا
+  رسیدن به وضعیتِ live پایش می‌شود — حلقه‌ی مفقودِ ریلیزهای 1.35.x که دمو را
+  روی 1.34.0 جا گذاشته بود. با `workflow_dispatch` هم می‌شود دستی اجراش کرد.
+  تا وقتی secret تنظیم نشده، با پیامِ روشن skip می‌شود نه خطا. یک‌بار تنظیم:
+  Settings → Secrets and variables → Actions → `RENDER_API_KEY`؛ پیش از
+  deploy، متغیرهای کلیدِ خاموشیِ قدیمی (`NOBAT_SCHEDULER`/`NOBAT_QUEUE_WORKER`)
+  هم پاک می‌شوند تا `/health` همیشه سبز شود.
+
 ## [1.36.0] - 2026-11-25
 
 ### Added

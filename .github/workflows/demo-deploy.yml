@@ -1,0 +1,50 @@
+name: Deploy demo
+
+on:
+    push:
+        tags: ['v*']
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    deploy:
+        name: Trigger Render deploy of the demo
+        runs-on: ubuntu-latest
+        steps:
+            - name: Trigger deploy and wait until it goes live
+              env:
+                  RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+                  SVC: srv-dbm9l05g1s2s73ch4n10
+              run: |
+                  if [ -z "$RENDER_API_KEY" ]; then
+                      echo "::notice::Secret RENDER_API_KEY is not set — demo deploy skipped. Add it under Settings → Secrets and variables → Actions, then re-run this workflow."
+                      exit 0
+                  fi
+                  # One-time hygiene: make sure the scheduler and queue-worker
+                  # kill-switches are never set on the service — the entrypoint
+                  # defaults both to on, and a stale false keeps /health red.
+                  for VAR in NOBAT_SCHEDULER NOBAT_QUEUE_WORKER; do
+                      curl -s -o /dev/null -X DELETE \
+                          -H "Authorization: Bearer $RENDER_API_KEY" \
+                          "https://api.render.com/v1/services/$SVC/env-vars/$VAR" || true
+                  done
+                  HTTP=$(curl -s -o /tmp/dep.json -w "%{http_code}" -X POST \
+                      -H "Authorization: Bearer $RENDER_API_KEY" \
+                      "https://api.render.com/v1/services/$SVC/deploys" -d '{}')
+                  [ "$HTTP" = "201" ] || { cat /tmp/dep.json; exit 1; }
+                  DEPID=$(python3 -c "import json;print(json.load(open('/tmp/dep.json'))['id'])")
+                  echo "Deploy $DEPID triggered"
+                  for i in $(seq 1 16); do
+                      sleep 30
+                      ST=$(curl -s -H "Authorization: Bearer $RENDER_API_KEY" \
+                          "https://api.render.com/v1/services/$SVC/deploys/$DEPID" \
+                          | python3 -c "import json,sys;print(json.load(sys.stdin)['status'])")
+                      echo "poll $i: $ST"
+                      case "$ST" in
+                          live) echo "Demo is live"; exit 0 ;;
+                          build_failed|update_failed|deactivated|canceled) echo "Deploy failed: $ST"; exit 1 ;;
+                      esac
+                  done
+                  echo "Deploy did not reach live within 8 minutes"; exit 1
