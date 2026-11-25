@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install dev test test-js test-cov stan lint lint-check build audit up down logs
+.PHONY: help install dev test test-js test-cov test-e2e stan lint lint-check build audit up down logs
 
 ## Show available targets
 help:
@@ -29,6 +29,10 @@ test-js:
 ## Run the Pest suite with coverage (fails below 85%)
 test-cov:
 	vendor/bin/pest --coverage --min=85
+
+## Run the Playwright E2E suite (e2e/serve.sh seeds a server on :8080)
+test-e2e:
+	npm run test:e2e
 
 ## Static analysis (PHPStan + Larastan, level 5)
 stan:

@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.0] - 2026-11-25
+
+### Added
+
+- **سوئیت E2E با Playwright — مرورگر واقعی روی مسیر واقعی محصول**: ۶ سناریو
+  در `e2e/` که سرور سید‌شده‌ی تازه را روی :8080 بوت می‌کنند (`e2e/serve.sh`)
+  و end-to-end تأیید می‌کنند: سلامتِ `/health` با نسخه‌ی semver-shaped،
+  لندینگِ فارسی، صفحه‌ی کسب‌وکار با پرسنل، سوئیچِ زبان به English، ورودِ
+  یک‌کلیکیِ حساب‌های دمو و **مسیر کامل OTP**: کد ۶رقمی تولید می‌شود، جابِ
+  پیامک inline ران می‌شود و تست کد را از لاگ می‌خواند و وارد می‌کند. جابِ
+  تازه‌ی `e2e` در CI با `--with-deps`، artifact گزارش در شکست. `make
+  test-e2e` محلی هم همین را اجرا می‌کند؛ PHP_BIN برای باینری‌های غیرِ PATH
+  قابل‌override است.
+- **`.nvmrc` (22) و `.php-version` (8.4)**: پین‌کردن نسخه‌ها برای asdf/volta/mise.
+
+### Fixed
+
+- شمارش کهنه‌ی «۲۷۰+ تست» در READMEها به ترکیب واقعی امروز رسید
+  (۳۳۰+ Pest + ۱۶ Vitest + ۶ E2E) و جدولِ استک و بخشِ اجرای تست‌ها هر سه
+  سوئیت را نام می‌برند.
+
 ## [1.36.2] - 2026-11-25
 
 ### Fixed

@@ -27,3 +27,9 @@ yarn-error.log
 
 # mPDF temp files
 storage/framework/mpdf
+
+# Playwright
+/test-results
+/playwright-report
+/blob-report
+/e2e/.auth

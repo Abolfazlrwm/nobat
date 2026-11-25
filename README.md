@@ -107,7 +107,7 @@
 - 📨 نوتیفیکیشن صف‌بندی‌شده (Database + SMS با معماری درایور — درایور لاگ و درگاه کاوه‌نگار آماده‌اند)
 - ⏰ **یادآوری پیامکی (نسخه ۱.۹.۰)**: کامند ساعتی `nobat:send-reminders` برای همه‌ی نوبت‌های تأییدشده‌ی ۲۴ ساعت آینده؛ «اول ارسال، بعد مهر» — خطای درگاه پیامک دوباره تلاش می‌شود و موفق هرگز تکرار نمی‌شود؛ با `NOBAT_SMS_REMINDERS=false` خاموش می‌شود
 - 🛡️ **مجموعه‌ی تقویت حرفه‌ای (نسخه ۱.۱۲.۰)**: هدرهای امنیتی روی هر پاسخ وب و API (nosniff، محافظت از فریم، Referrer-Policy، Permissions-Policy و HSTS در production)، صفحات خطای برندشده‌ی RTL فارسی برای ۴۰۳/۴۰۴/۴۱۹/۵۰۰/۵۰۳ بدون وابستگی به بیلد، متای SEO و OpenGraph با تصویر پیش‌نمایش ۱۲۸۰×۶۴۰، کوکی امن روی دمو، کش config/route/view در بوت دمو و پاکسازی آسیب‌پذیری‌های npm با `npm audit fix`
-- 🧪 **۲۷۰+ تست Pest** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، سه‌زبانه (صفحه‌ی عمومی و پنل‌ها)، تخفیف، لیست انتظار، API عمومی، پنل مشتری‌ها و گالری تصاویر
+- 🧪 **۳۳۰+ تست Pest + ۱۶ تست Vitest + ۶ سناریوی E2E با Playwright** سبز: منطق اسلات، جلوگیری از تداخل، مجوزها، گردش وضعیت، درگاه پیامک، یادآوری، چرخه‌ی کامل پرداخت، نظرات، گزارش‌ها، تحلیل، سه‌زبانه (صفحه‌ی عمومی و پنل‌ها)، تخفیف، لیست انتظار، API عمومی، پنل مشتری‌ها و گالری تصاویر؛ E2E واقعاً مرورگر را بالا می‌آورد و از health تا ورود پیامکی OTP را end-to-end تأیید می‌کند
 - 🐳 Docker (nginx + php-fpm + worker + MySQL + Redis) و GitHub Actions CI
 
 ## 🧱 استک فناوری
@@ -117,7 +117,7 @@
 | بک‌اند | Laravel 12, PHP 8.4+ |
 | فرانت‌اند | Inertia 2, Vue 3, TypeScript, Tailwind CSS, shadcn-vue |
 | احراز هویت و نقش‌ها | Laravel Auth + Spatie Permission |
-| تست | Pest (Feature + Domain) |
+| تست | Pest (Feature + Domain) · Vitest · Playwright E2E |
 | صف و کش | Redis (در Docker) / Database |
 | تقویم | پورت سبک‌وزن jalaali-js (MIT) با TypeScript |
 
@@ -165,7 +165,9 @@ docker compose exec app php artisan migrate --seed
 ## 🧪 اجرای تست‌ها
 
 ```bash
-php artisan test     # ۲۷۰+ تست — SQLite درون‌حافظه‌ای
+php artisan test        # ۳۳۰+ تست Pest — SQLite درون‌حافظه‌ای
+npm run test:unit       # ۱۶ تست Vitest روی منطق تقویم و اعداد فارسی
+make test-e2e           # ۶ سناریوی Playwright — سرور سید‌شده روی :8080 بوت می‌شود
 vendor/bin/pint --test
 ```
 

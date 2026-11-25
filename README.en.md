@@ -99,7 +99,7 @@ Demo accounts (password for all: `password`):
 - 🔐 **Double-booking prevention** with a transaction + `lockForUpdate` on the staff row
 - 📨 Queued notifications (database + SMS behind a driver architecture — log driver and a real **Kavenegar** gateway driver included)
 - ⏰ **SMS reminders (v1.9.0)**: the hourly `nobat:send-reminders` command covers every confirmed appointment in the next 24 hours; "send first, stamp after" — a gateway failure is retried, a success is never repeated; switch off with `NOBAT_SMS_REMINDERS=false`
-- 🧪 **270+ green Pest tests**: slot logic, conflict prevention, authorization, status flow, SMS gateway, reminders, the full payment cycle, reviews, reports, analytics, the trilingual experience (public pages and panels), discount codes, the waitlist, the public API, the customers panel and the photo gallery
+- 🧪 **330+ Pest tests + 16 Vitest units + 6 Playwright E2E scenarios** all green: slot logic, conflict prevention, authorization, status flow, SMS gateway, reminders, the full payment cycle, reviews, reports, analytics, the trilingual experience (public pages and panels), discount codes, the waitlist, the public API, the customers panel and the photo gallery — the E2E suite boots a real browser and verifies everything from /health to SMS-code login end to end
 - 🛡️ **Professional hardening (v1.12.0)**: a security header set on every web and API response (nosniff, frame protection, referrer policy, permissions policy, HSTS in production), branded RTL Persian error pages for 403/404/419/500/503 with no build dependency, SEO + OpenGraph meta with a 1280x640 preview image, secure demo cookies, config/route/view boot caching on the demo and an `npm audit fix` sweep
 - 🐳 Docker (nginx + php-fpm + queue worker + MySQL + Redis) and GitHub Actions CI
 
@@ -110,7 +110,7 @@ Demo accounts (password for all: `password`):
 | Backend | Laravel 12, PHP 8.4+ |
 | Frontend | Inertia 2, Vue 3, TypeScript, Tailwind CSS, shadcn-vue |
 | Auth & roles | Laravel Auth + Spatie Permission |
-| Testing | Pest (Feature + Domain) |
+| Testing | Pest (Feature + Domain) · Vitest · Playwright E2E |
 | Queue & cache | Redis (Docker) / Database |
 | Calendar | Lightweight TypeScript port of jalaali-js (MIT) |
 
@@ -149,7 +149,9 @@ Full production deployment walkthrough, Kavenegar SMS setup and a go-live checkl
 ## 🧪 Running the tests
 
 ```bash
-php artisan test     # 270+ tests — in-memory SQLite
+php artisan test      # 330+ Pest tests — in-memory SQLite
+npm run test:unit     # 16 Vitest units on the Jalali calendar and Persian numbers
+make test-e2e         # 6 Playwright scenarios — boots a seeded server on :8080
 vendor/bin/pint --test
 ```
 
