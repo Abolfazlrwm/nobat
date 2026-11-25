@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install dev test stan lint lint-check build audit up down logs
+.PHONY: help install dev test test-js stan lint lint-check build audit up down logs
 
 ## Show available targets
 help:
@@ -21,6 +21,10 @@ dev:
 ## Run the Pest suite
 test:
 	php artisan test
+
+## Run the Vitest suite (frontend units)
+test-js:
+	npm run test:unit
 
 ## Static analysis (PHPStan + Larastan, level 5)
 stan:

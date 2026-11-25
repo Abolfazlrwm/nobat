@@ -22,7 +22,7 @@ jobs:
               with:
                   php-version: '8.4'
                   extensions: sqlite3
-                  coverage: none
+                  coverage: pcov
 
             - name: Setup Node
               uses: actions/setup-node@v4
@@ -56,6 +56,9 @@ jobs:
             - name: Build frontend assets
               run: npm run build
 
+            - name: Unit tests (Vitest)
+              run: npm run test:unit
+
             - name: Prepare environment
               run: |
                   cp .env.example .env
@@ -73,5 +76,10 @@ jobs:
             - name: Dependency audit (npm, production deps)
               run: npm audit --omit=dev
 
-            - name: Tests (Pest)
-              run: php artisan test
+            - name: Tests (Pest, with coverage)
+              run: vendor/bin/pest --coverage --coverage-clover=coverage.xml
+
+            - name: Coverage summary
+              run: |
+                  PCT=$(php -r '$m = simplexml_load_file("coverage.xml")->project->metrics; echo round(100 * $m["coveredstatements"] / max(1, $m["statements"]), 1);')
+                  echo "Backend line coverage: **${PCT}%**" >> "$GITHUB_STEP_SUMMARY"

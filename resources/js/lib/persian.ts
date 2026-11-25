@@ -35,7 +35,7 @@ export function toLocalIso(date: Date): string {
     );
 }
 
-/** "2026-11-05T14:30:00" -> "۱۴۰۴/۰۸/۱۵" */
+/** "2026-11-05T14:30:00" -> "۱۴۰۵/۰۸/۱۴" */
 export function faDate(iso: string | Date): string {
     const date = iso instanceof Date ? iso : parseLocal(iso);
     const { jy, jm, jd } = toJalaali(date);

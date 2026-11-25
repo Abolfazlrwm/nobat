@@ -9,7 +9,8 @@
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
-        "lint:check": "eslint . --max-warnings 0"
+        "lint:check": "eslint . --max-warnings 0",
+        "test:unit": "vitest run"
     },
     "overrides": {
         "@vue/language-core": {
@@ -38,6 +39,7 @@
         "typescript": "^5.2.2",
         "typescript-eslint": "^8.23.0",
         "vite": "^6.4.6",
+        "vitest": "^5.1.1",
         "vue-tsc": "^2.2.0",
         "ziggy-js": "^2.6.5"
     },
