@@ -9,6 +9,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Sentry\Laravel\Integration;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -45,6 +46,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        // Unhandled exceptions flow to Sentry when SENTRY_LARAVEL_DSN is set;
+        // without a DSN the client is inert and local logging stays the only
+        // sink — no network calls, no behaviour change.
+        Integration::handles($exceptions);
+
         // Error pages and aborted JSON bypass route middleware — stamp the
         // security headers (with a fresh CSP nonce, since this responder
         // does not see the per-request attributes set by AddSecurityHeaders)

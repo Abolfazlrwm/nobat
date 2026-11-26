@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use PDO;
 
 class BackupDatabase extends Command
@@ -62,11 +64,72 @@ class BackupDatabase extends Command
         $size = number_format((int) filesize($target) / 1024, 1);
         $this->info("Backup written: {$target} ({$size} KB, integrity ok)");
 
-        if ($keep = (int) $this->option('keep')) {
-            $this->prune($directory, $keep);
+        // Retention is always on: the daily schedule passes no option, so a
+        // config-less command would grow the backup directory forever until
+        // the disk fills. --keep overrides the config default for one run.
+        $keep = max(1, (int) ($this->option('keep') ?: config('nobat.backup.keep', 14)));
+        $this->prune($directory, $keep);
+
+        // A local backup dies with its disk. When a remote disk is configured,
+        // every fresh snapshot is copied there too; a failed upload must fail
+        // the command (and surface through the scheduler) — silently keeping
+        // only the local copy is exactly how "we had backups" surprises happen.
+        $disk = (string) config('nobat.backup.disk');
+        if ($disk !== '' && ! $this->shipOffSite($disk, $target, $keep)) {
+            return self::FAILURE;
         }
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Stream the snapshot to the remote disk and prune the remote copies,
+     * mirroring local retention. Returns false when the upload fails.
+     */
+    private function shipOffSite(string $disk, string $target, int $keep): bool
+    {
+        try {
+            $store = Storage::disk($disk);
+            $prefix = rtrim((string) config('nobat.backup.remote_prefix', 'backups'), '/');
+            $remote = $prefix.'/'.basename($target);
+
+            $stream = fopen($target, 'rb');
+            if ($stream === false) {
+                return false;
+            }
+
+            try {
+                $store->writeStream($remote, $stream);
+            } finally {
+                fclose($stream);
+            }
+
+            $this->info("Off-site copy: [{$disk}] {$remote}");
+            $this->pruneRemote($store, $prefix, $keep);
+        } catch (\Throwable $e) {
+            // report() routes to Sentry when configured, local log otherwise.
+            report($e);
+            $this->error("Local backup ok, but off-site copy failed: {$e->getMessage()}");
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Same name-based retention as the local directory: snapshots sort by
+     * their timestamp, so the oldest N beyond $keep are simply the first ones.
+     */
+    private function pruneRemote(Filesystem $store, string $prefix, int $keep): void
+    {
+        $remote = preg_grep('/nobat-.*\.sqlite$/', $store->files($prefix)) ?: [];
+        sort($remote);
+
+        foreach (array_slice($remote, 0, max(0, count($remote) - $keep)) as $path) {
+            $store->delete($path);
+            $this->line("Pruned remote {$path}");
+        }
     }
 
     private function prune(string $directory, int $keep): void

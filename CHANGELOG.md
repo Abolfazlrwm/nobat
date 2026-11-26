@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.38.0] - 2026-11-26
+
+### Added
+
+- **ردیابی خطا با Sentry (PHP + مرورگر)، خاموش به‌صورت پیش‌فرض:** پکیج
+  `sentry/sentry-laravel` + ادغام `Integration::handles` در
+  `bootstrap/app.php` برای استثناهای handleنشده، و `@sentry/vue` با init
+  گیت‌شده در `app.ts`. هر دو DSN (`SENTRY_LARAVEL_DSN`، `VITE_SENTRY_DSN`)
+  خالی یعنی هیچ درخواستی به بیرون نمی‌رود؛ با DSN، نسخهٔ ریلیز خودکار از
+  `config('app.version')` می‌چسبد و `send_default_pii` خاموش است.
+- **بکاپِ off-site برای `nobat:backup`:** با `NOBAT_BACKUP_DISK` هر snapshot
+  تازه علاوه بر دیسک لوکال به یک دیسک Filesystem ریموت (S3/R2 با کلیدهای
+  `AWS_*`) هم کپی می‌شود؛ شکستِ آپلود کدِ خروج ۱ می‌دهد و `report()` می‌شود،
+  پس «فقط نسخهٔ لوکال مانده» هرگز بی‌صدا نیست. بازداشتِ ریموت همان keep را
+  رعایت می‌کند.
+- تست‌های جدید: آپلود ریموت موفق (با `Storage::fake`)، شکستِ آپلود، و
+  بازداشتِ پیش‌فرض از config — سوئیت به ۳۳۵ Pest / ۲٬۵۳۶ اظهار رسید.
+- `docs/OPERATIONS.md`: بندِ off-site در §۳؛ مانیتور بیرونی
+  (UptimeRobot روی `/health` با کیوورد `"status":"ok"`) و راه‌اندازی Sentry
+  در §۴؛ آیتم‌های استقرار در چک‌لیست §۵.
+
+### Fixed
+
+- **بازداشتِ بکاپ دیگر اختیاری نیست:** schedule شبانه بدون `--keep` اجرا
+  می‌شد و پوشهٔ `storage/app/backups` بی‌پایان رشد می‌کرد تا دیسک پر شود؛
+  حالا پیش‌فرض از `NOBAT_BACKUP_KEEP` (۱۴ نسخه) می‌آید و `--keep` فقط
+  همان اجرا را override می‌کند.
+
 ## [1.37.1] - 2026-11-25
 
 ### Changed
