@@ -1,8 +1,8 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import * as Sentry from '@sentry/vue';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
@@ -47,10 +47,7 @@ createInertiaApp({
             });
         }
 
-        app.use(plugin)
-            .use(i18n)
-            .use(ZiggyVue)
-            .mount(el);
+        app.use(plugin).use(i18n).use(ZiggyVue).mount(el);
     },
     progress: {
         color: '#4B5563',
